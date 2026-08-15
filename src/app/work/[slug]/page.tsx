@@ -1,0 +1,102 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { formatShipped, getProject, projects } from "@/content/projects";
+
+export function generateStaticParams() {
+  return projects.map((project) => ({ slug: project.slug }));
+}
+
+export async function generateMetadata(
+  props: PageProps<"/work/[slug]">,
+): Promise<Metadata> {
+  const { slug } = await props.params;
+  const project = getProject(slug);
+
+  if (!project) return {};
+
+  return {
+    title: project.title,
+    description: project.summary,
+  };
+}
+
+export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
+  const { slug } = await props.params;
+  const project = getProject(slug);
+
+  if (!project) notFound();
+
+  return (
+    <article className="mx-auto max-w-3xl px-6 py-20">
+      <Link href="/work" className="label text-muted hover:text-accent">
+        ← Work
+      </Link>
+
+      <p className="label mt-12 text-accent">{formatShipped(project.shipped)}</p>
+      <h1 className="mt-4 font-display text-[clamp(2rem,5vw,3.25rem)] font-semibold tracking-[-0.03em]">
+        {project.title}
+      </h1>
+      <p className="mt-6 text-xl leading-relaxed text-muted">{project.summary}</p>
+
+      {project.image && (
+        <Image
+          src={project.image}
+          alt={project.imageAlt ?? ""}
+          width={1440}
+          height={900}
+          priority
+          sizes="(min-width: 768px) 48rem, 100vw"
+          className="mt-12 h-auto w-full border border-line"
+        />
+      )}
+
+      <dl className="mt-12 grid gap-6 border-y border-line py-6 sm:grid-cols-2">
+        <div>
+          <dt className="label text-muted">Role</dt>
+          <dd className="mt-2 font-mono text-sm">{project.role}</dd>
+        </div>
+        <div>
+          <dt className="label text-muted">Stack</dt>
+          <dd className="mt-2 font-mono text-sm">{project.stack.join(", ")}</dd>
+        </div>
+      </dl>
+
+      <h2 className="label mt-14 text-muted">What it changed</h2>
+      <ul className="mt-6 grid gap-4">
+        {project.highlights.map((highlight) => (
+          <li key={highlight} className="flex gap-4 text-lg leading-relaxed">
+            <span aria-hidden className="mt-2 h-px w-6 shrink-0 bg-accent" />
+            {highlight}
+          </li>
+        ))}
+      </ul>
+
+      {(project.live || project.repo) && (
+        <div className="mt-14 flex flex-wrap gap-6">
+          {project.live && (
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noreferrer"
+              className="label border border-line px-5 py-3 hover:border-accent hover:text-accent"
+            >
+              Visit site
+            </a>
+          )}
+          {project.repo && (
+            <a
+              href={project.repo}
+              target="_blank"
+              rel="noreferrer"
+              className="label border border-line px-5 py-3 hover:border-accent hover:text-accent"
+            >
+              Source
+            </a>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
