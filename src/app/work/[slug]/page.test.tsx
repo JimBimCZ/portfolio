@@ -37,6 +37,22 @@ test("links to the repository when the project has one", async () => {
   );
 });
 
+test("links to the live site when the project has one", async () => {
+  render(await ProjectPage(argsFor("trader")));
+
+  expect(screen.getByRole("link", { name: "Visit site" })).toHaveAttribute(
+    "href",
+    "https://trader-jimbimczs-projects.vercel.app",
+  );
+});
+
+test("notes what to expect from a live demo when the project has a note", async () => {
+  const project = getProject("trader");
+  render(await ProjectPage(argsFor("trader")));
+
+  expect(screen.getByText(project!.liveNote!)).toBeInTheDocument();
+});
+
 test("an unknown slug does not render a page", async () => {
   await expect(ProjectPage(argsFor("no-such-project"))).rejects.toThrow();
 });

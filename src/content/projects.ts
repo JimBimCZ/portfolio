@@ -17,6 +17,8 @@ export type Project = {
   highlights: string[];
   repo?: string;
   live?: string;
+  /** What a visitor should expect from `live`, when it differs from the repo. */
+  liveNote?: string;
   /** Path under /public. Screenshots are 1440x900, captured from the running app. */
   image?: string;
   imageAlt?: string;
@@ -30,14 +32,26 @@ export const projects: Project[] = [
     summary:
       "A trading terminal with imaginary money: prices stream in twice a second, and an assistant that can read your portfolio and place the trades for you.",
     role: "Solo build — frontend, backend, infrastructure",
-    stack: ["Next.js", "FastAPI", "SQLite", "SSE", "OpenRouter", "Docker"],
+    stack: [
+      "Next.js",
+      "FastAPI",
+      "SQLite",
+      "Postgres",
+      "SSE",
+      "OpenRouter",
+      "Docker",
+      "Vercel",
+    ],
     highlights: [
-      "The assistant executes trades through the same API the UI uses, and shows each fill inline as it happens.",
-      "Prices arrive over Server-Sent Events rather than WebSockets, because the data only flows one way.",
-      "429 tests across the stack: 322 on the backend, 107 on the frontend, plus 20 Playwright specs run against the built container.",
+      "The assistant executes trades through the same API the UI uses, and shows each fill inline as it happens. The live demo answers from its scripted client rather than the model, so leaving it up costs nothing.",
+      "One codebase, two deployment shapes. Serverless has no background task and no disk, so prices become a closed-form function of the clock — Brownian motion by Lévy construction, 22 steps down a hashed tree rather than 172,800 summed half-second increments — and Postgres sits behind the same interface as SQLite. Routes, services and the frontend are untouched.",
       "Market data comes from a geometric Brownian motion simulator by default — per-ticker volatility, correlated sector moves, no API key. Real quotes are opt-in, and there is deliberately no silent fallback between them.",
+      "501 tests across the stack: 374 on the backend, 107 on the frontend, plus 20 Playwright specs run against the built container.",
     ],
     repo: "https://github.com/JimBimCZ/trader",
+    live: "https://trader-jimbimczs-projects.vercel.app",
+    liveNote:
+      "The demo runs the serverless build with no database attached, so the portfolio starts at $10,000 and resets whenever the instance is recycled.",
     image: "/work/trader.webp",
     imageAlt:
       "The Trader terminal: a streaming watchlist of ten tickers on the left, an AAPL price chart, trade ticket, allocation treemap and positions table in the centre, and the assistant on the right confirming a five-share GOOGL buy it just executed.",

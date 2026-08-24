@@ -97,6 +97,10 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
           )}
         </div>
       )}
+
+      {project.live && project.liveNote && (
+        <p className="mt-6 max-w-xl text-sm text-muted">{project.liveNote}</p>
+      )}
     </article>
   );
 }

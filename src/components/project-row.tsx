@@ -24,15 +24,29 @@ export function ProjectRow({ project }: { project: Project }) {
           </h3>
           <p className="mt-2 max-w-xl text-muted">{project.summary}</p>
           <p className="label mt-4 text-muted">{project.stack.join(" / ")}</p>
-          {project.repo && (
-            <a
-              href={project.repo}
-              target="_blank"
-              rel="noreferrer"
-              className="label relative mt-4 inline-block text-muted hover:text-accent"
-            >
-              GitHub
-            </a>
+          {(project.live || project.repo) && (
+            <div className="mt-4 flex flex-wrap gap-6">
+              {project.live && (
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="label relative text-muted hover:text-accent"
+                >
+                  Live demo
+                </a>
+              )}
+              {project.repo && (
+                <a
+                  href={project.repo}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="label relative text-muted hover:text-accent"
+                >
+                  GitHub
+                </a>
+              )}
+            </div>
           )}
           <span className="sr-only">Shipped {formatShipped(project.shipped)}</span>
         </div>
