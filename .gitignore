@@ -42,3 +42,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# personal documents — the CV carries a phone number and home address,
+# and this repo is the source for a public site
+Vit_Busek_CV_*.md
