@@ -11,7 +11,7 @@ export default function WorkPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-20">
       <h1 className="font-display text-[clamp(2rem,5vw,3.25rem)] font-semibold tracking-[-0.03em]">
-        Work
+        Here’s my latest work
       </h1>
       <p className="mt-4 max-w-lg text-lg text-muted">
         Newest first. Each entry lists what shipped, when, and what it changed.

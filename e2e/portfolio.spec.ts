@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { projects } from "../src/content/projects";
 
 test("a visitor can get from the home page to a project's source", async ({ page }) => {
   await page.goto("/");
@@ -18,14 +19,15 @@ test("a visitor can get from the home page to a project's source", async ({ page
   );
 });
 
-test("the work page lists both projects with their screenshots", async ({ page }) => {
+test("the work page lists every project with its screenshot", async ({ page }) => {
   await page.goto("/work");
 
-  await expect(page.getByRole("link", { name: "Legal Document Creator" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Kanban MVP" })).toBeVisible();
+  for (const project of projects) {
+    await expect(page.getByRole("link", { name: project.title })).toBeVisible();
+  }
 
   const screenshots = page.getByRole("img");
-  await expect(screenshots).toHaveCount(2);
+  await expect(screenshots).toHaveCount(projects.filter((p) => p.image).length);
   for (const image of await screenshots.all()) {
     await expect(image).toBeVisible();
   }

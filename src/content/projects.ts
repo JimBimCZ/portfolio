@@ -24,6 +24,25 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "trader",
+    title: "Trader",
+    shipped: "2026-08",
+    summary:
+      "A trading terminal with imaginary money: prices stream in twice a second, and an assistant that can read your portfolio and place the trades for you.",
+    role: "Solo build — frontend, backend, infrastructure",
+    stack: ["Next.js", "FastAPI", "SQLite", "SSE", "OpenRouter", "Docker"],
+    highlights: [
+      "The assistant executes trades through the same API the UI uses, and shows each fill inline as it happens.",
+      "Prices arrive over Server-Sent Events rather than WebSockets, because the data only flows one way.",
+      "429 tests across the stack: 322 on the backend, 107 on the frontend, plus 20 Playwright specs run against the built container.",
+      "Market data comes from a geometric Brownian motion simulator by default — per-ticker volatility, correlated sector moves, no API key. Real quotes are opt-in, and there is deliberately no silent fallback between them.",
+    ],
+    repo: "https://github.com/JimBimCZ/trader",
+    image: "/work/trader.webp",
+    imageAlt:
+      "The Trader terminal: a streaming watchlist of ten tickers on the left, an AAPL price chart, trade ticket, allocation treemap and positions table in the centre, and the assistant on the right confirming a five-share GOOGL buy it just executed.",
+  },
+  {
     slug: "legal-document-creator",
     title: "Legal Document Creator",
     shipped: "2026-08",
