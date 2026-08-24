@@ -26,7 +26,25 @@ export default function ContactPage() {
         and reply within a couple of days.
       </p>
 
-      <ul className="mt-14 grid gap-4 border-t border-line pt-6">
+      <dl className="mt-14 grid gap-4 border-t border-line pt-6">
+        <div className="grid gap-1 sm:grid-cols-[6rem_1fr] sm:gap-4">
+          <dt className="label text-muted">phone</dt>
+          <dd className="font-mono text-sm">
+            <a
+              href={`tel:${site.phone.replace(/\s/g, "")}`}
+              className="text-muted hover:text-accent"
+            >
+              {site.phone}
+            </a>
+          </dd>
+        </div>
+        <div className="grid gap-1 sm:grid-cols-[6rem_1fr] sm:gap-4">
+          <dt className="label text-muted">based</dt>
+          <dd className="font-mono text-sm text-muted">{site.location} — CET</dd>
+        </div>
+      </dl>
+
+      <ul className="mt-10 grid gap-4 border-t border-line pt-6">
         {site.links.map((link) => (
           <li key={link.href}>
             <a
