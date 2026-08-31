@@ -1,4 +1,4 @@
-# Portfolio rebuild: the workspace
+# Portfolio rebuild: the carousel
 
 Design spec. Written 2026-08-31.
 
@@ -16,28 +16,27 @@ answer four questions in that window:
 Everything below serves those four questions. Where a design choice is fun but does
 not move one of them, it is cut.
 
-The page is also the primary work sample. A frontend engineer's portfolio that is
-slow, shifts under the reader, or breaks on a keyboard has answered question 1 in the
-wrong direction, whatever it claims in prose.
+The page is also the primary work sample. A frontend engineer's portfolio that is slow,
+shifts under the reader, or breaks on a keyboard has answered question 1 in the wrong
+direction, whatever it claims in prose.
+
+## Name
+
+**Vit Busek**, without diacritics, everywhere — page copy, metadata, the title template
+and the CV filename convention. The current `site.ts` has "Vít Busek", which is neither
+form consistently.
 
 ## The central idea
 
-Six applications exist. Five of them are deployed and publicly reachable right now.
-No portfolio claim is as strong as the running thing itself, so the page embeds them:
-a window holds one live application, and a switcher changes which one.
+Six applications exist; five are deployed. The home page is a **carousel of them**, each
+card showing the app actually running as a short silent loop, and each card opening the
+real deployment in a new tab.
 
-This is deliberately not a screenshot gallery and not an OS simulation. The window is
-the structure because a window is what holds a running program — that is the whole
-borrowing. There is no desktop metaphor to learn, no draggable furniture, no fake
-menu bar.
-
-### Why the window earns its place
-
-- It makes "these are real and running" self-evident rather than asserted.
-- It gives every project a consistent frame, so six different visual identities do not
-  turn the page into a collage.
-- Its controls do real work: expand gives the app the whole viewport, collapse gets it
-  out of the way.
+Embedding the apps in iframes was considered and rejected. It made the page's first paint
+depend on someone else's cold start, it forced a second-class experience on phones, and it
+kept a visitor inside a 900px-tall box when the real app is a better demonstration of
+itself at full size. A capture that loads instantly and a click that opens the real thing
+is both faster and more honest.
 
 ## Visual direction: Graphite
 
@@ -45,9 +44,9 @@ Dark by default. Muted throughout — the brief was explicitly "not screaming".
 
 ### Colour
 
-Tokens carry both themes; components never write a `dark:` variant. `:root` holds the
-dark values, and `@media (prefers-color-scheme: light)` swaps them. This inverts the
-current file, which is light-first.
+Tokens carry both themes; components never write a `dark:` variant. `:root` holds the dark
+values, and `@media (prefers-color-scheme: light)` swaps them. This inverts the current
+file, which is light-first.
 
 | Token | Dark (default) | Light |
 |---|---|---|
@@ -65,145 +64,117 @@ current file, which is light-first.
 
 Colour is meaning, not decoration:
 
-- `--accent` marks the active app, interactive controls, and focus.
+- `--accent` marks the active slide, interactive controls, and focus.
 - `--live` marks a deployment that is actually up. It appears nowhere else.
 
-Reachability and maturity are two different facts and must not be conflated. The dot
-answers "does this respond?" — `--live` when it does, `--dim` when it does not. The
-`status` field answers "is this finished?" and is carried in words, not colour. So
-`work-planner` shows a live dot, because it genuinely responds, alongside the words
-"in development".
+Reachability and maturity are separate facts. The dot answers "does this respond?"; the
+`status` field answers "is this finished?" and is carried in words. `work-planner` shows a
+live dot alongside the words "in development".
 
-Every text/background pair must clear WCAG AA (4.5:1 for body, 3:1 for large text) in
-both themes. `--dim` on `--bg` is the tightest pair and must be checked, not assumed.
+Every text/background pair must clear WCAG AA in both themes. `--dim` on `--bg` is the
+tightest pair and must be measured, not assumed.
 
 ### Type
 
 Two families, down from three.
 
-- **Schibsted Grotesk** — everything structural. Display sizes at `-0.026em` tracking
-  and weight 600; body at 400.
+- **Schibsted Grotesk** — everything structural.
 - **JetBrains Mono** — numbers, URLs, field labels, evidence tags. Data only.
 
 The `label` utility survives as the small-caps mono treatment.
 
-### Motion
-
-Three places only: the crossfade when a live app replaces its screenshot, the switcher's
-active-tab slide, and the expand transition. Everything honours `prefers-reduced-motion`,
-where each becomes an instant state change rather than a shortened one.
-
 ## Page structure
 
-Order is by what persuades, not by what is fun to build.
-
-1. **Header** — name, role, availability, contact. Availability and email are reachable
-   from every screen without navigation.
-2. **Workspace** — the hero. Switcher plus one live application.
+1. **Header** — name, role, availability, email, nav. Availability and contact are
+   reachable from every screen without navigating.
+2. **Carousel** — the hero. Five apps, one active, each opening live in a new tab.
 3. **What each one is** — one checkable sentence per app, with its real numbers.
-4. **Experience** — the employment history. Six years of paid senior work, including a
-   team lead role, is the most credible evidence on the page for this audience, so it
-   sits high rather than in a footer.
+4. **Track record** — the employment history. Six years of paid senior work including a
+   team lead role is the most credible evidence here for this audience, so it sits high.
 5. **Skills, with receipts** — every skill names the shipped projects that prove it.
-6. **Decisions** — three real engineering problems and how they were solved, each
-   linking to the commit.
-7. **Contact** — email, phone, GitHub.
+6. **Contact** — email, phone, GitHub, location.
 
-The header carries the availability status and a direct email link, so questions 3 and 4
-are answered without navigating. A CV download is deliberately not promised here: the
-only CV in the repository is gitignored markdown. If a PDF is added later it becomes a
-link in the header and the contact screen; the design leaves room for it and does not
-depend on it.
+There is no "decisions" section. It was specced and cut: it served the engineer who reads
+deeply, but it pushed the things that persuade everyone else further down the page.
 
-`kanban` does not appear in the workspace; it lives on `/work` only. Five windows already
-risk repetition, and it is the weakest of the set.
+Deep detail — stack, highlights, per-project narrative — lives on `/work` and
+`/work/[slug]`, reachable from the nav and from every carousel card.
 
-Switcher order: `trader`, `games-db`, `my-movies`, `legal`, `work-planner`.
+## The carousel
+
+### Behaviour
+
+- Five slides, one active. Order: `trader`, `games-db`, `my-movies`, `legal`,
+  `work-planner`.
+- **No auto-advance.** Motion already comes from the active capture looping; a carousel
+  that moves on its own takes control away from someone reading, and is a well-known way
+  to annoy the exact person this page is trying to impress.
+- Controls: previous/next buttons, a labelled tab per app, arrow keys when the carousel
+  has focus, and swipe on touch.
+- Clicking the active card opens that deployment in a **new tab** (`target="_blank"`,
+  `rel="noopener noreferrer"`).
+- The card is a link, not a div with a handler, so it is keyboard-operable and
+  middle-clickable for free.
 
 `trader` leads because every pixel in it is the author's own design, it is visually dense
-in a way that reads as competence immediately, and it shows AI, streaming and full-stack
-in a single frame. `games-db` cannot lead: it renders Steam's storefront, so first paint
-would be a stranger's product artwork and a price tag. Second position lets its real
-headline — 245,025 appids indexed, 14,621 hydrated with full detail — do the persuading
-instead.
+in a way that reads as competence immediately, and it shows AI, streaming and full-stack in
+one frame. `games-db` cannot lead: it renders Steam's storefront, so first paint would be a
+stranger's product artwork and a price tag. Second position lets its own headline —
+245,025 appids indexed, 14,621 hydrated — do the persuading instead.
 
-## The embed
+`kanban` is not in the carousel; it appears on `/work` only. Five slides already risk
+repetition and it is the weakest of the set.
 
-### Loading sequence
+### Media
 
-The window is never empty and never blocks first paint.
+Each app has a **scripted video tour**: Playwright drives the live deployment through a
+short sequence, recorded silently at 1440x900 and looped. A tour shows the app doing its
+job rather than sitting idle — the untouched Trader home screen has an empty positions
+table and an empty performance chart, which undersells it badly.
 
-1. The screenshot ships in the static HTML and paints immediately. For the featured app
-   it is the LCP element and loads eagerly; every other screenshot is lazy.
-2. The iframe mounts beneath it at `opacity: 0`, `pointer-events: none`.
-3. On the iframe's `load` event it crossfades to `opacity: 1` over 250ms and becomes
-   interactive. Under `prefers-reduced-motion` the swap is instant.
-4. The screenshot stays mounted underneath. It costs one decoded image and means a slow
-   route inside the app still has a backdrop rather than white.
+Per-app scripts live in `scripts/capture/`, are committed, and are re-runnable when an app
+changes. Each produces a WebM plus a poster frame (WebP, 1440x900).
 
-Screenshots are captured from the live deployment at 1440x900, matching the existing
-captures in `public/work/`, and the container is locked to 16:10 with `aspect-ratio`. The
-iframe renders at that same ratio, so the swap cannot shift layout. `games-db`,
-`my-movies` and `work-planner` have no capture yet and need one.
+Markup is `<video autoplay muted loop playsinline preload="none" poster="…">`. Not GIF:
+at this size a GIF runs to several megabytes and bands visibly, where the same loop as
+WebM is roughly a tenth of that and stays sharp.
 
-### Failure
+Playback rules:
 
-`load` fires for error pages too, so it is not sufficient evidence that an app is up. A
-timeout runs alongside it: if `load` has not fired within 8 seconds, the iframe is
-discarded, the screenshot stays, and the window surfaces "Open app" as a direct link.
-The failed state is visually the same window — there is no broken-looking box, and no
-error text shouting at a visitor who did nothing wrong.
+- **Only the active slide plays.** Every other slide is its poster. Leaving a slide pauses
+  and unloads its video.
+- The poster ships in the static HTML and is the LCP candidate, so the card is never
+  empty and video never blocks first paint.
+- `prefers-reduced-motion: reduce` — no video is loaded at all, on any slide. The poster
+  is the whole experience, and nothing is lost but the motion.
+- The container is locked to 16:10 with `aspect-ratio`, so nothing shifts as media loads.
 
-### Cost control
+If a video fails, the poster is already underneath and stays. There is no error state to
+design, because the failure state is the normal state minus motion.
 
-Exactly one iframe exists at a time. Switching apps unmounts the previous one before
-mounting the next, so memory and connections stay flat however long someone explores.
+### Sign-in apps
 
-Only the featured app auto-loads, and only on viewports that get embeds. The featured app
-is the first entry in the switcher order, `trader`. Every other window is click-to-load
-behind a "Run this app" control.
+`legal` and `work-planner` both present only a sign-in form to a stranger. Two login
+screens in a hero carousel would undercut the whole page.
 
-`work-planner` is a special case: its board is behind sign-in, so the embed lands on a
-sign-in screen. That is what the window shows, with a caption saying the board sits behind
-it. It is not dressed up as more than it is.
+Both get a **demo account**, and the card surfaces the credentials plainly next to the
+"Open live app" link, so a visitor can go in and use the real thing. The tours for these
+two are recorded from a signed-in session, showing the actual product.
 
-### Sandboxing
+This is the one place the page shows something a visitor cannot reach in one click, so it
+must say so in words: the card states that sign-in is required and gives the credentials
+to get past it. Credentials live in `projects.ts` beside the project, as ordinary content.
 
-Third-party origins are framed with an explicit allowlist:
-`sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"`,
-plus `referrerpolicy="no-referrer"` and a `title` naming the application. These are the
-author's own deployments, not untrusted third parties, but the attribute is stated rather
-than omitted.
+**Blocked until the accounts exist.** Until then the two cards carry the sign-in poster and
+no credentials, which is honest but weak. This is the one open dependency in the plan.
 
 ## Mobile
 
-Below 768px there are no iframes at all. A desktop application rendered into a 390px
-viewport is unreadable, and pinch-zooming inside an iframe is a bad experience that would
-answer question 1 in the wrong direction.
+The carousel is the same component, not a fallback: one card at a time, swipeable, tabs
+becoming a scrollable strip with the active app scrolled into view. Tapping opens the real
+deployment full-screen in a new tab, which is where a phone visitor wants it anyway.
 
-Mobile is designed, not degraded:
-
-- The same window chrome holds the screenshot.
-- The control reads "Open app" and opens the real deployment in a new tab, full-screen,
-  where it is actually usable.
-- The switcher becomes a horizontally scrollable segmented control with the active app
-  scrolled into view.
-- The numbers under each window carry the persuasion the live app carries on desktop.
-
-The breakpoint is resolved after mount via `matchMedia`. The server renders the
-screenshot state, which is also the mobile state, so there is no hydration mismatch and
-no flash — desktop simply upgrades.
-
-## Window controls
-
-Two controls, both real buttons with accessible names.
-
-- **Collapse** reduces the window to its title bar, so the page below is reachable.
-- **Expand** takes the app to a full-viewport surface. Focus moves into the surface, it
-  is `aria-modal` with a focus trap, Escape returns, and focus lands back on the control
-  that opened it.
-
-There is no close button. Nothing here can be closed, so offering it would be a lie.
+Video still plays only for the active slide, so a phone loads exactly one.
 
 ## Content model
 
@@ -213,15 +184,12 @@ There is no close button. Nothing here can be closed, so offering it would be a 
 
 Existing fields stay. New fields:
 
-- `embedUrl?: string` — the deployment to frame. Required when `status` is `live`.
-- `status: "live" | "in-development" | "archived"` — drives the switcher dot and the
-  wording. `work-planner` is `in-development`: it is behind sign-in and still being
-  built, and the page says so rather than implying a finished product.
-- `metrics: { label: string; value: string }[]` — the numbers under the window. Two to
-  four. Every value must be checkable.
-- `screenshot: string` and `screenshotAlt: string` — now required for any project in the
-  workspace, because the screenshot is the load-bearing placeholder rather than a
-  decoration.
+- `liveUrl?: string` — the deployment. Required when `status` is `live`.
+- `status: "live" | "in-development" | "archived"`.
+- `metrics: { label: string; value: string }[]` — two to four, every value checkable.
+- `poster: string` and `posterAlt: string` — required for any carousel project.
+- `tour?: string` — path to the WebM.
+- `demo?: { email: string; password: string }` — surfaced on the card when present.
 
 ### `skills.ts` (new)
 
@@ -237,85 +205,69 @@ type SkillGroup = { title: string; skills: Skill[] };
 `ProjectSlug` is derived from `projects`, so evidence pointing at a project that does not
 exist is a compile error, and a unit test asserts every slug resolves at runtime too.
 
-**Every mapping must be verified against the repository before it ships.** The READMEs
-are not evidence: `work-planner`'s still describes a scaffold with no auth, boards or
-cards, while its merge history has all three; `my_movies`' says `schema.ts` is
-deliberately empty and only the health check touches Postgres, so listing Postgres under
-`my-movies` would be an overclaim. A skills section whose entire value is that it is
-checkable cannot contain a single row that does not check out.
-
-### `decisions.ts` (new)
-
-Three entries: title, two-sentence problem, two-sentence resolution, commit URL. Sourced
-from real commits.
+**Every mapping must be verified against the repository before it ships.** The READMEs are
+not evidence: `work-planner`'s still describes a scaffold with no auth, boards or cards
+while its merge history has all three; `my_movies`' says `schema.ts` is deliberately empty
+and only the health check touches Postgres, so listing Postgres under `my-movies` would be
+an overclaim. A skills section whose entire value is that it is checkable cannot contain a
+single row that does not check out.
 
 ## Routes
 
 Unchanged, so nothing 404s: `/`, `/work`, `/work/[slug]`, `/about`, `/contact`,
-`not-found`. `/work/[slug]` gains the same window component, embedding that project alone.
-
-The site stays fully static: `generateStaticParams` prerenders every project page, and
-there is no runtime data source.
+`not-found`. The site stays fully static; `generateStaticParams` prerenders every project
+page and there is no runtime data source.
 
 ## Quality floor
 
-Non-negotiable, and verified rather than asserted:
+Verified rather than asserted:
 
-- No layout shift. Every image and embed container has fixed dimensions or aspect ratio.
-- The embed never blocks first paint or LCP.
-- Every interactive element is reachable and operable by keyboard, with a visible focus
-  ring.
-- `prefers-reduced-motion` is honoured everywhere.
+- No layout shift; every media container has a fixed aspect ratio.
+- Video never blocks first paint; posters are the LCP candidates.
+- Every control is keyboard-reachable with a visible focus ring.
+- `prefers-reduced-motion` is honoured — and here it means no video at all, not faster video.
 - Contrast clears AA in both themes.
 - The production build stays static and type-checks clean.
 
 ## Testing
 
-Three layers, per the repository standard.
-
 **Unit / content integrity**
 - Every `skills.ts` evidence slug resolves to a real project.
-- Every `live` project has an `embedUrl`; every workspace project has a `screenshot` that
-  exists on disk and a non-empty `screenshotAlt`.
-- No duplicate slugs; `shipped` parses; switcher order references real projects.
-- `decisions.ts` entries all carry a commit URL.
+- Every `live` project has a `liveUrl`; every carousel project has a `poster` that exists
+  on disk and a non-empty `posterAlt`; every declared `tour` file exists.
+- No duplicate slugs; `shipped` parses; carousel order references real projects.
+- No diacritics regression: the rendered name is "Vit Busek".
 
 **Component**
-- The switcher changes the mounted application.
-- Exactly one iframe is mounted at a time; switching unmounts the previous one.
-- Click-to-load mounts an iframe only after activation.
-- The iframe is transparent and non-interactive until `load`, and opaque after it.
-- The timeout path discards the iframe and reveals the link.
-- Expand sets modal state and moves focus; Escape restores it.
-- The mobile branch renders a link and never an iframe.
+- The active slide advances and wraps with the next/previous controls and arrow keys.
+- Exactly one video element is playing; changing slides pauses and unloads the previous.
+- Under `prefers-reduced-motion`, no video element is rendered at all.
+- Each card links to its `liveUrl` with `target="_blank"` and `rel="noopener noreferrer"`.
+- A project with `demo` renders its credentials; one without renders none.
 
 **End-to-end (Playwright)**
-- The workspace renders with the featured app and exactly one iframe with the expected
-  `src`.
-- Switching apps changes the iframe `src` and leaves exactly one iframe.
-- Expand fills the viewport; Escape returns focus to the trigger.
-- A mobile-viewport project asserts no iframe exists and the link points at the
-  deployment.
+- The carousel renders with `trader` active and its poster present.
+- Next/previous and the tabs change the active slide.
+- The active card's link points at the expected deployment and opens in a new tab.
+- Keyboard-only traversal reaches the tabs, the controls and the contact link.
+- A reduced-motion project asserts no `<video>` exists.
+- A mobile-viewport project asserts one card is visible and the link is correct.
 - Both themes render, driven by `prefers-color-scheme` emulation.
-- Keyboard-only traversal reaches the switcher, the window controls and the contact link.
 
 ## Changes to CLAUDE.md
-
-Two documented conventions change and the file is updated in the same work:
 
 - The theme inverts: `:root` is dark, `prefers-color-scheme: light` swaps the values. The
   "never write `dark:` variants" rule is unchanged and matters more.
 - Three type faces become two: Schibsted Grotesk and JetBrains Mono.
-
-A new section documents the embed contract — one iframe at a time, screenshot as
-placeholder, no embeds below the mobile breakpoint — because it is the thing most likely
-to be broken accidentally by a later change.
+- A new section documents the media contract — poster in the static HTML, only the active
+  slide plays, no video under reduced motion, capture scripts in `scripts/capture/` — since
+  that is the thing most likely to be broken accidentally by a later change.
 
 ## Explicitly out of scope
 
+- No iframes anywhere. Considered and rejected above.
 - No CMS or runtime data source. Content stays typed files.
-- No analytics.
-- No contact form. Email and phone are enough, and a form is a backend to maintain.
-- No draggable windows, no desktop metaphor beyond the frame itself.
+- No analytics, no contact form.
+- No auto-advancing carousel.
 - `next-store` is not featured. Both of its deployments errored; it is not shippable
   evidence.
