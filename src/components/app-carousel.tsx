@@ -35,12 +35,9 @@ export function AppCarousel({ projects }: { projects: Project[] }) {
   };
 
   return (
-    <section>
+    <section aria-label="Deployed applications" aria-roledescription="carousel">
       <div className="relative">
         <div
-          role="group"
-          aria-roledescription="carousel"
-          aria-label="Deployed applications"
           className="overflow-hidden"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}

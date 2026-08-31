@@ -99,7 +99,7 @@ export const skillGroups: SkillGroup[] = [
       {
         name: "Testing",
         detail: "unit, integration and Playwright end-to-end",
-        evidence: ["trader", "games-db", "work-planner"],
+        evidence: ["trader", "games-db", "work-planner", "kanban"],
       },
       {
         name: "Docker",

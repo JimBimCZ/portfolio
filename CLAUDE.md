@@ -69,3 +69,13 @@ Tests sit next to what they cover (`src/**/*.test.tsx`); `e2e/` holds the Playwr
 - `vitest.config.mts` sets `globals: true` on purpose. Testing Library only registers its automatic between-test cleanup when a global `afterEach` exists — without it, the DOM leaks between tests and you get "found multiple elements" failures that look like component bugs.
 - Async server components are tested by awaiting them: `render(await ProjectPage({ params: Promise.resolve({ slug }) }))`. Derive the argument type with `Parameters<typeof ProjectPage>[0]` so the global `PageProps` helper stays the source of truth.
 - Prefer role-based queries. Where a string appears in both the page and the footer, scope with `getByRole("main")` instead of loosening the query.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

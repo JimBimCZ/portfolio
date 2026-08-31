@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { expect, test, vi } from "vitest";
 import { carouselProjects } from "@/content/projects";
@@ -68,11 +68,21 @@ test("exactly one video plays, however far you scroll the carousel", async () =>
   expect(container.querySelectorAll("video").length).toBeLessThanOrEqual(1);
 });
 
+// The touch handlers sit on the carousel's swipeable track, a plain div one
+// level inside the labelled region (it lost its own role/label so the region
+// wouldn't announce its name twice — see app-carousel.tsx). A touch event
+// only reaches an ancestor's handler by bubbling, so these fire on the
+// visible card itself, same as a real finger would touch it, rather than on
+// the region landmark that wraps the whole component.
+
 test("a left swipe advances to the next slide", () => {
   render(<AppCarousel projects={carouselProjects} />);
-  const viewport = screen.getByRole("group", { name: "Deployed applications" });
-  fireEvent.touchStart(viewport, { touches: [{ clientX: 200 }] });
-  fireEvent.touchEnd(viewport, { changedTouches: [{ clientX: 100 }] });
+  const region = screen.getByRole("region", { name: "Deployed applications" });
+  const activeCard = within(region).getByRole("link", {
+    name: new RegExp(carouselProjects[0].title),
+  });
+  fireEvent.touchStart(activeCard, { touches: [{ clientX: 200 }] });
+  fireEvent.touchEnd(activeCard, { changedTouches: [{ clientX: 100 }] });
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
     carouselProjects[1].title,
   );
@@ -80,9 +90,12 @@ test("a left swipe advances to the next slide", () => {
 
 test("a right swipe returns to the previous slide", () => {
   render(<AppCarousel projects={carouselProjects} />);
-  const viewport = screen.getByRole("group", { name: "Deployed applications" });
-  fireEvent.touchStart(viewport, { touches: [{ clientX: 100 }] });
-  fireEvent.touchEnd(viewport, { changedTouches: [{ clientX: 200 }] });
+  const region = screen.getByRole("region", { name: "Deployed applications" });
+  const activeCard = within(region).getByRole("link", {
+    name: new RegExp(carouselProjects[0].title),
+  });
+  fireEvent.touchStart(activeCard, { touches: [{ clientX: 100 }] });
+  fireEvent.touchEnd(activeCard, { changedTouches: [{ clientX: 200 }] });
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
     carouselProjects.at(-1)!.title,
   );
@@ -90,9 +103,12 @@ test("a right swipe returns to the previous slide", () => {
 
 test("a short touch that is not a real swipe does not change the slide", () => {
   render(<AppCarousel projects={carouselProjects} />);
-  const viewport = screen.getByRole("group", { name: "Deployed applications" });
-  fireEvent.touchStart(viewport, { touches: [{ clientX: 100 }] });
-  fireEvent.touchEnd(viewport, { changedTouches: [{ clientX: 110 }] });
+  const region = screen.getByRole("region", { name: "Deployed applications" });
+  const activeCard = within(region).getByRole("link", {
+    name: new RegExp(carouselProjects[0].title),
+  });
+  fireEvent.touchStart(activeCard, { touches: [{ clientX: 100 }] });
+  fireEvent.touchEnd(activeCard, { changedTouches: [{ clientX: 110 }] });
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
     carouselProjects[0].title,
   );
