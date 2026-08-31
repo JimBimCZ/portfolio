@@ -1,7 +1,11 @@
 /**
  * One scripted tour per app. Videos loop on the card, so keep them tight —
- * roughly 15 seconds is the target, though a slow cold start on a live
- * serverless deployment can push that out.
+ * the plan's target is ~12 seconds. Recording starts with the browser
+ * context, so a live deployment's own cold-load time is baked into every
+ * capture and this project deliberately has no ffmpeg dependency to trim it
+ * back out afterwards. ~16 seconds (trader, the slowest of the five, after
+ * two rounds of cuts from an original 51s) was accepted as the practical
+ * floor without adding an encoder.
  *
  * A tour can also export `prepare(page)`, which runs once before the poster
  * frame is captured (and before `run`). Use it when the resting state is a

@@ -69,7 +69,7 @@ export const projects = [
       "The demo runs the serverless build with no database attached, so the portfolio starts at $10,000 and resets whenever the instance is recycled.",
     image: "/work/trader.webp",
     imageAlt:
-      "The Trader terminal: a streaming watchlist of ten tickers on the left, an AAPL price chart, trade ticket, allocation treemap and positions table in the centre, and the assistant on the right confirming a five-share GOOGL buy it just executed.",
+      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart, trade ticket, allocation panel, session P&L chart and positions table in the centre, and the assistant's prompt suggestions on the right.",
     liveUrl: "https://trader-jimbimczs-projects.vercel.app",
     status: "live",
     metrics: [
@@ -79,7 +79,7 @@ export const projects = [
     ],
     poster: "/work/trader.webp",
     posterAlt:
-      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart above the open position and a rising performance chart in the centre, and the assistant's prompt suggestions on the right.",
+      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart above the open position and a session P&L chart in the centre, and the assistant's prompt suggestions on the right.",
     tour: "/work/trader.webm",
   },
   {
@@ -115,7 +115,7 @@ export const projects = [
     ],
     poster: "/work/games-db.webp",
     posterAlt:
-      "Games DB's home page: a featured Counter-Strike 2 banner above a Top Sellers grid of game cover art, prices, and discount badges.",
+      "Games DB's home page: a featured game banner above a Top Sellers grid of game cover art, prices, and discount badges.",
     tour: "/work/games-db.webm",
   },
   {
@@ -151,7 +151,7 @@ export const projects = [
     ],
     poster: "/work/my-movies.webp",
     posterAlt:
-      "My Movies' home page: a full-bleed hero for The Whisper Man with its synopsis and a More Info button, above a Trending This Week row of poster thumbnails.",
+      "My Movies' home page: a full-bleed hero for a trending title with its synopsis and a More Info button, above a Trending This Week row of poster thumbnails.",
     tour: "/work/my-movies.webm",
   },
   {
@@ -171,7 +171,7 @@ export const projects = [
     repo: "https://github.com/JimBimCZ/legal",
     image: "/work/legal.webp",
     imageAlt:
-      "The app filling in a mutual NDA: chat transcript on the left, live document preview on the right showing all ten fields completed.",
+      "Legal Document Creator's sign-in screen: an email and password form beneath the app name, with a Need an account? Sign up link below it.",
     liveUrl: "https://legal-seven-zeta.vercel.app",
     status: "live",
     signInRequired: true,
