@@ -40,7 +40,7 @@ describe.each([
 ])("%s theme", (_name, selector) => {
   const t = tokens(selector);
 
-  test.each(["text", "muted", "dim", "accent"])(
+  test.each(["text", "muted", "dim", "accent", "live"])(
     "%s clears AA against the canvas",
     (token) => {
       expect(contrast(t[token], t.canvas)).toBeGreaterThanOrEqual(4.5);
@@ -53,5 +53,9 @@ describe.each([
 
   test("text on a raised surface stays readable", () => {
     expect(contrast(t.text, t.raised)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test("live clears AA against the surface, since a status label may sit on a card", () => {
+    expect(contrast(t.live, t.surface)).toBeGreaterThanOrEqual(4.5);
   });
 });
