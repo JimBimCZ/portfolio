@@ -39,9 +39,9 @@ export type Project = {
   signInRequired?: boolean;
 };
 
-export const projects: Project[] = [
+export const projects = [
   {
-    slug: "trader",
+    slug: "trader" as const,
     title: "Trader",
     shipped: "2026-08",
     summary:
@@ -79,7 +79,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "games-db",
+    slug: "games-db" as const,
     title: "Games DB",
     shipped: "2026-08",
     summary:
@@ -98,7 +98,7 @@ export const projects: Project[] = [
     highlights: [
       "Its own index of Steam's catalogue — 245,025 appids, 14,621 hydrated with full detail — because Steam has no /discover or /trending endpoint to browse against.",
       "Search runs on a Postgres trigram index (pg_trgm), not on Steam.",
-      "Four scheduled jobs — catalogue sync, list sync, hydration, and price refresh — each takes an advisory lock so two copies can't run at once.",
+      "One scheduled job — a monthly GitHub Actions cron refreshes prices — plus three CLI jobs (catalogue sync, list sync, hydration) run by hand. Hydration, price refresh, and list sync each take a Postgres advisory lock so two copies can't run at once; catalogue sync does not need one.",
       "GitHub OAuth sign-in for a personal library; browsing and search work for anyone, signed in or not.",
     ],
     repo: "https://github.com/JimBimCZ/games-db",
@@ -111,7 +111,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "my-movies",
+    slug: "my-movies" as const,
     title: "My Movies",
     shipped: "2026-08",
     summary:
@@ -128,7 +128,7 @@ export const projects: Project[] = [
       "Docker",
     ],
     highlights: [
-      "Eight browse rows on the home page — trending, upcoming, top rated, airing today, and four genre rows — each streamed in with Suspense.",
+      "Nine browse rows on the home page — trending, now playing, upcoming, top rated, airing today, and four genre rows — each streamed in with Suspense.",
       "Search is URL-driven: the query lives in the URL, so results are linkable and the back button works.",
       "An on-demand /api/revalidate endpoint purges TMDB response caches by tag rather than waiting out a TTL.",
       "GitHub and Google OAuth sign-in for a personal watchlist; every browse, detail, and search route works without an account.",
@@ -137,13 +137,13 @@ export const projects: Project[] = [
     liveUrl: "https://my-movies-plum.vercel.app",
     status: "live",
     metrics: [
-      { value: "8", label: "browse rows" },
+      { value: "9", label: "browse rows" },
       { value: "Tag-based", label: "cache revalidation" },
       { value: "Linkable", label: "search lives in the URL" },
     ],
   },
   {
-    slug: "legal",
+    slug: "legal" as const,
     title: "Legal Document Creator",
     shipped: "2026-08",
     summary:
@@ -169,7 +169,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "work-planner",
+    slug: "work-planner" as const,
     title: "Work Planner",
     shipped: "2026-08",
     summary:
@@ -189,7 +189,7 @@ export const projects: Project[] = [
       "Boards, columns and cards backed by a real Postgres schema — well past the health-route scaffold the README still describes.",
       "Keyboard-operable drag and drop between columns, built on dnd-kit.",
       "OAuth-only sign-in (Google and GitHub) gates every board; there is no guest or demo account.",
-      "275 tests across the stack: 200 unit and component, 75 Playwright end-to-end.",
+      "291 tests across the stack: 211 unit and component, 80 Playwright end-to-end.",
     ],
     repo: "https://github.com/JimBimCZ/work-planner",
     liveUrl: "https://work-planner-seven.vercel.app",
@@ -197,11 +197,11 @@ export const projects: Project[] = [
     signInRequired: true,
     metrics: [
       { value: "Postgres", label: "Drizzle + Neon" },
-      { value: "275", label: "tests across the stack" },
+      { value: "291", label: "tests across the stack" },
     ],
   },
   {
-    slug: "kanban",
+    slug: "kanban" as const,
     title: "Kanban MVP",
     shipped: "2026-08",
     summary:
@@ -223,8 +223,12 @@ export const projects: Project[] = [
       { value: "10", label: "tests across the stack" },
     ],
   },
-];
+] satisfies Project[];
 
+// `satisfies` (rather than a `: Project[]` annotation) keeps each entry's literal `slug`
+// type, so this resolves to a union of the six actual slugs, not plain `string`. See the
+// `tsc` runs in the Task 2 fix report for a demonstration that a bogus `evidence` slug in
+// skills.ts is a compile error, not just a runtime test failure.
 export type ProjectSlug = (typeof projects)[number]["slug"];
 
 /** The home page carousel. kanban is deliberately absent — five slides already

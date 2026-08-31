@@ -53,7 +53,7 @@ export const skillGroups: SkillGroup[] = [
       },
       {
         name: "Scheduled jobs",
-        detail: "monthly sweeps, advisory locks, durable partial progress",
+        detail: "a monthly cron job, advisory-locked queues, durable partial progress",
         evidence: ["games-db"],
       },
       {
