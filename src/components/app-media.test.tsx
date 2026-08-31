@@ -1,4 +1,7 @@
 import { render, screen } from "@testing-library/react";
+import { act } from "react";
+import { hydrateRoot } from "react-dom/client";
+import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, expect, test, vi } from "vitest";
 import type { Project } from "@/content/projects";
 import { AppMedia } from "./app-media";
@@ -50,6 +53,30 @@ test("renders no video for a project without a tour", () => {
     <AppMedia project={{ ...project, tour: undefined }} active />,
   );
   expect(container.querySelector("video")).toBeNull();
+});
+
+test("the initial static markup for an active card with a tour carries no video, so a reduced-motion visitor never sees one flash before hydration corrects it", () => {
+  // The server can't know a visitor's OS preference, so the prerendered HTML
+  // (what a reduced-motion visitor's browser paints first, and what
+  // hydration must reconcile against) must default to "no video" rather than
+  // rely on a post-paint effect to remove one.
+  const staticHtml = renderToStaticMarkup(<AppMedia project={project} active />);
+  expect(staticHtml).not.toContain("<video");
+
+  // Hydrate that markup as a reduced-motion visitor's browser would, and
+  // confirm the hydrated DOM stays free of a video too.
+  setReducedMotion(true);
+  const container = document.createElement("div");
+  container.innerHTML = staticHtml;
+  document.body.appendChild(container);
+
+  act(() => {
+    hydrateRoot(container, <AppMedia project={project} active />);
+  });
+
+  expect(container.querySelector("video")).toBeNull();
+
+  document.body.removeChild(container);
 });
 
 test("the video is silent, looping and unobtrusive", () => {

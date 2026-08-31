@@ -44,7 +44,18 @@ export function AppMedia({ project, active }: { project: Project; active: boolea
 }
 
 function usePrefersReducedMotion() {
-  return useSyncExternalStore(subscribeToReducedMotion, getReducedMotionSnapshot, () => false);
+  // The server has no way to know the visitor's OS preference, and this value
+  // is what the very first painted frame (the prerendered HTML, and the
+  // just-hydrated DOM before this hook's client subscription kicks in) is
+  // built from. Defaulting to "not reduced" would mean every visitor with
+  // reduced motion enabled briefly gets a <video> in that first frame — a
+  // real violation of "no video is rendered at all," not a theoretical one,
+  // since Task 5's carousel starts with slide 0 active. Defaulting to
+  // "reduced" instead means the cost lands on non-reduced-motion users, who
+  // see the tour appear a beat after hydration rather than in the first
+  // frame — acceptable, and it keeps the poster the LCP element. Do not
+  // change this back to `() => false`.
+  return useSyncExternalStore(subscribeToReducedMotion, getReducedMotionSnapshot, () => true);
 }
 
 function subscribeToReducedMotion(onChange: () => void) {
