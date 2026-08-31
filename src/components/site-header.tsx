@@ -13,6 +13,18 @@ export function SiteHeader() {
         <Link href="/" className="label text-text hover:text-accent">
           {site.name}
         </Link>
+        <div className="hidden items-center gap-6 sm:flex">
+          <p className="label flex items-center gap-2 text-muted">
+            <span className="size-1.5 rounded-full bg-live" aria-hidden />
+            {site.status}
+          </p>
+          <a
+            href={`mailto:${site.email}`}
+            className="label text-muted hover:text-accent"
+          >
+            {site.email}
+          </a>
+        </div>
         <nav aria-label="Main">
           <ul className="flex items-center gap-6">
             {site.nav.map((item) => {
