@@ -1,7 +1,8 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
-import { formatShipped, getProject, projects } from "./projects";
+import { site } from "./site";
+import { carouselProjects, formatShipped, getProject, projects } from "./projects";
 
 describe("formatShipped", () => {
   test("renders an ISO year-month as a readable date", () => {
@@ -50,5 +51,48 @@ describe("projects", () => {
       expect(existsSync(join(process.cwd(), "public", project.image))).toBe(true);
       expect(project.imageAlt?.length ?? 0).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("carousel projects", () => {
+  test("are ordered with trader first, so first paint is not Steam's storefront", () => {
+    expect(carouselProjects.map((p) => p.slug)).toEqual([
+      "trader",
+      "games-db",
+      "my-movies",
+      "legal",
+      "work-planner",
+    ]);
+  });
+
+  test("every carousel project has a live URL to open", () => {
+    for (const project of carouselProjects) {
+      expect(project.liveUrl).toMatch(/^https:\/\//);
+    }
+  });
+
+  test("every carousel project carries checkable metrics", () => {
+    for (const project of carouselProjects) {
+      expect(project.metrics.length).toBeGreaterThanOrEqual(2);
+      expect(project.metrics.length).toBeLessThanOrEqual(4);
+      for (const metric of project.metrics) {
+        expect(metric.value.length).toBeGreaterThan(0);
+        expect(metric.label.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  test("a project behind sign-in says so, so the card can warn a visitor", () => {
+    for (const project of carouselProjects) {
+      if (!project.signInRequired) continue;
+      expect(project.slug === "legal" || project.slug === "work-planner").toBe(true);
+    }
+  });
+});
+
+describe("the name", () => {
+  test("carries no diacritics", () => {
+    expect(site.name).toBe("Vit Busek");
+    expect(site.name.normalize("NFD")).toBe(site.name);
   });
 });

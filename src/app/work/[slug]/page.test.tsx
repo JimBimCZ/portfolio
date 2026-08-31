@@ -12,12 +12,12 @@ function argsFor(slug: string) {
 test("generates a route for every project", async () => {
   const params = await generateStaticParams();
   expect(params).toContainEqual({ slug: "kanban" });
-  expect(params).toContainEqual({ slug: "legal-document-creator" });
+  expect(params).toContainEqual({ slug: "legal" });
 });
 
 test("renders the project's title, role, and highlights", async () => {
-  const project = getProject("legal-document-creator");
-  render(await ProjectPage(argsFor("legal-document-creator")));
+  const project = getProject("legal");
+  render(await ProjectPage(argsFor("legal")));
 
   expect(
     screen.getByRole("heading", { level: 1, name: project!.title }),

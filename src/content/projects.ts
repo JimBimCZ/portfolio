@@ -4,6 +4,8 @@
  * `shipped` is an ISO year-month and drives both the ordering and the visible
  * date. There are no version numbers because neither repository tags releases.
  */
+export type Metric = { label: string; value: string };
+
 export type Project = {
   slug: string;
   title: string;
@@ -22,6 +24,19 @@ export type Project = {
   /** Path under /public. Screenshots are 1440x900, captured from the running app. */
   image?: string;
   imageAlt?: string;
+  /** The deployment a visitor can open. Required when `status` is "live". */
+  liveUrl?: string;
+  status: "live" | "in-development" | "archived";
+  /** Two to four. Every value must be checkable against the repo or the app. */
+  metrics: Metric[];
+  /** Poster frame, 1440x900. Ships in the static HTML and is the LCP candidate. */
+  poster?: string;
+  posterAlt?: string;
+  /** Silent looping WebM tour, played only while this card is active. */
+  tour?: string;
+  /** Surfaced on the card so a visitor can get past the sign-in wall. */
+  demo?: { email: string; password: string };
+  signInRequired?: boolean;
 };
 
 export const projects: Project[] = [
@@ -55,9 +70,80 @@ export const projects: Project[] = [
     image: "/work/trader.webp",
     imageAlt:
       "The Trader terminal: a streaming watchlist of ten tickers on the left, an AAPL price chart, trade ticket, allocation treemap and positions table in the centre, and the assistant on the right confirming a five-share GOOGL buy it just executed.",
+    liveUrl: "https://trader-jimbimczs-projects.vercel.app",
+    status: "live",
+    metrics: [
+      { value: "2/sec", label: "price ticks streamed" },
+      { value: "846", label: "tests across the stack" },
+      { value: "Lévy", label: "closed-form price clock" },
+    ],
   },
   {
-    slug: "legal-document-creator",
+    slug: "games-db",
+    title: "Games DB",
+    shipped: "2026-08",
+    summary:
+      "A personal PC games catalogue that indexes Steam's entire storefront into Postgres, so browsing, filtering, and search never touch Steam's own rate-limited API.",
+    role: "Solo build — frontend, backend, infrastructure",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind",
+      "Postgres",
+      "Drizzle",
+      "Auth.js",
+      "Vercel",
+      "Docker",
+    ],
+    highlights: [
+      "Its own index of Steam's catalogue — 245,025 appids, 14,621 hydrated with full detail — because Steam has no /discover or /trending endpoint to browse against.",
+      "Search runs on a Postgres trigram index (pg_trgm), not on Steam.",
+      "Four scheduled jobs — catalogue sync, list sync, hydration, and price refresh — each takes an advisory lock so two copies can't run at once.",
+      "GitHub OAuth sign-in for a personal library; browsing and search work for anyone, signed in or not.",
+    ],
+    repo: "https://github.com/JimBimCZ/games-db",
+    liveUrl: "https://games-db-phi.vercel.app",
+    status: "live",
+    metrics: [
+      { value: "245,025", label: "appids indexed" },
+      { value: "14,621", label: "hydrated with detail" },
+      { value: "pg_trgm", label: "trigram search" },
+    ],
+  },
+  {
+    slug: "my-movies",
+    title: "My Movies",
+    shipped: "2026-08",
+    summary:
+      "A personal streaming catalogue pulling from TMDB, presented as a Netflix-style browsing UI with linkable search and a watchlist behind sign-in.",
+    role: "Solo build — frontend, backend, infrastructure",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind",
+      "Postgres",
+      "Drizzle",
+      "Auth.js",
+      "Vercel",
+      "Docker",
+    ],
+    highlights: [
+      "Eight browse rows on the home page — trending, upcoming, top rated, airing today, and four genre rows — each streamed in with Suspense.",
+      "Search is URL-driven: the query lives in the URL, so results are linkable and the back button works.",
+      "An on-demand /api/revalidate endpoint purges TMDB response caches by tag rather than waiting out a TTL.",
+      "GitHub and Google OAuth sign-in for a personal watchlist; every browse, detail, and search route works without an account.",
+    ],
+    repo: "https://github.com/JimBimCZ/my_movies",
+    liveUrl: "https://my-movies-plum.vercel.app",
+    status: "live",
+    metrics: [
+      { value: "8", label: "browse rows" },
+      { value: "Tag-based", label: "cache revalidation" },
+      { value: "Linkable", label: "search lives in the URL" },
+    ],
+  },
+  {
+    slug: "legal",
     title: "Legal Document Creator",
     shipped: "2026-08",
     summary:
@@ -67,13 +153,52 @@ export const projects: Project[] = [
     highlights: [
       "The model replies against a Pydantic schema generated from each template's own fields, so a turn can only come back as valid, typed values.",
       "A turn is saved only after the model call succeeds — a failed request leaves nothing behind and is safe to retry.",
-      "136 tests across the stack: 65 on the backend, 71 on the frontend.",
+      "161 tests across the stack: 86 on the backend, 75 on the frontend.",
       "One container, one origin. A multi-stage build compiles the Next.js export and FastAPI serves it, so there is no CORS layer to configure.",
     ],
     repo: "https://github.com/JimBimCZ/legal",
     image: "/work/legal.webp",
     imageAlt:
       "The app filling in a mutual NDA: chat transcript on the left, live document preview on the right showing all ten fields completed.",
+    liveUrl: "https://legal-seven-zeta.vercel.app",
+    status: "live",
+    signInRequired: true,
+    metrics: [
+      { value: "11", label: "Common Paper templates" },
+      { value: "161", label: "tests across the stack" },
+    ],
+  },
+  {
+    slug: "work-planner",
+    title: "Work Planner",
+    shipped: "2026-08",
+    summary:
+      "A collaborative kanban board, JIRA-board style: multiple boards per user, keyboard-operable drag and drop, due dates, and OAuth-only sign-in.",
+    role: "Solo build — frontend, backend, infrastructure",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind",
+      "Postgres",
+      "Drizzle",
+      "Auth.js",
+      "Vercel",
+      "Docker",
+    ],
+    highlights: [
+      "Boards, columns and cards backed by a real Postgres schema — well past the health-route scaffold the README still describes.",
+      "Keyboard-operable drag and drop between columns, built on dnd-kit.",
+      "OAuth-only sign-in (Google and GitHub) gates every board; there is no guest or demo account.",
+      "275 tests across the stack: 200 unit and component, 75 Playwright end-to-end.",
+    ],
+    repo: "https://github.com/JimBimCZ/work-planner",
+    liveUrl: "https://work-planner-seven.vercel.app",
+    status: "live",
+    signInRequired: true,
+    metrics: [
+      { value: "Postgres", label: "Drizzle + Neon" },
+      { value: "275", label: "tests across the stack" },
+    ],
   },
   {
     slug: "kanban",
@@ -92,8 +217,31 @@ export const projects: Project[] = [
     repo: "https://github.com/JimBimCZ/kanban",
     image: "/work/kanban.webp",
     imageAlt: "The kanban board with cards distributed across its columns.",
+    status: "in-development",
+    metrics: [
+      { value: "5", label: "renameable columns" },
+      { value: "10", label: "tests across the stack" },
+    ],
   },
 ];
+
+export type ProjectSlug = (typeof projects)[number]["slug"];
+
+/** The home page carousel. kanban is deliberately absent — five slides already
+ *  risk repetition and it is the weakest of the set. */
+const CAROUSEL_ORDER = [
+  "trader",
+  "games-db",
+  "my-movies",
+  "legal",
+  "work-planner",
+] as const;
+
+export const carouselProjects = CAROUSEL_ORDER.map((slug) => {
+  const project = getProject(slug);
+  if (!project) throw new Error(`carousel references unknown project: ${slug}`);
+  return project;
+});
 
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
