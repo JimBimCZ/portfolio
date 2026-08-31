@@ -20,7 +20,7 @@ test("leads with the carousel of deployed applications", () => {
   ).toBeInTheDocument();
 });
 
-test("answers 'is this person available' without navigating", () => {
+test("states availability in the hero's spec block, without navigating", () => {
   render(<Home />);
   expect(screen.getByText(/open to new work/i)).toBeInTheDocument();
 });

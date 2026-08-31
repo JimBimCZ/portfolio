@@ -33,7 +33,7 @@ export function SkillMatrix({ groups }: { groups: SkillGroup[] }) {
                               href={href}
                               target={external ? "_blank" : undefined}
                               rel={external ? "noopener noreferrer" : undefined}
-                              className="label text-accent hover:opacity-80"
+                              className="label text-muted hover:text-accent"
                             >
                               {slug}
                             </Link>

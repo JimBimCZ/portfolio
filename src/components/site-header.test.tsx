@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test, vi } from "vitest";
+import { site } from "@/content/site";
 import { SiteHeader } from "./site-header";
 
 const pathname = vi.hoisted(() => ({ current: "/" }));
@@ -26,4 +27,24 @@ test("marks nothing as current on the home page", () => {
   for (const name of ["Work", "About", "Contact"]) {
     expect(screen.getByRole("link", { name })).not.toHaveAttribute("aria-current");
   }
+});
+
+test("shows the live-availability status", () => {
+  render(<SiteHeader />);
+  const status = screen.getByText(site.status);
+  expect(status.querySelector(".bg-live")).not.toBeNull();
+});
+
+test("offers a mailto link for direct contact", () => {
+  render(<SiteHeader />);
+  const link = screen.getByRole("link", { name: site.email });
+  expect(link).toHaveAttribute("href", `mailto:${site.email}`);
+});
+
+test("hides availability and email below the sm breakpoint", () => {
+  render(<SiteHeader />);
+  const link = screen.getByRole("link", { name: site.email });
+  const group = link.closest(".hidden");
+  expect(group).not.toBeNull();
+  expect(group).toHaveClass("sm:flex");
 });
