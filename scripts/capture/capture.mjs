@@ -37,15 +37,32 @@ for (const [slug, tour] of targets) {
 
   try {
     await page.goto(tour.url, { waitUntil: "networkidle", timeout: 60_000 });
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(1500);
 
-    // Poster first, before the tour moves anything, so the still is a clean
-    // resting state rather than a half-finished interaction.
+    // A tour can define `prepare` for an app whose resting state undersells
+    // it (trader's untouched home screen has an empty positions table and
+    // an empty performance chart). It runs before the poster is taken, so
+    // the still shows the app populated instead. A failed prepare must
+    // degrade to the plain resting-state poster, never fail the capture —
+    // guarded the same way tour.run's own steps are.
+    if (tour.prepare) {
+      try {
+        await tour.prepare(page);
+      } catch (error) {
+        console.log(
+          `  prepare failed for ${slug}, poster falls back to resting state: ${String(error).split("\n")[0]}`,
+        );
+      }
+    }
+
+    // Poster after prepare (if any), before the rest of the tour moves
+    // anything, so the still is a settled state rather than a half-finished
+    // interaction.
     const shot = await page.screenshot();
     await sharp(shot).resize(VIEWPORT.width, VIEWPORT.height).webp({ quality: 82 })
       .toFile(join(OUT, `${slug}.webp`));
 
-    await tour.run(page);
+    if (tour.run) await tour.run(page);
 
     const video = page.video();
     await context.close(); // flushes the video file

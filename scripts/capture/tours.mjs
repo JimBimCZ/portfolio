@@ -1,7 +1,15 @@
 /**
- * One scripted tour per app. Keep them under ~12 seconds: the card loops them.
- * A tour shows the app working — Trader's untouched home screen has an empty
- * positions table and an empty performance chart, which undersells it badly.
+ * One scripted tour per app. Videos loop on the card, so keep them tight —
+ * roughly 15 seconds is the target, though a slow cold start on a live
+ * serverless deployment can push that out.
+ *
+ * A tour can also export `prepare(page)`, which runs once before the poster
+ * frame is captured (and before `run`). Use it when the resting state is a
+ * bad first impression — trader's untouched home screen has an empty
+ * positions table and an empty performance chart, which undersells it badly
+ * — to leave the app populated before the still is taken. Apps whose resting
+ * state is already good (games-db, my-movies, the two sign-in screens) don't
+ * define one.
  *
  * URLs here must match `liveUrl` in src/content/projects.ts, which is the
  * source of truth for where each app is deployed.
@@ -19,12 +27,29 @@ async function maybe(action) {
 export const tours = {
   trader: {
     url: "https://trader-jimbimczs-projects.vercel.app",
-    async run(page) {
+    async prepare(page) {
       await maybe(async () => {
-        await page.getByPlaceholder("UNITS").fill("5");
-        await page.getByRole("button", { name: "Buy" }).click();
-        await settle(page, 2500); // positions table and allocation fill in
+        // The quantity field's placeholder is "0" — "UNITS" is the column
+        // label above it, not placeholder text. Its accessible name is the
+        // reliable thing to key off; it survives a copy change that a
+        // placeholder-based locator wouldn't.
+        await page.getByLabel("Ticker to trade").fill("AAPL");
+        await page.getByLabel("Quantity to trade").fill("5");
+        await page.getByTestId("buy-button").click();
+        // The fill confirmation depends on a live-priced trade round trip,
+        // which on a cold serverless instance can take a few seconds — wait
+        // for the dialog itself rather than guessing with a fixed delay, so
+        // a slow trade still lands before the poster is taken.
+        await page.getByRole("button", { name: "Done" }).waitFor({ state: "visible", timeout: 8_000 });
+        await page.getByRole("button", { name: "Done" }).click();
+        // The Positions/Allocation panels refetch right after the dialog
+        // closes and briefly still show the pre-trade empty state before
+        // they catch up — give that refetch time to land before the poster
+        // is taken, or the still can show "0 open" despite a real position.
+        await settle(page, 2500);
       });
+    },
+    async run(page) {
       await maybe(async () => {
         await page.getByPlaceholder(/Ask or instruct/i).fill("How is my portfolio doing?");
         await page.getByRole("button", { name: "Send" }).click();
@@ -59,8 +84,9 @@ export const tours = {
       });
     },
   },
-  // legal and work-planner sit behind sign-in. Their tours log in with the demo
-  // account first; until those accounts exist, the tour is the sign-in screen.
+  // legal sits behind a real email/password sign-in. Until a demo account
+  // exists (LEGAL_DEMO_EMAIL / LEGAL_DEMO_PASSWORD unset), the tour is just
+  // the sign-in screen.
   legal: {
     url: "https://legal-seven-zeta.vercel.app",
     async run(page) {
@@ -75,18 +101,10 @@ export const tours = {
       });
     },
   },
+  // work-planner is OAuth-only (Google, GitHub) — there is no email/password
+  // form on its sign-in screen, so no demo account could ever drive it past
+  // that point. The poster and video are the sign-in screen itself.
   "work-planner": {
     url: "https://work-planner-seven.vercel.app",
-    async run(page) {
-      const email = process.env.PLANNER_DEMO_EMAIL;
-      const password = process.env.PLANNER_DEMO_PASSWORD;
-      if (!email || !password) return;
-      await maybe(async () => {
-        await page.getByLabel("Email").fill(email);
-        await page.getByLabel("Password").fill(password);
-        await page.getByRole("button", { name: /sign in/i }).click();
-        await settle(page, 3000);
-      });
-    },
   },
 };

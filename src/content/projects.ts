@@ -79,7 +79,7 @@ export const projects = [
     ],
     poster: "/work/trader.webp",
     posterAlt:
-      "The Trader terminal at rest: a ten-ticker watchlist on the left, an AAPL price chart and empty trade ticket in the centre, and the assistant's prompt suggestions on the right.",
+      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart above the open position and a rising performance chart in the centre, and the assistant's prompt suggestions on the right.",
     tour: "/work/trader.webm",
   },
   {
