@@ -48,7 +48,7 @@ Screenshots live in `public/work/` and are referenced by `image`. They are real 
 
 `ProjectRow` puts a stretched link (`after:absolute after:inset-0`) on the title so the whole row is clickable. That is what keeps the repository link a valid sibling rather than an anchor nested inside another anchor — if you add more links to a row, they need `relative` to sit above the stretched one.
 
-Routes: `/` (hero + featured), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the three fonts, the metadata template (`%s — Vít Bušek`), and the header/footer shell.
+Routes: `/` (hero + featured), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
 
 `src/components/` is presentational and unaware of routing, with one exception: `site-header.tsx` is a Client Component because it reads `usePathname` for the active nav state. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs.
 
@@ -56,8 +56,9 @@ Routes: `/` (hero + featured), `/work` (full log), `/work/[slug]`, `/about`, `/c
 
 Tailwind v4, configured in CSS. There is no `tailwind.config.js`; the theme lives in `@theme inline` inside `src/app/globals.css`.
 
-- **Never write `dark:` variants.** Both themes define the same semantic tokens (`canvas`, `surface`, `line`, `text`, `muted`, `accent`, `accent-soft`) and `prefers-color-scheme` swaps the values underneath. Use `bg-canvas text-muted border-line`; the theme follows for free. A raw hex or a `dark:` prefix in a component means a token is missing — add the token instead.
-- Three type roles, three faces: `font-display` (Bricolage Grotesque, headings only), `font-body` (Newsreader, the default), `font-mono` (JetBrains Mono, metadata).
+- **Never write `dark:` variants.** Dark is the default: `:root` holds the dark values and `@media (prefers-color-scheme: light)` swaps them underneath the same semantic tokens (`canvas`, `surface`, `raised`, `line`, `line-soft`, `text`, `muted`, `dim`, `accent`, `accent-soft`, `live`). Use `bg-canvas text-muted border-line`; both themes follow for free. A raw hex or a `dark:` prefix in a component means a token is missing — add the token instead.
+- Two type roles, two faces: `font-display`/`font-body` (Schibsted Grotesk) and `font-mono` (JetBrains Mono, for numbers, URLs, labels and evidence tags).
+- Token contrast is enforced by `src/content/theme.test.ts`, which parses `globals.css` and fails the suite if any pair drops below AA. Change a colour and run `npm test -- theme` before anything else.
 - The `label` utility (defined in `globals.css`) is the small-caps mono treatment used for eyebrows, versions, field names, and buttons. Reach for it before hand-rolling `text-xs uppercase tracking-*`.
 - Accent is used sparingly and carries meaning: active nav, ship dates, the spec-block keys and corner ticks, the primary button. Adding more accent dilutes it.
 

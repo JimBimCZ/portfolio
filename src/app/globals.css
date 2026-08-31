@@ -1,40 +1,52 @@
 @import "tailwindcss";
 
-/* Semantic tokens. Both themes define every role, so components never need
-   a `dark:` variant — the value under the token swaps instead. */
+/* Graphite. Dark is the default; the light block swaps the values underneath the
+   same tokens, so no component ever needs a `dark:` variant. */
 :root {
-  --canvas: #e8e6df;
-  --surface: #f3f1ec;
-  --line: #d3cfc5;
-  --text: #14181c;
-  --muted: #5c646b;
-  --accent: #8a6a12;
-  --accent-soft: rgb(138 106 18 / 0.1);
+  --canvas: #14171B;
+  --surface: #1C2127;
+  --raised: #232931;
+  --line: #2E353E;
+  --line-soft: #262C34;
+  --text: #E6E9ED;
+  --muted: #8E97A2;
+  --dim: #7C8590;
+  --accent: #7BA3CC;
+  --accent-soft: rgb(123 163 204 / 0.13);
+  --live: #6FBE93;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --canvas: #0f1317;
-    --surface: #161b21;
-    --line: #242c34;
-    --text: #e6e4de;
-    --muted: #97a0a8;
-    --accent: #c9a227;
-    --accent-soft: rgb(201 162 39 / 0.1);
+    --canvas: #E9EAEC;
+    --surface: #FCFCFD;
+    --raised: #F3F4F6;
+    --line: #DEE1E5;
+    --line-soft: #E9EAEE;
+    --text: #1A1D21;
+    --muted: #545B63;
+    --dim: #636A72;
+    --accent: #3D6B8C;
+    --accent-soft: rgb(61 107 140 / 0.10);
+    --live: #2D724D;
   }
 }
 
 @theme inline {
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
+  --color-raised: var(--raised);
   --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
   --color-text: var(--text);
   --color-muted: var(--muted);
+  --color-dim: var(--dim);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-live: var(--live);
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-display: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 }
 

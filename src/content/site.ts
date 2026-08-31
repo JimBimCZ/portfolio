@@ -3,7 +3,7 @@
  * Edit this first — pages read from it rather than hardcoding copy.
  */
 export const site = {
-  name: "Vít Busek",
+  name: "Vit Busek",
   role: "Frontend & AI engineer",
   location: "Brno, CZ",
   tagline: "I build AI features that behave like software, not demos.",
