@@ -1,6 +1,6 @@
 # Portfolio
 
-Personal site for Vít Bušek. Next.js 16 (App Router), React 19, Tailwind v4, TypeScript. Fully static — every route is prerendered at build time.
+Personal site for Vit Busek. Next.js 16 (App Router), React 19, Tailwind v4, TypeScript. Fully static — every route is prerendered at build time.
 
 ## Develop
 
