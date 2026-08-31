@@ -8,7 +8,7 @@ test("a visitor can get from the home page to a project's source", async ({ page
   await expect(page).toHaveURL("/work");
 
   await page.getByRole("link", { name: "Legal Document Creator" }).click();
-  await expect(page).toHaveURL("/work/legal-document-creator");
+  await expect(page).toHaveURL("/work/legal");
   await expect(
     page.getByRole("heading", { level: 1, name: "Legal Document Creator" }),
   ).toBeVisible();

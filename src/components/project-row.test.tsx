@@ -14,6 +14,8 @@ const project: Project = {
   repo: "https://github.com/JimBimCZ/example",
   image: "/work/legal.webp",
   imageAlt: "A screenshot of the example project.",
+  status: "live",
+  metrics: [{ label: "tests", value: "1" }],
 };
 
 function renderRow(overrides: Partial<Project> = {}) {
