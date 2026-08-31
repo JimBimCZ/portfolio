@@ -39,9 +39,9 @@ export default function Home() {
         <SpecBlock rows={site.manifest} />
       </section>
 
-      <section aria-label="Deployed applications" className="py-12">
+      <div className="py-12">
         <AppCarousel projects={carouselProjects} />
-      </section>
+      </div>
 
       <section aria-labelledby="what-each-one-is" className="py-16">
         <div className="flex items-baseline justify-between gap-6">
