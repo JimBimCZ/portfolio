@@ -69,7 +69,7 @@ export const projects = [
       "The demo runs the serverless build with no database attached, so the portfolio starts at $10,000 and resets whenever the instance is recycled.",
     image: "/work/trader.webp",
     imageAlt:
-      "The Trader terminal: a streaming watchlist of ten tickers on the left, an AAPL price chart, trade ticket, allocation treemap and positions table in the centre, and the assistant on the right confirming a five-share GOOGL buy it just executed.",
+      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart, trade ticket, allocation panel, session P&L chart and positions table in the centre, and the assistant's prompt suggestions on the right.",
     liveUrl: "https://trader-jimbimczs-projects.vercel.app",
     status: "live",
     metrics: [
@@ -77,6 +77,10 @@ export const projects = [
       { value: "846", label: "tests across the stack" },
       { value: "Lévy", label: "closed-form price clock" },
     ],
+    poster: "/work/trader.webp",
+    posterAlt:
+      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart above the open position and a session P&L chart in the centre, and the assistant's prompt suggestions on the right.",
+    tour: "/work/trader.webm",
   },
   {
     slug: "games-db" as const,
@@ -109,6 +113,10 @@ export const projects = [
       { value: "14,621", label: "hydrated with detail" },
       { value: "pg_trgm", label: "trigram search" },
     ],
+    poster: "/work/games-db.webp",
+    posterAlt:
+      "Games DB's home page: a featured game banner above a Top Sellers grid of game cover art, prices, and discount badges.",
+    tour: "/work/games-db.webm",
   },
   {
     slug: "my-movies" as const,
@@ -141,6 +149,10 @@ export const projects = [
       { value: "Tag-based", label: "cache revalidation" },
       { value: "Linkable", label: "search lives in the URL" },
     ],
+    poster: "/work/my-movies.webp",
+    posterAlt:
+      "My Movies' home page: a full-bleed hero for a trending title with its synopsis and a More Info button, above a Trending This Week row of poster thumbnails.",
+    tour: "/work/my-movies.webm",
   },
   {
     slug: "legal" as const,
@@ -159,7 +171,7 @@ export const projects = [
     repo: "https://github.com/JimBimCZ/legal",
     image: "/work/legal.webp",
     imageAlt:
-      "The app filling in a mutual NDA: chat transcript on the left, live document preview on the right showing all ten fields completed.",
+      "Legal Document Creator's sign-in screen: an email and password form beneath the app name, with a Need an account? Sign up link below it.",
     liveUrl: "https://legal-seven-zeta.vercel.app",
     status: "live",
     signInRequired: true,
@@ -167,6 +179,10 @@ export const projects = [
       { value: "11", label: "Common Paper templates" },
       { value: "161", label: "tests across the stack" },
     ],
+    poster: "/work/legal.webp",
+    posterAlt:
+      "Legal Document Creator's sign-in screen: an email and password form under the app name, with no demo account available yet.",
+    tour: "/work/legal.webm",
   },
   {
     slug: "work-planner" as const,
@@ -199,6 +215,10 @@ export const projects = [
       { value: "Postgres", label: "Drizzle + Neon" },
       { value: "291", label: "tests across the stack" },
     ],
+    poster: "/work/work-planner.webp",
+    posterAlt:
+      "Work Planner's sign-in screen: the app name above Continue with Google and Continue with GitHub buttons, with no guest or demo account available.",
+    tour: "/work/work-planner.webm",
   },
   {
     slug: "kanban" as const,

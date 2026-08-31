@@ -90,6 +90,23 @@ describe("carousel projects", () => {
   });
 });
 
+describe("carousel media", () => {
+  test("every declared poster exists and is described for screen readers", () => {
+    for (const project of carouselProjects) {
+      expect(project.poster, `${project.slug} has no poster`).toBeDefined();
+      expect(existsSync(join(process.cwd(), "public", project.poster!))).toBe(true);
+      expect(project.posterAlt?.length ?? 0).toBeGreaterThan(0);
+    }
+  });
+
+  test("every declared tour exists on disk", () => {
+    for (const project of carouselProjects) {
+      if (!project.tour) continue;
+      expect(existsSync(join(process.cwd(), "public", project.tour))).toBe(true);
+    }
+  });
+});
+
 describe("the name", () => {
   test("carries no diacritics", () => {
     expect(site.name).toBe("Vit Busek");
