@@ -33,9 +33,19 @@ for (const [slug, tour] of targets) {
     colorScheme: "dark",
     recordVideo: { dir: TMP, size: VIEWPORT },
   });
-  const page = await context.newPage();
 
   try {
+    // Warm the deployment before the recorded pass. The first load of a
+    // sleeping Vercel function and an uncached CDN can take many seconds,
+    // and that wait was landing straight in the recorded video. This
+    // throwaway page shares the context's cache and cookies with the real
+    // page that follows, but its own video is discarded (never renamed out
+    // of TMP, so the closing rmSync sweeps it away).
+    const warmup = await context.newPage();
+    await warmup.goto(tour.url, { waitUntil: "networkidle", timeout: 60_000 });
+    await warmup.close();
+
+    const page = await context.newPage();
     await page.goto(tour.url, { waitUntil: "networkidle", timeout: 60_000 });
     await page.waitForTimeout(1500);
 
