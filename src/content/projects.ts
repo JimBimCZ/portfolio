@@ -77,6 +77,10 @@ export const projects = [
       { value: "846", label: "tests across the stack" },
       { value: "Lévy", label: "closed-form price clock" },
     ],
+    poster: "/work/trader.webp",
+    posterAlt:
+      "The Trader terminal at rest: a ten-ticker watchlist on the left, an AAPL price chart and empty trade ticket in the centre, and the assistant's prompt suggestions on the right.",
+    tour: "/work/trader.webm",
   },
   {
     slug: "games-db" as const,
@@ -109,6 +113,10 @@ export const projects = [
       { value: "14,621", label: "hydrated with detail" },
       { value: "pg_trgm", label: "trigram search" },
     ],
+    poster: "/work/games-db.webp",
+    posterAlt:
+      "Games DB's home page: a featured Counter-Strike 2 banner above a Top Sellers grid of game cover art, prices, and discount badges.",
+    tour: "/work/games-db.webm",
   },
   {
     slug: "my-movies" as const,
@@ -141,6 +149,10 @@ export const projects = [
       { value: "Tag-based", label: "cache revalidation" },
       { value: "Linkable", label: "search lives in the URL" },
     ],
+    poster: "/work/my-movies.webp",
+    posterAlt:
+      "My Movies' home page: a full-bleed hero for The Whisper Man with its synopsis and a More Info button, above a Trending This Week row of poster thumbnails.",
+    tour: "/work/my-movies.webm",
   },
   {
     slug: "legal" as const,
@@ -167,6 +179,10 @@ export const projects = [
       { value: "11", label: "Common Paper templates" },
       { value: "161", label: "tests across the stack" },
     ],
+    poster: "/work/legal.webp",
+    posterAlt:
+      "Legal Document Creator's sign-in screen: an email and password form under the app name, with no demo account available yet.",
+    tour: "/work/legal.webm",
   },
   {
     slug: "work-planner" as const,
@@ -199,6 +215,10 @@ export const projects = [
       { value: "Postgres", label: "Drizzle + Neon" },
       { value: "291", label: "tests across the stack" },
     ],
+    poster: "/work/work-planner.webp",
+    posterAlt:
+      "Work Planner's sign-in screen: the app name above Continue with Google and Continue with GitHub buttons, with no guest or demo account available.",
+    tour: "/work/work-planner.webm",
   },
   {
     slug: "kanban" as const,
