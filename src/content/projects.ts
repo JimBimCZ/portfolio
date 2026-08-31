@@ -209,7 +209,7 @@ export const projects = [
     ],
     repo: "https://github.com/JimBimCZ/work-planner",
     liveUrl: "https://work-planner-seven.vercel.app",
-    status: "live",
+    status: "in-development",
     signInRequired: true,
     metrics: [
       { value: "Postgres", label: "Drizzle + Neon" },

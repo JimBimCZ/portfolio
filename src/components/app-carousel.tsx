@@ -35,7 +35,7 @@ export function AppCarousel({ projects }: { projects: Project[] }) {
   };
 
   return (
-    <section aria-label="Deployed applications">
+    <section>
       <div className="relative">
         <div
           role="group"

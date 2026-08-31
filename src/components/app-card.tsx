@@ -20,6 +20,10 @@ export function AppCard({ project, active }: { project: Project; active: boolean
       // of the Tab order, so a sighted keyboard user's focus never lands on
       // something they can't see.
       tabIndex={active ? undefined : -1}
+      // With aria-hidden dropped, all five links sit in the tree at once —
+      // aria-current is what tells a screen-reader user (e.g. browsing a
+      // rotor links list, not the tablist) which one matches the screen.
+      aria-current={active ? "true" : undefined}
       className="block overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-accent"
     >
       <div className="flex items-center gap-3 border-b border-line-soft bg-raised px-4 py-2.5">

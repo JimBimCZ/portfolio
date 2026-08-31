@@ -73,3 +73,13 @@ test("the active card's link stays in the normal tab order", () => {
   render(<AppCard project={project} active />);
   expect(screen.getByRole("link", { name: /Trader/ })).not.toHaveAttribute("tabIndex");
 });
+
+test("the active card's link is marked aria-current, so AT users can tell it apart from the other four", () => {
+  render(<AppCard project={project} active />);
+  expect(screen.getByRole("link", { name: /Trader/ })).toHaveAttribute("aria-current", "true");
+});
+
+test("an inactive card's link carries no aria-current", () => {
+  render(<AppCard project={project} active={false} />);
+  expect(screen.getByRole("link", { name: /Trader/ })).not.toHaveAttribute("aria-current");
+});
