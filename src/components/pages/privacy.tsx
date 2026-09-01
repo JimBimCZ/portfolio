@@ -1,9 +1,9 @@
 import { SpecBlock } from "@/components/spec-block";
-import type { Copy } from "@/content/copy";
+import type { Copy, Locale } from "@/content/copy";
 import { formatShipped } from "@/content/projects";
 import { site } from "@/content/site";
 
-export function PrivacyPage({ copy }: { copy: Copy }) {
+export function PrivacyPage({ copy, locale }: { copy: Copy; locale: Locale }) {
   return (
     <div className="mx-auto max-w-3xl px-6 py-20">
       <h1 className="font-display text-[clamp(2rem,5vw,3.25rem)] font-semibold tracking-[-0.03em]">
@@ -39,7 +39,7 @@ export function PrivacyPage({ copy }: { copy: Copy }) {
       </div>
 
       <p className="mt-14 font-mono text-sm text-dim">
-        {copy.pages.privacy.updated} {formatShipped(copy.person.privacy.updated, "en")}.
+        {copy.pages.privacy.updated} {formatShipped(copy.person.privacy.updated, locale)}.
       </p>
     </div>
   );

@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <PrivacyPage copy={copy} />;
+  return <PrivacyPage copy={copy} locale="en" />;
 }
