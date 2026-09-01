@@ -16,10 +16,12 @@ const SWIPE_THRESHOLD_PX = 40;
  */
 export function AppCarousel({
   projects,
-  copy,
+  labels,
+  inDevelopment,
 }: {
   projects: LocalisedProject[];
-  copy: Copy;
+  labels: Copy["ui"]["carousel"];
+  inDevelopment: string;
 }) {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -42,7 +44,7 @@ export function AppCarousel({
   };
 
   return (
-    <section aria-label={copy.ui.carousel.region} aria-roledescription="carousel">
+    <section aria-label={labels.region} aria-roledescription="carousel">
       <div className="relative">
         <div
           className="overflow-hidden"
@@ -60,27 +62,32 @@ export function AppCarousel({
                   position === index ? "opacity-100" : "opacity-35"
                 }`}
               >
-                <AppCard project={project} active={position === index} copy={copy} />
+                <AppCard
+                  project={project}
+                  active={position === index}
+                  labels={labels}
+                  inDevelopment={inDevelopment}
+                />
               </div>
             ))}
           </div>
         </div>
 
         <CarouselButton
-          label={copy.ui.carousel.previous}
+          label={labels.previous}
           onClick={() => move(-1)}
           className="left-0"
         >
           ‹
         </CarouselButton>
-        <CarouselButton label={copy.ui.carousel.next} onClick={() => move(1)} className="right-0">
+        <CarouselButton label={labels.next} onClick={() => move(1)} className="right-0">
           ›
         </CarouselButton>
       </div>
 
       <div
         role="tablist"
-        aria-label={copy.ui.carousel.tablist}
+        aria-label={labels.tablist}
         className="mt-3 flex gap-1 overflow-x-auto rounded-lg border border-line-soft bg-raised p-1"
         onKeyDown={(event) => {
           if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;

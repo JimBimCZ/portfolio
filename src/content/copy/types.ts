@@ -6,6 +6,8 @@ export type Locale = (typeof LOCALES)[number];
 /** Chrome: strings that belong to the shell rather than to one page. */
 export type UiCopy = {
   nav: { work: string; about: string; contact: string };
+  /** Accessible name of the header's <nav> landmark. */
+  navLabel: string;
   privacy: string;
   languageSwitch: { label: string; en: string; cs: string };
   carousel: {
@@ -32,6 +34,8 @@ export type JobCopy = {
 export type PersonCopy = {
   role: string;
   location: string;
+  /** Location plus timezone abbreviation, as read on the contact page and the spec block's "based" row. */
+  locationWithTimezone: string;
   tagline: string;
   intro: string;
   status: string;
@@ -93,6 +97,7 @@ export type SkillCopy = { name: string; detail: string };
 export type SkillGroupCopy = { title: string; skills: Record<string, SkillCopy> };
 
 export type Copy = {
+  locale: Locale;
   ui: UiCopy;
   person: PersonCopy;
   pages: PagesCopy;

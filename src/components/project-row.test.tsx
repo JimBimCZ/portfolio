@@ -24,7 +24,7 @@ const project: LocalisedProject = {
 function renderRow(overrides: Partial<LocalisedProject> = {}) {
   return render(
     <ul>
-      <ProjectRow project={{ ...project, ...overrides }} copy={copy} />
+      <ProjectRow project={{ ...project, ...overrides }} copy={copy} locale="en" />
     </ul>,
   );
 }
@@ -89,4 +89,26 @@ test("links to the live demo separately from the title", () => {
 test("omits the live demo link when a project has no live URL", () => {
   renderRow();
   expect(screen.queryByRole("link", { name: "Live demo" })).toBeNull();
+});
+
+test("names the ship date for screen readers", () => {
+  renderRow();
+  expect(screen.getByText("Shipped August 2026")).toBeInTheDocument();
+});
+
+// Regression: the row formatted its date with a hardcoded "en", so a Czech
+// page announced an English month.
+test("announces the ship date in the row's own locale", () => {
+  const csCopy = getCopy("cs");
+  render(
+    <ul>
+      <ProjectRow project={project} copy={csCopy} locale="cs" />
+    </ul>,
+  );
+
+  expect(screen.getByText("Nasazeno: srpen 2026")).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Example Project" })).toHaveAttribute(
+    "href",
+    "/cs/work/example",
+  );
 });

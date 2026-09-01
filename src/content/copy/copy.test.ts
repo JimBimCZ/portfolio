@@ -1,12 +1,47 @@
 import { describe, expect, test } from "vitest";
-import { LOCALES, getCopy } from "./index";
+import { LOCALES, counterpart, getCopy } from "./index";
 import { cs } from "./cs";
 import { en } from "./en";
+
+describe("counterpart", () => {
+  test("maps an English path into the Czech tree", () => {
+    expect(counterpart("/work/trader")).toBe("/cs/work/trader");
+  });
+
+  test("maps a Czech path back into the English tree", () => {
+    expect(counterpart("/cs/work/trader")).toBe("/work/trader");
+  });
+
+  test("maps each home page to the other", () => {
+    expect(counterpart("/")).toBe("/cs");
+    expect(counterpart("/cs")).toBe("/");
+  });
+});
 
 describe("copy", () => {
   test("every locale resolves to a dictionary", () => {
     for (const locale of LOCALES) {
       expect(getCopy(locale), locale).toBeDefined();
+    }
+  });
+
+  // `dictionaries` in `./index` keys each Copy object by locale independently
+  // of the object's own `locale` field — nothing stops the two from drifting
+  // (a bad edit, or a third locale copy-pasted from an existing dictionary).
+  // localise.ts's formatMetricValue trusts `copy.locale` to decide whether to
+  // reformat a metric value, so a drift here would silently mis-format
+  // English (or under-format Czech) with no other test catching it directly.
+  test("each dictionary's own locale field matches the key it is registered under", () => {
+    for (const locale of LOCALES) {
+      expect(getCopy(locale).locale, locale).toBe(locale);
+    }
+  });
+
+  // `global-not-found.tsx` has no parent layout, so it applies the template by
+  // hand. Lose the placeholder and its title silently becomes the raw template.
+  test("every title template keeps its placeholder", () => {
+    for (const locale of LOCALES) {
+      expect(getCopy(locale).meta.titleTemplate, locale).toContain("%s");
     }
   });
 
