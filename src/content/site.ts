@@ -77,4 +77,40 @@ export const site = {
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
+  /**
+   * The privacy notice. Content lives here like everything else, so the page
+   * holds no copy of its own. `updated` is an ISO year-month, same as
+   * `shipped` on a project. Change it whenever a row or section below changes.
+   */
+  privacy: {
+    updated: "2026-09",
+    summary: [
+      ["cookies", "None set, none read"],
+      ["analytics", "None, no tracking script of any kind"],
+      ["fonts", "Self-hosted, so no request reaches Google"],
+      ["forms", "None, contact is a mailto link"],
+    ] satisfies [string, string][],
+    sections: [
+      {
+        heading: "Why there is no cookie banner",
+        body:
+          "Consent is required for storing or reading information on your device. This site does neither: no cookies, no local storage, no third-party embeds, no analytics. There is nothing to ask you to accept. The two typefaces are downloaded when the site is built and served from this domain, so opening a page here tells Google nothing.",
+      },
+      {
+        heading: "What the server records",
+        body:
+          "The site is hosted on Vercel, which logs each request the way any web server does: IP address, the page asked for, a timestamp and a browser string. Vercel holds those logs as my processor, under its own retention policy, and they exist to serve pages and keep the platform running. I do not export them, combine them with anything, or use them to work out who you are.",
+      },
+      {
+        heading: "If you write to me",
+        body:
+          "Then I hold what you chose to send, in my mailbox, for as long as the conversation is useful — for a role or a project, usually the length of it and a reasonable while after. There is no mailing list to be added to.",
+      },
+      {
+        heading: "Your rights",
+        body:
+          "You can ask what I hold about you, ask for it corrected or deleted, and object to my holding it at all. Write to the address above and I will answer. If my answer does not satisfy you, you can complain to the Czech data protection authority, the Úřad pro ochranu osobních údajů, at uoou.gov.cz.",
+      },
+    ],
+  },
 };
