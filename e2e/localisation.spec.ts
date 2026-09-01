@@ -40,5 +40,10 @@ test("English URLs are untouched by the Czech tree", async ({ page }) => {
 test("an unknown Czech project shows the Czech not-found page", async ({ page }) => {
   await page.goto("/cs/work/does-not-exist");
   await expect(page.locator("html")).toHaveAttribute("lang", "cs");
-  await expect(page.getByText("404")).toBeVisible();
+  // "404" alone is identical in both dictionaries, so it would still pass if
+  // the page silently fell back to English copy. Assert the Czech title
+  // itself, read from the same dictionary the page renders from.
+  await expect(
+    page.getByRole("heading", { name: getCopy("cs").pages.notFound.title }),
+  ).toBeVisible();
 });

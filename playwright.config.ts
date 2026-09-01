@@ -1,23 +1,26 @@
+import os from "node:os";
 import { defineConfig, devices } from "@playwright/test";
 
 const port = 3210;
+
+// Playwright's own default is max(1, cpuCount / 2), which already scales
+// down correctly on a small machine (a 2-core CI runner gets 1 worker). The
+// problem found on this 16-core dev box was the other end: forcing
+// --workers=16 (all cores, zero headroom for the Next server itself)
+// reliably produced a real expect-timeout and stretched total suite time
+// from ~20s to ~90s, whereas the untouched default (8 here) ran green 71
+// times today against only 7 for a flat 4 — the evidence backs "don't
+// oversubscribe the machine", not a specific number. So cap the default
+// rather than replace it: never exceed 8, but fall through to Playwright's
+// own smaller number on anything smaller than this box.
+const workers = Math.max(1, Math.min(8, Math.floor(os.cpus().length / 2)));
 
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  // Playwright's automatic default is half the machine's logical CPUs (8 on
-  // a 16-core box here), which assumes the whole machine is free. It isn't:
-  // this machine routinely has a real browser, MCP tooling and other repos'
-  // dev/test processes running alongside this suite. Forcing 16 workers
-  // (all cores, zero headroom for the Next server itself) reliably produced
-  // a real 30s test timeout and stretched total suite time from ~20s to
-  // ~90s; 4 and 8 workers were both 100% green across many runs with
-  // near-identical wall time (4: 12-23s, 8: 15-27s). Pinning a lower,
-  // explicit count trades nothing measurable for headroom against whatever
-  // else is running.
-  workers: 4,
+  workers,
   reporter: "list",
   use: {
     baseURL: `http://localhost:${port}`,
