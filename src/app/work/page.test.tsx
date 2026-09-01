@@ -29,7 +29,7 @@ test("shows a screenshot for every project that declares one", () => {
   render(<WorkPage />);
 
   for (const project of projects) {
-    if (!project.imageAlt) continue;
-    expect(screen.getByRole("img", { name: project.imageAlt })).toBeInTheDocument();
+    if (!project.posterAlt) continue;
+    expect(screen.getByRole("img", { name: project.posterAlt })).toBeInTheDocument();
   }
 });

@@ -40,10 +40,10 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
       </h1>
       <p className="mt-6 text-xl leading-relaxed text-muted">{project.summary}</p>
 
-      {project.image && (
+      {project.poster && (
         <Image
-          src={project.image}
-          alt={project.imageAlt ?? ""}
+          src={project.poster}
+          alt={project.posterAlt ?? ""}
           width={1440}
           height={900}
           priority

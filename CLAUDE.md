@@ -44,13 +44,23 @@ The bundled docs in `node_modules/next/dist/docs/` are the authority for this ve
 
 Adding a project means adding one array entry. `/work/[slug]` picks it up through `generateStaticParams`, so every project page is prerendered at build time — the site has no runtime data source and deploys as static output.
 
-Screenshots live in `public/work/` and are referenced by `image`. They are real captures of the running apps at 1440x900, not mockups; regenerate one by starting that project's Docker stack and capturing the same viewport. A test asserts that every declared `image` exists on disk and has non-empty `imageAlt`, so a broken path fails the suite rather than the page.
+Screenshots live in `public/work/` and are referenced by `poster`. They are real captures of the running apps at 1440x900, not mockups; regenerate one by starting that project's Docker stack and capturing the same viewport. A test asserts that every declared `poster` exists on disk and has non-empty `posterAlt`, so a broken path fails the suite rather than the page.
 
 `ProjectRow` puts a stretched link (`after:absolute after:inset-0`) on the title so the whole row is clickable. That is what keeps the repository link a valid sibling rather than an anchor nested inside another anchor — if you add more links to a row, they need `relative` to sit above the stretched one.
 
 Routes: `/` (hero + featured), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
 
 `src/components/` is presentational and unaware of routing, with one exception: `site-header.tsx` is a Client Component because it reads `usePathname` for the active nav state. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs.
+
+### Media contract
+
+`public/work/<slug>.webp` is a 1440x900 poster and `<slug>.webm` a silent tour, both produced by `npm run capture` from the live deployment. The rules the components depend on:
+
+- The poster ships in the static HTML and is the LCP candidate. It is never replaced, only covered — so a failed video has no error state.
+- Only the active card renders a `<video>`. Switching cards unmounts the previous one.
+- `prefers-reduced-motion: reduce` renders no video at all, on any card.
+- Containers are locked to `aspect-ratio: 16/10`, so media loading cannot shift the layout.
+- There are no iframes. Embedding the apps was specced and rejected — see the spec.
 
 ## Styling conventions
 

@@ -45,11 +45,11 @@ describe("projects", () => {
     }
   });
 
-  test("declared screenshots exist in public and are described for screen readers", () => {
+  test("declared posters exist in public and are described for screen readers", () => {
     for (const project of projects) {
-      if (!project.image) continue;
-      expect(existsSync(join(process.cwd(), "public", project.image))).toBe(true);
-      expect(project.imageAlt?.length ?? 0).toBeGreaterThan(0);
+      if (!project.poster) continue;
+      expect(existsSync(join(process.cwd(), "public", project.poster))).toBe(true);
+      expect(project.posterAlt?.length ?? 0).toBeGreaterThan(0);
     }
   });
 });

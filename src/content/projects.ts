@@ -21,9 +21,6 @@ export type Project = {
   live?: string;
   /** What a visitor should expect from `live`, when it differs from the repo. */
   liveNote?: string;
-  /** Path under /public. Screenshots are 1440x900, captured from the running app. */
-  image?: string;
-  imageAlt?: string;
   /** The deployment a visitor can open. Required when `status` is "live". */
   liveUrl?: string;
   status: "live" | "in-development" | "archived";
@@ -67,9 +64,6 @@ export const projects = [
     live: "https://trader-jimbimczs-projects.vercel.app",
     liveNote:
       "The demo runs the serverless build with no database attached, so the portfolio starts at $10,000 and resets whenever the instance is recycled.",
-    image: "/work/trader.webp",
-    imageAlt:
-      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart, trade ticket, allocation panel, session P&L chart and positions table in the centre, and the assistant's prompt suggestions on the right.",
     liveUrl: "https://trader-jimbimczs-projects.vercel.app",
     status: "live",
     metrics: [
@@ -169,9 +163,6 @@ export const projects = [
       "One container, one origin. A multi-stage build compiles the Next.js export and FastAPI serves it, so there is no CORS layer to configure.",
     ],
     repo: "https://github.com/JimBimCZ/legal",
-    image: "/work/legal.webp",
-    imageAlt:
-      "Legal Document Creator's sign-in screen: an email and password form beneath the app name, with a Need an account? Sign up link below it.",
     liveUrl: "https://legal-seven-zeta.vercel.app",
     status: "live",
     signInRequired: true,
@@ -235,13 +226,13 @@ export const projects = [
       "Unit and end-to-end suites, plus a connectivity check for the model provider.",
     ],
     repo: "https://github.com/JimBimCZ/kanban",
-    image: "/work/kanban.webp",
-    imageAlt: "The kanban board with cards distributed across its columns.",
     status: "in-development",
     metrics: [
       { value: "5", label: "renameable columns" },
       { value: "10", label: "tests across the stack" },
     ],
+    poster: "/work/kanban.webp",
+    posterAlt: "The kanban board with cards distributed across its columns.",
   },
 ] satisfies Project[];
 
