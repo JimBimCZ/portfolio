@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { LOCALES, getCopy } from "./index";
+import { cs } from "./cs";
+import { en } from "./en";
 
 describe("copy", () => {
   test("every locale resolves to a dictionary", () => {
@@ -42,6 +44,47 @@ describe("person copy", () => {
         "Kinalisoft",
         "Axon Garside, Manchester UK",
       ]);
+    }
+  });
+});
+
+/**
+ * Every leaf of a dictionary as a `path, value` pair — e.g. `person.bio.0` or
+ * `projects.trader.summary`. Collecting the value alongside the path (rather
+ * than re-walking the object per path) keeps the emptiness check below a plain
+ * loop instead of a cast-heavy traversal.
+ */
+function leaves(node: unknown, prefix = ""): { path: string; value: unknown }[] {
+  if (typeof node !== "object" || node === null) return [{ path: prefix, value: node }];
+  return Object.entries(node).flatMap(([key, child]) =>
+    leaves(child, prefix ? `${prefix}.${key}` : key),
+  );
+}
+
+describe("the Czech dictionary", () => {
+  test("covers exactly the keys English covers", () => {
+    expect(leaves(cs).map((leaf) => leaf.path).sort()).toEqual(
+      leaves(en).map((leaf) => leaf.path).sort(),
+    );
+  });
+
+  test("leaves nothing empty", () => {
+    for (const locale of LOCALES) {
+      for (const { path, value } of leaves(getCopy(locale))) {
+        expect(String(value).trim().length, `${locale}.${path}`).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  test("is actually Czech, not English pasted twice", () => {
+    // Prose the reader judges the site by. Structural strings, job titles,
+    // employer names and stack entries are deliberately identical across
+    // locales and are not checked here.
+    expect(cs.person.tagline).not.toBe(en.person.tagline);
+    expect(cs.person.intro).not.toBe(en.person.intro);
+    expect(cs.person.bio).not.toEqual(en.person.bio);
+    for (const slug of Object.keys(en.projects) as (keyof typeof en.projects)[]) {
+      expect(cs.projects[slug].summary, slug).not.toBe(en.projects[slug].summary);
     }
   });
 });
