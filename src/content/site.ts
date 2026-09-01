@@ -1,3 +1,5 @@
+import type { Copy } from "./copy/types";
+
 /**
  * Single source of truth for everything about the person behind the site.
  * Edit this first — pages read from it rather than hardcoding copy.
@@ -73,10 +75,10 @@ export const site = {
   ] satisfies [string, string][],
   links: [{ label: "GitHub", href: "https://github.com/JimBimCZ" }],
   nav: [
-    { label: "Work", href: "/work" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
-  ],
+    { key: "work", href: "/work" },
+    { key: "about", href: "/about" },
+    { key: "contact", href: "/contact" },
+  ] satisfies { key: keyof Copy["ui"]["nav"]; href: string }[],
   /**
    * The privacy notice. Content lives here like everything else, so the page
    * holds no copy of its own. `updated` is an ISO year-month, same as
