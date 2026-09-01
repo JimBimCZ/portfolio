@@ -28,6 +28,15 @@ test("renders the project's title, role, and highlights", async () => {
   }
 });
 
+test("loads the poster as the page's LCP candidate", async () => {
+  const project = getProject("legal");
+  render(await ProjectPage(argsFor("legal")));
+
+  const poster = screen.getByRole("img", { name: project!.posterAlt });
+  expect(poster).toHaveAttribute("loading", "eager");
+  expect(poster).toHaveAttribute("fetchpriority", "high");
+});
+
 test("links to the repository when the project has one", async () => {
   render(await ProjectPage(argsFor("kanban")));
 

@@ -46,7 +46,10 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
           alt={project.posterAlt ?? ""}
           width={1440}
           height={900}
-          priority
+          // The one image on the page and its LCP candidate. `priority` is
+          // deprecated in Next.js 16; these two props are what it stood for.
+          loading="eager"
+          fetchPriority="high"
           sizes="(min-width: 768px) 48rem, 100vw"
           className="mt-12 h-auto w-full border border-line"
         />
