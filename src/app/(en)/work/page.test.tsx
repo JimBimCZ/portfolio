@@ -1,13 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
+import { WorkPage } from "@/components/pages/work";
 import { getCopy } from "@/content/copy";
 import { localiseProjects } from "@/content/localise";
-import WorkPage from "./page";
 
-const projects = localiseProjects(getCopy("en"));
+const copy = getCopy("en");
+const projects = localiseProjects(copy);
 
 test("lists every project with a link to its detail page", () => {
-  render(<WorkPage />);
+  render(<WorkPage copy={copy} locale="en" />);
 
   for (const project of projects) {
     expect(screen.getByRole("link", { name: project.title })).toHaveAttribute(
@@ -18,7 +19,7 @@ test("lists every project with a link to its detail page", () => {
 });
 
 test("links each project that has a repository to GitHub", () => {
-  render(<WorkPage />);
+  render(<WorkPage copy={copy} locale="en" />);
 
   const expected = projects.filter((project) => project.repo).map((p) => p.repo);
   const hrefs = screen
@@ -29,7 +30,7 @@ test("links each project that has a repository to GitHub", () => {
 });
 
 test("shows a screenshot for every project that declares one", () => {
-  render(<WorkPage />);
+  render(<WorkPage copy={copy} locale="en" />);
 
   for (const project of projects) {
     if (!project.posterAlt) continue;

@@ -1,5 +1,6 @@
-import { NotFoundPanel } from "@/components/not-found-panel";
+import { NotFoundPage } from "@/components/pages/not-found";
+import { getCopy } from "@/content/copy";
 
 export default function NotFound() {
-  return <NotFoundPanel />;
+  return <NotFoundPage copy={getCopy("en")} home="/" />;
 }

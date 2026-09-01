@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
-import { NotFoundPanel } from "@/components/not-found-panel";
+import { NotFoundPage } from "@/components/pages/not-found";
 import { getCopy } from "@/content/copy";
 import "./globals.css";
 
@@ -30,7 +30,7 @@ export default function GlobalNotFound() {
     >
       <body className="flex min-h-full flex-col">
         <main className="flex-1">
-          <NotFoundPanel />
+          <NotFoundPage copy={copy} home="/" />
         </main>
       </body>
     </html>

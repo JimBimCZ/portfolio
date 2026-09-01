@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
+import { ContactPage } from "@/components/pages/contact";
 import { getCopy } from "@/content/copy";
 import { site } from "@/content/site";
-import ContactPage from "./page";
 
 const copy = getCopy("en");
 
 test("links the email address as a mailto", () => {
-  render(<ContactPage />);
+  render(<ContactPage copy={copy} />);
 
   expect(screen.getByRole("link", { name: site.email })).toHaveAttribute(
     "href",
@@ -16,7 +16,7 @@ test("links the email address as a mailto", () => {
 });
 
 test("links the phone number as a dialable tel with no spaces", () => {
-  render(<ContactPage />);
+  render(<ContactPage copy={copy} />);
 
   expect(screen.getByRole("link", { name: site.phone })).toHaveAttribute(
     "href",
@@ -25,7 +25,7 @@ test("links the phone number as a dialable tel with no spaces", () => {
 });
 
 test("shows where he is based", () => {
-  render(<ContactPage />);
+  render(<ContactPage copy={copy} />);
 
   expect(screen.getByText(`${copy.person.location} — CET`)).toBeInTheDocument();
 });

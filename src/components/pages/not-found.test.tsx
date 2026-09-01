@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
 import { getCopy } from "@/content/copy";
-import { NotFoundPanel } from "./not-found-panel";
+import { NotFoundPage } from "./not-found";
 
 const copy = getCopy("en");
 
 test("names the status and offers a way back", () => {
-  render(<NotFoundPanel />);
+  render(<NotFoundPage copy={copy} home="/" />);
 
   expect(screen.getByText(copy.pages.notFound.code)).toBeInTheDocument();
   expect(
