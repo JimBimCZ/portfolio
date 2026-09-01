@@ -2,6 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatShipped, type Project } from "@/content/projects";
 
+const STATUS_LABEL: Record<Project["status"], string> = {
+  live: "Live",
+  "in-development": "In development",
+  archived: "Archived",
+};
+
 /**
  * One entry in the log. The title carries a stretched link so the whole row is
  * clickable, which leaves the repository link free to sit inside the row as a
@@ -14,21 +20,28 @@ export function ProjectRow({ project }: { project: Project }) {
         <p className="label text-accent">{project.shipped.replace("-", ".")}</p>
 
         <div>
-          <h3 className="font-display text-2xl font-semibold tracking-tight">
-            <Link
-              href={`/work/${project.slug}`}
-              className="after:absolute after:inset-0 group-hover:text-accent"
-            >
-              {project.title}
-            </Link>
-          </h3>
+          <div className="flex flex-wrap items-baseline gap-3">
+            <h3 className="font-display text-2xl font-semibold tracking-tight">
+              <Link
+                href={`/work/${project.slug}`}
+                className="after:absolute after:inset-0 group-hover:text-accent"
+              >
+                {project.title}
+              </Link>
+            </h3>
+            {project.status !== "live" && (
+              <span className="label rounded border border-line px-1.5 py-0.5 text-dim">
+                {STATUS_LABEL[project.status]}
+              </span>
+            )}
+          </div>
           <p className="mt-2 max-w-xl text-muted">{project.summary}</p>
           <p className="label mt-4 text-muted">{project.stack.join(" / ")}</p>
-          {(project.live || project.repo) && (
+          {(project.liveUrl || project.repo) && (
             <div className="mt-4 flex flex-wrap gap-6">
-              {project.live && (
+              {project.liveUrl && (
                 <a
-                  href={project.live}
+                  href={project.liveUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="label relative text-muted hover:text-accent"
@@ -51,10 +64,10 @@ export function ProjectRow({ project }: { project: Project }) {
           <span className="sr-only">Shipped {formatShipped(project.shipped)}</span>
         </div>
 
-        {project.image && (
+        {project.poster && (
           <Image
-            src={project.image}
-            alt={project.imageAlt ?? ""}
+            src={project.poster}
+            alt={project.posterAlt ?? ""}
             width={1440}
             height={900}
             sizes="(min-width: 1024px) 18rem, 100vw"

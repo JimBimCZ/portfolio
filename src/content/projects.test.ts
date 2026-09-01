@@ -1,7 +1,9 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
-import { formatShipped, getProject, projects } from "./projects";
+import { tours } from "../../scripts/capture/tours.mjs";
+import { site } from "./site";
+import { carouselProjects, formatShipped, getProject, projects } from "./projects";
 
 describe("formatShipped", () => {
   test("renders an ISO year-month as a readable date", () => {
@@ -44,11 +46,82 @@ describe("projects", () => {
     }
   });
 
-  test("declared screenshots exist in public and are described for screen readers", () => {
+  test("declared posters exist in public and are described for screen readers", () => {
     for (const project of projects) {
-      if (!project.image) continue;
-      expect(existsSync(join(process.cwd(), "public", project.image))).toBe(true);
-      expect(project.imageAlt?.length ?? 0).toBeGreaterThan(0);
+      if (!project.poster) continue;
+      expect(existsSync(join(process.cwd(), "public", project.poster))).toBe(true);
+      expect(project.posterAlt?.length ?? 0).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("carousel projects", () => {
+  test("are ordered with trader first, so first paint is not Steam's storefront", () => {
+    expect(carouselProjects.map((p) => p.slug)).toEqual([
+      "trader",
+      "games-db",
+      "my-movies",
+      "legal",
+      "work-planner",
+    ]);
+  });
+
+  test("every carousel project has a live URL to open", () => {
+    for (const project of carouselProjects) {
+      expect(project.liveUrl).toMatch(/^https:\/\//);
+    }
+  });
+
+  test("every carousel project carries checkable metrics", () => {
+    for (const project of carouselProjects) {
+      expect(project.metrics.length).toBeGreaterThanOrEqual(2);
+      expect(project.metrics.length).toBeLessThanOrEqual(4);
+      for (const metric of project.metrics) {
+        expect(metric.value.length).toBeGreaterThan(0);
+        expect(metric.label.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  test("a project behind sign-in says so, so the card can warn a visitor", () => {
+    for (const project of carouselProjects) {
+      if (!project.signInRequired) continue;
+      expect(project.slug === "legal" || project.slug === "work-planner").toBe(true);
+    }
+  });
+});
+
+describe("carousel media", () => {
+  test("every declared poster exists and is described for screen readers", () => {
+    for (const project of carouselProjects) {
+      expect(project.poster, `${project.slug} has no poster`).toBeDefined();
+      expect(existsSync(join(process.cwd(), "public", project.poster!))).toBe(true);
+      expect(project.posterAlt?.length ?? 0).toBeGreaterThan(0);
+    }
+  });
+
+  test("every declared tour exists on disk", () => {
+    for (const project of carouselProjects) {
+      if (!project.tour) continue;
+      expect(existsSync(join(process.cwd(), "public", project.tour))).toBe(true);
+    }
+  });
+
+  // tours.mjs states this as an invariant in a comment ("URLs here must match
+  // `liveUrl`") but nothing enforced it — a moved deployment would silently
+  // capture the wrong app.
+  test("every tour's URL matches its project's liveUrl", () => {
+    for (const [slug, tour] of Object.entries(tours)) {
+      const project = getProject(slug);
+      expect(project, `no project for tour entry ${slug}`).toBeDefined();
+      expect(tour.url).toBe(project!.liveUrl);
+    }
+  });
+});
+
+describe("the name", () => {
+  test("carries no diacritics", () => {
+    expect(site.name).toBe("Vit Busek");
+    expect(site.name.normalize("NFD")).toBe(site.name);
   });
 });

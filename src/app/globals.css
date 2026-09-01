@@ -3,6 +3,7 @@
 /* Graphite. Dark is the default; the light block swaps the values underneath the
    same tokens, so no component ever needs a `dark:` variant. */
 :root {
+  color-scheme: dark;
   --canvas: #14171B;
   --surface: #1C2127;
   --raised: #232931;
@@ -18,6 +19,7 @@
 
 @media (prefers-color-scheme: light) {
   :root {
+    color-scheme: light;
     --canvas: #E9EAEC;
     --surface: #FCFCFD;
     --raised: #F3F4F6;

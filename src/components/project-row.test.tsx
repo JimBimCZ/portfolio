@@ -12,8 +12,10 @@ const project: Project = {
   stack: ["Next.js", "FastAPI"],
   highlights: ["Made the slow part fast."],
   repo: "https://github.com/JimBimCZ/example",
-  image: "/work/legal.webp",
-  imageAlt: "A screenshot of the example project.",
+  poster: "/work/legal.webp",
+  posterAlt: "A screenshot of the example project.",
+  status: "live",
+  metrics: [{ label: "tests", value: "1" }],
 };
 
 function renderRow(overrides: Partial<Project> = {}) {
@@ -52,8 +54,18 @@ test("renders the screenshot with its description", () => {
 });
 
 test("renders no image when a project has no screenshot", () => {
-  renderRow({ image: undefined });
+  renderRow({ poster: undefined });
   expect(screen.queryByRole("img")).toBeNull();
+});
+
+test("shows a status badge when a project is not live", () => {
+  renderRow({ status: "in-development" });
+  expect(screen.getByText("In development")).toBeInTheDocument();
+});
+
+test("omits the status badge when a project is live", () => {
+  renderRow();
+  expect(screen.queryByText("Live")).toBeNull();
 });
 
 test("shows the summary and the stack", () => {
@@ -65,7 +77,7 @@ test("shows the summary and the stack", () => {
 });
 
 test("links to the live demo separately from the title", () => {
-  renderRow({ live: "https://example.vercel.app" });
+  renderRow({ liveUrl: "https://example.vercel.app" });
   const live = screen.getByRole("link", { name: "Live demo" });
   expect(live).toHaveAttribute("href", "https://example.vercel.app");
   expect(live).toHaveAttribute("target", "_blank");

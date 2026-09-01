@@ -41,16 +41,27 @@ The bundled docs in `node_modules/next/dist/docs/` are the authority for this ve
 
 - `site.ts` — name, role, contact, nav, and the `manifest` rows shown in the spec block. Pages read from it; no page hardcodes personal copy.
 - `projects.ts` — the `Project[]` array plus `getProject` and `formatShipped`. Ordered newest first and rendered as a log keyed on `shipped` (an ISO year-month). There are deliberately no version numbers: neither repository tags releases, so a version would be invented.
+- `skills.ts` — the skill groups behind the home page's skill matrix, each backed by checkable `evidence` against a real project slug.
 
 Adding a project means adding one array entry. `/work/[slug]` picks it up through `generateStaticParams`, so every project page is prerendered at build time — the site has no runtime data source and deploys as static output.
 
-Screenshots live in `public/work/` and are referenced by `image`. They are real captures of the running apps at 1440x900, not mockups; regenerate one by starting that project's Docker stack and capturing the same viewport. A test asserts that every declared `image` exists on disk and has non-empty `imageAlt`, so a broken path fails the suite rather than the page.
+Screenshots live in `public/work/` and are referenced by `poster`. They are real captures of the running apps at 1440x900, not mockups; regenerate one with `npm run capture` from the live deployment (see Media contract below). A test asserts that every declared `poster` exists on disk and has non-empty `posterAlt`, so a broken path fails the suite rather than the page.
 
 `ProjectRow` puts a stretched link (`after:absolute after:inset-0`) on the title so the whole row is clickable. That is what keeps the repository link a valid sibling rather than an anchor nested inside another anchor — if you add more links to a row, they need `relative` to sit above the stretched one.
 
-Routes: `/` (hero + featured), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
+Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
 
 `src/components/` is presentational and unaware of routing, with one exception: `site-header.tsx` is a Client Component because it reads `usePathname` for the active nav state. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs.
+
+### Media contract
+
+`public/work/<slug>.webp` is a 1440x900 poster and `<slug>.webm` a silent tour, both produced by `npm run capture` from the live deployment. The rules the components depend on:
+
+- The poster ships in the static HTML and is the LCP candidate. It is never replaced, only covered — so a failed video has no error state.
+- Only the active card renders a `<video>`. Switching cards unmounts the previous one.
+- `prefers-reduced-motion: reduce` renders no video at all, on any card.
+- Containers are locked to `aspect-ratio: 16/10`, so media loading cannot shift the layout.
+- There are no iframes. Embedding the apps was specced and rejected — see the spec.
 
 ## Styling conventions
 
@@ -69,3 +80,13 @@ Tests sit next to what they cover (`src/**/*.test.tsx`); `e2e/` holds the Playwr
 - `vitest.config.mts` sets `globals: true` on purpose. Testing Library only registers its automatic between-test cleanup when a global `afterEach` exists — without it, the DOM leaks between tests and you get "found multiple elements" failures that look like component bugs.
 - Async server components are tested by awaiting them: `render(await ProjectPage({ params: Promise.resolve({ slug }) }))`. Derive the argument type with `Parameters<typeof ProjectPage>[0]` so the global `PageProps` helper stays the source of truth.
 - Prefer role-based queries. Where a string appears in both the page and the footer, scope with `getByRole("main")` instead of loosening the query.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
