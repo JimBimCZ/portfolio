@@ -78,6 +78,16 @@ test("an unknown project shows the not-found page", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("the privacy notice is reachable from every page's footer", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("contentinfo").getByRole("link", { name: "Privacy" }).click();
+  await expect(page).toHaveURL("/privacy");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Privacy" }),
+  ).toBeVisible();
+});
+
 test("the contact page exposes a usable mailto link", async ({ page }) => {
   await page.goto("/contact");
 

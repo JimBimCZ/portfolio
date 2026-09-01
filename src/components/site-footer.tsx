@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { site } from "@/content/site";
 
 export function SiteFooter() {
@@ -23,6 +24,11 @@ export function SiteFooter() {
               </a>
             </li>
           ))}
+          <li>
+            <Link href="/privacy" className="label text-muted hover:text-accent">
+              Privacy
+            </Link>
+          </li>
         </ul>
       </div>
     </footer>
