@@ -80,16 +80,21 @@ test("an unknown project shows the not-found page", async ({ page }) => {
 });
 
 test("an unmatched URL shows the global not-found page", async ({ page }) => {
-  const response = await page.goto("/no-such-page");
+  for (const path of ["/no-such-page", "/cs/no-such-page"]) {
+    const response = await page.goto(path);
 
-  expect(response?.status()).toBe(404);
-  await expect(
-    page.getByRole("heading", { name: "That page does not exist." }),
-  ).toBeVisible();
-  // global-not-found bypasses the layouts, so unlike the route-level 404 above
-  // this page carries no site header, and titles itself without the template.
-  await expect(page.getByRole("banner")).toHaveCount(0);
-  await expect(page).toHaveTitle("404 — Vit Busek");
+    expect(response?.status(), path).toBe(404);
+    await expect(
+      page.getByRole("heading", { name: "That page does not exist." }),
+    ).toBeVisible();
+    // global-not-found bypasses the layouts, so unlike the route-level 404
+    // above this page carries no site header, and titles itself without the
+    // template. It is English-only by design — even under /cs, since a truly
+    // unmatched URL never reaches the (cs) route group's layout at all.
+    await expect(page.getByRole("banner")).toHaveCount(0);
+    await expect(page).toHaveTitle("404 — Vit Busek");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  }
 });
 
 test("the Czech home page is served in Czech", async ({ page }) => {

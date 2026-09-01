@@ -64,6 +64,18 @@ Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), 
 - There are no iframes. Embedding the apps was specced and rejected — see the spec.
 - `public/og.jpg` is the social card: 1200x630 JPEG, built from `trader.webp` by `node scripts/capture/og.mjs`. JPEG because LinkedIn still renders WebP cards unreliably. Rebuild it whenever that poster is recaptured; `site.ts` declares it and a test asserts it exists.
 
+### Localisation
+
+The site is served in two languages: English at `/`, `/work`, `/work/[slug]`, `/about`, `/contact`, `/privacy`, and Czech at the same paths under `/cs`. Slugs stay English in both trees — `/cs/work/trader`, not a translated slug.
+
+This is two route groups under `src/app/`, `(en)/` and `(cs)/cs/`, each with its own `layout.tsx` (own `<html lang>`, own metadata, own instance of `SiteHeader`/`SiteFooter`). The shape is deliberately asymmetric: `(en)/` sits at the root because English is the primary tree, `(cs)/cs/` nests an extra `cs` segment because a route group's folder name is invisible to the URL — the segment has to be a real path piece. Each group also carries its own `not-found.tsx` for a `notFound()` thrown inside that tree (an unknown slug on `/work/[slug]` or `/cs/work/[slug]`), so the 404 body renders in the right language. A URL that matches no route at all — `/nonsense`, `/cs/nonsense` — never reaches either group; it falls through to the root `global-not-found.tsx`, which is intentionally English-only and shell-less (no header, no `<html lang="cs">`) because it bypasses layouts entirely.
+
+Prose lives in `src/content/copy/`: `types.ts` defines the `Copy` type, `en.ts` and `cs.ts` are the two dictionaries (each checked with `satisfies Copy`), and `index.ts` exports `getCopy(locale)`, `localePrefix(locale)` (`""` for English, `"/cs"` for Czech — every internal href is built from it so a page never links out of its own tree), and `counterpart(pathname)` (the same page in the other language, used by the header's language switch and by hreflang/canonical metadata).
+
+`Copy["projects"]` is `Record<ProjectSlug, ProjectCopy>` — keyed by the same `ProjectSlug` union `projects.ts` derives from the `Project[]` array. That's what makes adding a project without Czech prose a compile error: widen the slug union and `cs.ts`'s `satisfies Copy` check fails until you add the matching entry. Facts (employer, period, metric values, dates as ISO strings) stay single-source in `src/content/projects.ts` and `site.ts` — never duplicated per locale — while prose (summaries, highlights, taglines, section bodies) is per-locale in the dictionaries.
+
+`src/content/localise.ts` holds the `localise*` selectors that merge the two: `localiseProjects`/`localiseProject`/`localiseCarousel` pair `projects.ts`'s data with a `Copy`'s per-project text by slug (and throw if a project's `metrics` and its copy's `metricLabels` don't line up 1:1), `localiseSkills` does the same for the skill matrix, and `formatMetricValue` applies the locale's thousands separator to a metric's data value (`245,025` in English, `245 025` in Czech) without touching values that aren't plain integers. Components never read `projects.ts` or `skills.ts` directly for display — they go through a `localise*` selector with a `Copy`, so a page can't accidentally render English data under `/cs` or vice versa.
+
 ## Styling conventions
 
 Tailwind v4, configured in CSS. There is no `tailwind.config.js`; the theme lives in `@theme inline` inside `src/app/globals.css`.
