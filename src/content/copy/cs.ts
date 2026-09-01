@@ -23,15 +23,15 @@ export const cs = {
     status: {
       live: "V provozu",
       "in-development": "Ve vývoji",
-      archived: "Archivováno",
+      archived: "V archivu",
     },
   },
   person: {
     role: "Frontend a AI vývojář",
     location: "Brno, ČR",
-    tagline: "Vyvíjím software, na který je spoleh — a díky AI nástrojům je hotový za dny, ne za měsíce.",
+    tagline: "Vyvíjím software, na který je spoleh — a díky AI nástrojům ho dodávám v řádu dnů, ne měsíců.",
     intro:
-      "Typovaný a otestovaný kód, který prošel review — vzniká v AI-asistovaném workflow, díky kterému se iterační cyklus zkrátí z týdnů na hodiny nebo dny.",
+      "Typovaný a otestovaný kód, který prošel review — vzniká ve workflow s podporou AI, díky kterému se iterační cyklus zkrátí z týdnů na hodiny nebo dny.",
     status: "Otevřen novým projektům",
     ogImageAlt:
       "Terminál Trader: watchlist se streamovanými cenami, otevřená pozice AAPL a panel s asistentem.",
@@ -45,9 +45,9 @@ export const cs = {
     ],
     /** The about page reads these as paragraphs, in order. */
     bio: [
-      "Senior frontend vývojář, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které se vyplatí držet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
-      "Běžná náplň dne je React a TypeScript na seniorní úrovni — funkce, které vznikají a dál se udržují v kódu, se kterým musí žít i ostatní, stav řešený přes Redux a React Context a produkční problémy dohledané v CloudWatch logách a v SQL, ne odhadnuté.",
-      "Druhá polovina je agentic AI: workflow postavená kolem LLM, vlastní MCP servery a multiagentní systémy vyladěné tak, aby byly spolehlivé a zároveň dost levné na to, aby se daly reálně provozovat. Nejlíp mi to jde v úzké spolupráci s ostatními — dodat řešení, které pokrývá potřebu klienta, k datu, na kterém jsme se domluvili.",
+      "Senior frontend vývojář, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
+      "Běžnou náplní dne je React a TypeScript na seniorní úrovni — funkce, které vznikají a dál se udržují v kódu, se kterým musí žít i ostatní, stav řešený přes Redux a React Context a produkční problémy dohledané v CloudWatch logách a v SQL, ne odhadované.",
+      "Druhá polovina je agentic AI: workflow postavená kolem LLM, vlastní MCP servery a multiagentní systémy vyladěné tak, aby byly spolehlivé a zároveň dost levné na to, aby se daly reálně provozovat. Nejlíp mi to jde v úzké spolupráci s ostatními — dodávat řešení, které sedne na potřebu klienta, v termínu, na kterém jsme se domluvili.",
     ],
     /** Newest first. The about page renders this as a log. */
     experience: [
@@ -67,7 +67,7 @@ export const cs = {
         title: "Frontend Developer",
         org: "Kinalisoft",
         period: "09/2020 – 02/2023",
-        note: "Jediný frontend vývojář na celém FE platformy pro monitoring strojů, stavěné pro Mycronic. Dodal jsem MyCenterAnalysis, které získalo ocenění na veletrhu Productronica.",
+        note: "Jediný frontend vývojář na celém FE platformy pro monitoring strojů, kterou jsme dělali pro Mycronic. Dodal jsem MyCenterAnalysis, které získalo ocenění na veletrhu Productronica.",
       },
       {
         title: "Frontend Developer",
@@ -106,17 +106,17 @@ export const cs = {
         {
           heading: "Proč tu není cookie lišta",
           body:
-            "Souhlas je potřeba pro ukládání nebo čtení informací ve vašem zařízení. Tenhle web nedělá ani jedno: žádné cookies, žádné local storage, žádný vložený obsah třetích stran, žádná analytika. Není tedy nic, s čím byste museli souhlasit. Obě písma se stáhnou při sestavení webu a servírují se z této domény, takže tím, že si tu otevřete stránku, se Google nedozví nic.",
+            "Souhlas je potřeba pro ukládání nebo čtení informací ve vašem zařízení. Tenhle web nedělá ani jedno: žádné cookies, žádné local storage, žádný vložený obsah třetích stran, žádná analytika. Není tedy nic, s čím byste museli souhlasit. Obě písma se stáhnou při sestavení webu a načítají se z této domény, takže tím, že si tu otevřete stránku, se Google nedozví nic.",
         },
         {
           heading: "Co zaznamenává server",
           body:
-            "Web běží na Vercelu, který si každý požadavek loguje tak, jak to dělá každý webový server: IP adresa, vyžádaná stránka, časové razítko a řetězec prohlížeče. Vercel tyto logy drží jako můj zpracovatel, podle vlastních pravidel pro dobu uchování, a slouží k tomu, aby se stránky doručily a platforma běžela. Neexportuji je, nespojuji je s ničím dalším a nepoužívám je k tomu, abych zjišťoval, kdo jste.",
+            "Web běží na Vercelu, který si každý požadavek loguje tak, jak to dělá každý webový server: IP adresa, vyžádaná stránka, časové razítko a identifikace prohlížeče (user agent). Vercel tyto logy drží jako můj zpracovatel, podle vlastních pravidel pro dobu uchování, a slouží k tomu, aby se stránky doručily a platforma běžela. Neexportuji je, nespojuji je s ničím dalším a nepoužívám je k tomu, abych zjišťoval, kdo jste.",
         },
         {
           heading: "Když mi napíšete",
           body:
-            "Pak mám to, co jste se rozhodli poslat, ve své poštovní schránce po dobu, po kterou je konverzace k něčemu — u pozice nebo projektu obvykle po dobu jeho trvání a rozumnou chvíli po něm. Není tu žádný mailing list, do kterého byste se mohli dostat.",
+            "Pak mám to, co jste se rozhodli poslat, ve své poštovní schránce po dobu, po kterou je konverzace k něčemu — u pozice nebo projektu obvykle po dobu, po kterou trvají, a rozumnou chvíli po nich. Není tu žádný mailing list, do kterého byste se mohli dostat.",
         },
         {
           heading: "Vaše práva",
@@ -139,7 +139,7 @@ export const cs = {
     },
     work: {
       title: "Na čem jsem naposledy dělal",
-      lede: "Od nejnovějšího. U každé položky je, co bylo hotové, kdy a co to změnilo.",
+      lede: "Od nejnovějšího. U každé položky stojí, co jsem nasadil, kdy a co to změnilo.",
       more: "Další se chystá",
       liveDemo: "Živé demo",
       repo: "GitHub",
@@ -182,16 +182,16 @@ export const cs = {
     home: {
       title: "Vit Busek — Frontend a AI vývojář",
       description:
-        "Typovaný a otestovaný kód, který prošel review — vzniká v AI-asistovaném workflow, díky kterému se iterační cyklus zkrátí z týdnů na hodiny nebo dny.",
+        "Typovaný a otestovaný kód, který prošel review — vzniká ve workflow s podporou AI, díky kterému se iterační cyklus zkrátí z týdnů na hodiny nebo dny.",
     },
     work: {
       title: "Projekty",
-      description: "Projekty od nejnovějšího, s tím, co bylo hotové a co to změnilo.",
+      description: "Projekty od nejnovějšího, s tím, co jsem nasadil a co to změnilo.",
     },
     about: {
       title: "O mně",
       description:
-        "Senior frontend vývojář, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které se vyplatí držet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
+        "Senior frontend vývojář, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
     },
     contact: {
       title: "Kontakt",
@@ -210,7 +210,7 @@ export const cs = {
       role: "Sólo projekt — frontend, backend, infrastruktura",
       highlights: [
         "Asistent zadává obchody přes stejné API jako samotné UI a každé plnění ukazuje rovnou v konverzaci. Živé demo odpovídá ze skriptovaného klienta, ne z modelu, takže jeho provoz nic nestojí.",
-        "Jedna kódová báze, dva tvary nasazení. Serverless nemá úlohu běžící na pozadí ani disk, takže se z ceny stává uzavřená funkce času — Brownův pohyb Lévyho konstrukcí, 22 kroků hashovaným stromem místo 172 800 sečtených půlsekundových přírůstků — a Postgres sedí za stejným rozhraním jako SQLite. Routy, služby ani frontend se nemění.",
+        "Jedna kódová báze, dva tvary nasazení. Serverless nemá úlohu běžící na pozadí ani disk, takže se z ceny stává funkce času v uzavřeném tvaru — Brownův pohyb Lévyho konstrukcí, 22 kroků hashovaným stromem místo 172 800 sečtených půlsekundových přírůstků — a Postgres sedí za stejným rozhraním jako SQLite. Routy, služby ani frontend se nemění.",
         "Tržní data jdou ve výchozím stavu ze simulátoru geometrického Brownova pohybu — volatilita zvlášť pro každý ticker, korelované pohyby sektorů, žádný API klíč. Reálné kurzy se musí zapnout a mezi oběma režimy záměrně není žádný tichý fallback.",
         "846 testů napříč stackem: 591 na backendu, 228 na frontendu a k tomu 27 Playwright testů proti sestavenému kontejneru.",
       ],
@@ -222,7 +222,7 @@ export const cs = {
     },
     "games-db": {
       summary:
-        "Osobní katalog PC her, který si celý obchod Steamu zaindexuje do Postgresu, takže procházení, filtrování ani vyhledávání se rate-limitovaného API Steamu nikdy nedotknou.",
+        "Osobní katalog PC her, který si celý obchod Steamu zaindexuje do Postgresu, takže procházení, filtrování ani vyhledávání rate-limitované API Steamu vůbec nepotřebují.",
       role: "Sólo projekt — frontend, backend, infrastruktura",
       highlights: [
         "Vlastní index katalogu Steamu — 245 025 appidů, 14 621 z nich načtených do plného detailu — protože Steam žádný endpoint /discover ani /trending k procházení nemá.",
@@ -240,7 +240,7 @@ export const cs = {
       role: "Sólo projekt — frontend, backend, infrastruktura",
       highlights: [
         "Devět řad k procházení na úvodní stránce — trending, právě v kinech, připravované, nejlépe hodnocené, dnes vysílané a čtyři žánrové — každá streamovaná přes Suspense.",
-        "Vyhledávání řídí URL: dotaz žije v adrese, takže na výsledky jde poslat odkaz a tlačítko zpět funguje.",
+        "Vyhledávání je řízené adresou: dotaz žije v URL, takže na výsledky jde poslat odkaz a tlačítko zpět funguje.",
         "Endpoint /api/revalidate na požádání zneplatní cache odpovědí z TMDB podle tagu, místo aby se čekalo na vypršení TTL.",
         "Přihlášení přes GitHub a Google OAuth kvůli osobnímu watchlistu; procházení, detaily i vyhledávání fungují bez účtu.",
       ],
@@ -253,7 +253,7 @@ export const cs = {
         "Právní smlouva sepsaná konverzací. Vyberete jednu z 11 šablon Common Paper, odpovídáte běžnou řečí a dokument se plní před očima.",
       role: "Sólo projekt — frontend, backend, infrastruktura",
       highlights: [
-        "Model odpovídá proti Pydantic schématu vygenerovanému z polí konkrétní šablony, takže se z jednoho kola můžou vrátit jen validní typované hodnoty.",
+        "Odpověď modelu se validuje proti Pydantic schématu vygenerovanému z polí konkrétní šablony, takže z jednoho kola můžou přijít jen validní typované hodnoty.",
         "Kolo se uloží až po úspěšném volání modelu — neúspěšný požadavek po sobě nic nenechá a jde ho bezpečně zopakovat.",
         "161 testů napříč stackem: 86 na backendu, 75 na frontendu.",
         "Jeden kontejner, jeden origin. Vícefázový build zkompiluje export Next.js a FastAPI ho servíruje, takže není potřeba nastavovat žádnou CORS vrstvu.",
@@ -300,7 +300,7 @@ export const cs = {
         },
         "scheduled-jobs": {
           name: "Plánované úlohy",
-          detail: "měsíční cron, fronty jištěné advisory lockem, odolný částečný postup",
+          detail: "měsíční cron, fronty jištěné advisory lockem, rozdělaná práce přežije pád",
         },
         auth: { name: "Auth", detail: "přihlášení přes OAuth a session" },
         caching: {
