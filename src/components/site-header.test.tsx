@@ -1,7 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test, vi } from "vitest";
+import { getCopy } from "@/content/copy";
 import { site } from "@/content/site";
 import { SiteHeader } from "./site-header";
+
+const copy = getCopy("en");
 
 const pathname = vi.hoisted(() => ({ current: "/" }));
 
@@ -31,7 +34,7 @@ test("marks nothing as current on the home page", () => {
 
 test("shows the live-availability status", () => {
   render(<SiteHeader />);
-  const status = screen.getByText(site.status);
+  const status = screen.getByText(copy.person.status);
   expect(status.querySelector(".bg-live")).not.toBeNull();
 });
 

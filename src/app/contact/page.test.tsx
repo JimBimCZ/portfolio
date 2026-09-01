@@ -1,7 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
+import { getCopy } from "@/content/copy";
 import { site } from "@/content/site";
 import ContactPage from "./page";
+
+const copy = getCopy("en");
 
 test("links the email address as a mailto", () => {
   render(<ContactPage />);
@@ -24,5 +27,5 @@ test("links the phone number as a dialable tel with no spaces", () => {
 test("shows where he is based", () => {
   render(<ContactPage />);
 
-  expect(screen.getByText(`${site.location} — CET`)).toBeInTheDocument();
+  expect(screen.getByText(`${copy.person.location} — CET`)).toBeInTheDocument();
 });

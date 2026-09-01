@@ -18,3 +18,30 @@ describe("copy", () => {
     }
   });
 });
+
+describe("person copy", () => {
+  test("every locale carries the whole bio and CV", () => {
+    for (const locale of LOCALES) {
+      const { person } = getCopy(locale);
+      expect(person.bio.length, locale).toBe(3);
+      expect(person.experience.length, locale).toBe(4);
+      for (const job of person.experience) {
+        expect(job.title.length, `${locale} ${job.org}`).toBeGreaterThan(0);
+        expect(job.note.length, `${locale} ${job.org}`).toBeGreaterThan(0);
+      }
+      expect(person.privacy.sections.length, locale).toBe(4);
+    }
+  });
+
+  test("the CV keeps its real employers and dates in every locale", () => {
+    for (const locale of LOCALES) {
+      const orgs = getCopy(locale).person.experience.map((job) => job.org);
+      expect(orgs, locale).toEqual([
+        "Three Pillar Global",
+        "Notino",
+        "Kinalisoft",
+        "Axon Garside, Manchester UK",
+      ]);
+    }
+  });
+});

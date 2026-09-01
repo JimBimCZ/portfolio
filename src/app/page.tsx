@@ -3,40 +3,43 @@ import { AppCarousel } from "@/components/app-carousel";
 import { ExperienceLog } from "@/components/experience-log";
 import { SkillMatrix } from "@/components/skill-matrix";
 import { SpecBlock } from "@/components/spec-block";
+import { getCopy } from "@/content/copy";
 import { carouselProjects } from "@/content/projects";
 import { skillGroups } from "@/content/skills";
 import { site } from "@/content/site";
 
 export default function Home() {
+  const copy = getCopy("en");
+
   return (
     <div className="mx-auto max-w-5xl px-6">
       <section className="grid items-start gap-12 py-20 sm:py-28 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div>
           <p className="label text-accent">
-            {site.role} · {site.location}
+            {copy.person.role} · {copy.person.location}
           </p>
           <h1 className="mt-6 font-display text-[clamp(2.5rem,7vw,4.5rem)] font-semibold leading-[0.95] tracking-[-0.03em]">
-            {site.tagline}
+            {copy.person.tagline}
           </h1>
           <p className="mt-8 max-w-md text-lg leading-relaxed text-muted">
-            {site.intro}
+            {copy.person.intro}
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/work"
               className="label bg-accent px-5 py-3 text-canvas transition-opacity hover:opacity-85"
             >
-              View work
+              {copy.pages.home.viewWork}
             </Link>
             <Link
               href="/contact"
               className="label border border-line px-5 py-3 text-text transition-colors hover:border-accent hover:text-accent"
             >
-              Get in touch
+              {copy.pages.home.getInTouch}
             </Link>
           </div>
         </div>
-        <SpecBlock rows={site.manifest} />
+        <SpecBlock rows={copy.person.manifest} />
       </section>
 
       <div className="py-12">
@@ -46,10 +49,10 @@ export default function Home() {
       <section aria-labelledby="what-each-one-is" className="py-16">
         <div className="flex items-baseline justify-between gap-6">
           <h2 id="what-each-one-is" className="label text-muted">
-            What each one actually is
+            {copy.pages.home.whatEachOneIs}
           </h2>
           <Link href="/work" className="label text-muted hover:text-accent">
-            All projects →
+            {copy.pages.home.allProjects}
           </Link>
         </div>
         <ul className="mt-8 divide-y divide-line-soft border-t border-line">
@@ -72,20 +75,20 @@ export default function Home() {
       <section aria-labelledby="track-record" className="py-16">
         <div className="flex items-baseline justify-between gap-6">
           <h2 id="track-record" className="label text-muted">
-            Track record
+            {copy.pages.home.trackRecord}
           </h2>
           <Link href="/about" className="label text-muted hover:text-accent">
-            Full history →
+            {copy.pages.home.fullHistory}
           </Link>
         </div>
         <div className="mt-8">
-          <ExperienceLog roles={site.experience} />
+          <ExperienceLog roles={copy.person.experience} />
         </div>
       </section>
 
       <section aria-labelledby="skills" className="py-16">
         <h2 id="skills" className="label text-muted">
-          Skills, with receipts
+          {copy.pages.home.skills}
         </h2>
         <div className="mt-8">
           <SkillMatrix groups={skillGroups} />
@@ -94,7 +97,7 @@ export default function Home() {
 
       <section aria-labelledby="contact" className="border-t border-line py-16">
         <h2 id="contact" className="label text-muted">
-          Contact
+          {copy.pages.home.contact}
         </h2>
         <div className="mt-8 grid gap-x-12 gap-y-4 sm:grid-cols-2">
           <a
@@ -120,7 +123,7 @@ export default function Home() {
               {link.label}
             </a>
           ))}
-          <p className="label text-muted">{site.location}</p>
+          <p className="label text-muted">{copy.person.location}</p>
         </div>
       </section>
     </div>

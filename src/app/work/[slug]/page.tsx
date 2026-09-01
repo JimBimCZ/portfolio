@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getCopy } from "@/content/copy";
 import { formatShipped, getProject, projects } from "@/content/projects";
+
+const copy = getCopy("en");
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -31,7 +34,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
   return (
     <article className="mx-auto max-w-3xl px-6 py-20">
       <Link href="/work" className="label text-muted hover:text-accent">
-        ← Work
+        {copy.pages.project.back}
       </Link>
 
       <p className="label mt-12 text-accent">{formatShipped(project.shipped)}</p>
@@ -57,16 +60,16 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
 
       <dl className="mt-12 grid gap-6 border-y border-line py-6 sm:grid-cols-2">
         <div>
-          <dt className="label text-muted">Role</dt>
+          <dt className="label text-muted">{copy.pages.project.role}</dt>
           <dd className="mt-2 font-mono text-sm">{project.role}</dd>
         </div>
         <div>
-          <dt className="label text-muted">Stack</dt>
+          <dt className="label text-muted">{copy.pages.project.stack}</dt>
           <dd className="mt-2 font-mono text-sm">{project.stack.join(", ")}</dd>
         </div>
       </dl>
 
-      <h2 className="label mt-14 text-muted">What it brings</h2>
+      <h2 className="label mt-14 text-muted">{copy.pages.project.whatItBrings}</h2>
       <ul className="mt-6 grid gap-4">
         {project.highlights.map((highlight) => (
           <li key={highlight} className="flex gap-4 text-lg leading-relaxed">
@@ -85,7 +88,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
               rel="noreferrer"
               className="label border border-line px-5 py-3 hover:border-accent hover:text-accent"
             >
-              Visit site
+              {copy.pages.project.visitSite}
             </a>
           )}
           {project.repo && (
@@ -95,7 +98,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
               rel="noreferrer"
               className="label border border-line px-5 py-3 hover:border-accent hover:text-accent"
             >
-              Source
+              {copy.pages.project.source}
             </a>
           )}
         </div>

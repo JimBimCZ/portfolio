@@ -1,21 +1,23 @@
 import type { Metadata } from "next";
 import { SpecBlock } from "@/components/spec-block";
-import { site } from "@/content/site";
+import { getCopy } from "@/content/copy";
+
+const copy = getCopy("en");
 
 export const metadata: Metadata = {
-  title: "About",
-  description: site.bio[0],
+  title: copy.meta.about.title,
+  description: copy.meta.about.description,
 };
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-20">
       <h1 className="font-display text-[clamp(2rem,5vw,3.25rem)] font-semibold tracking-[-0.03em]">
-        About
+        {copy.pages.about.title}
       </h1>
 
       <div className="mt-10 grid gap-6 text-lg leading-relaxed">
-        {site.bio.map((paragraph, index) => (
+        {copy.person.bio.map((paragraph, index) => (
           <p key={paragraph} className={index === 0 ? undefined : "text-muted"}>
             {paragraph}
           </p>
@@ -23,19 +25,19 @@ export default function AboutPage() {
       </div>
 
       <div className="mt-14">
-        <SpecBlock rows={site.manifest} />
+        <SpecBlock rows={copy.person.manifest} />
       </div>
 
       <section aria-labelledby="experience" className="mt-16">
         <h2 id="experience" className="label text-muted">
-          Experience
+          {copy.pages.about.experience}
         </h2>
         <ul aria-labelledby="experience" className="mt-8 border-t border-line">
-          {site.experience.map((job) => (
+          {copy.person.experience.map((job) => (
             <li key={`${job.org}-${job.period}`} className="border-b border-line py-6">
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <h3 className="font-display text-xl font-semibold tracking-[-0.02em]">
-                  {job.role}
+                  {job.title}
                 </h3>
                 <p className="label text-accent">{job.period}</p>
               </div>
@@ -48,10 +50,10 @@ export default function AboutPage() {
 
       <section aria-labelledby="toolkit" className="mt-16">
         <h2 id="toolkit" className="label text-muted">
-          Toolkit
+          {copy.pages.about.toolkit}
         </h2>
         <div className="mt-8">
-          <SpecBlock rows={site.skills} />
+          <SpecBlock rows={copy.person.toolkit} />
         </div>
       </section>
     </div>

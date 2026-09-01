@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getCopy } from "@/content/copy";
 import { formatShipped, type Project } from "@/content/projects";
 
 const STATUS_LABEL: Record<Project["status"], string> = {
@@ -7,6 +8,8 @@ const STATUS_LABEL: Record<Project["status"], string> = {
   "in-development": "In development",
   archived: "Archived",
 };
+
+const copy = getCopy("en");
 
 /**
  * One entry in the log. The title carries a stretched link so the whole row is
@@ -46,7 +49,7 @@ export function ProjectRow({ project }: { project: Project }) {
                   rel="noreferrer"
                   className="label relative text-muted hover:text-accent"
                 >
-                  Live demo
+                  {copy.pages.work.liveDemo}
                 </a>
               )}
               {project.repo && (
@@ -56,12 +59,14 @@ export function ProjectRow({ project }: { project: Project }) {
                   rel="noreferrer"
                   className="label relative text-muted hover:text-accent"
                 >
-                  GitHub
+                  {copy.pages.work.repo}
                 </a>
               )}
             </div>
           )}
-          <span className="sr-only">Shipped {formatShipped(project.shipped)}</span>
+          <span className="sr-only">
+            {copy.pages.work.shipped} {formatShipped(project.shipped)}
+          </span>
         </div>
 
         {project.poster && (

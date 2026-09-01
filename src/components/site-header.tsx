@@ -18,7 +18,7 @@ export function SiteHeader() {
         <div className="hidden items-center gap-6 sm:flex">
           <p className="label flex items-center gap-2 text-muted">
             <span className="size-1.5 rounded-full bg-live" aria-hidden />
-            {site.status}
+            {copy.person.status}
           </p>
           <a
             href={`mailto:${site.email}`}
