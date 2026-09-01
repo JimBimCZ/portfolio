@@ -10,6 +10,14 @@ describe("copy", () => {
     }
   });
 
+  // `global-not-found.tsx` has no parent layout, so it applies the template by
+  // hand. Lose the placeholder and its title silently becomes the raw template.
+  test("every title template keeps its placeholder", () => {
+    for (const locale of LOCALES) {
+      expect(getCopy(locale).meta.titleTemplate, locale).toContain("%s");
+    }
+  });
+
   test("the nav names every section the site routes to", () => {
     for (const locale of LOCALES) {
       const { nav } = getCopy(locale).ui;

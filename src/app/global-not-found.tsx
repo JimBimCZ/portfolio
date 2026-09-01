@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
-import Link from "next/link";
+import { NotFoundPanel } from "@/components/not-found-panel";
 import { getCopy } from "@/content/copy";
 import "./globals.css";
 
@@ -16,6 +16,7 @@ const mono = JetBrains_Mono({
 
 const copy = getCopy("en");
 
+// No layout wraps this page, so the title template has to be applied by hand.
 export const metadata: Metadata = {
   title: copy.meta.titleTemplate.replace("%s", copy.pages.notFound.code),
   description: copy.pages.notFound.title,
@@ -27,18 +28,9 @@ export default function GlobalNotFound() {
       lang="en"
       className={`${sans.variable} ${mono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-canvas text-text">
-        <main className="mx-auto max-w-3xl flex-1 px-6 py-32">
-          <p className="label text-accent">{copy.pages.notFound.code}</p>
-          <h1 className="mt-6 font-display text-[clamp(2rem,5vw,3.25rem)] font-semibold tracking-[-0.03em]">
-            {copy.pages.notFound.title}
-          </h1>
-          <Link
-            href="/"
-            className="label mt-10 inline-block text-muted hover:text-accent"
-          >
-            {copy.pages.notFound.back}
-          </Link>
+      <body className="flex min-h-full flex-col">
+        <main className="flex-1">
+          <NotFoundPanel />
         </main>
       </body>
     </html>
