@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     url: site.url,
     siteName: site.name,
     type: "website",
+    locale: "en_GB",
     images: [
       {
         url: site.ogImage,

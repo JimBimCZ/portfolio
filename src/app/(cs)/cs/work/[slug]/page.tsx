@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProjectPage } from "@/components/pages/project";
-import { getCopy } from "@/content/copy";
+import { counterpart, getCopy } from "@/content/copy";
 import { localiseProject } from "@/content/localise";
+import { alternatesFor } from "@/content/metadata";
 import { projects } from "@/content/projects";
 
 const copy = getCopy("cs");
@@ -21,9 +22,12 @@ export async function generateMetadata(
 
   if (!project) return {};
 
+  const path = `/work/${slug}`;
+
   return {
     title: project.title,
     description: project.summary,
+    alternates: { ...alternatesFor(path), canonical: counterpart(path) },
   };
 }
 
