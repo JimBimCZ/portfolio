@@ -65,7 +65,7 @@ test("exactly one video plays, however far you scroll the carousel", async () =>
   const { container } = render(<AppCarousel projects={carouselProjects} />);
   await userEvent.click(screen.getByRole("button", { name: /next/i }));
   await userEvent.click(screen.getByRole("button", { name: /next/i }));
-  expect(container.querySelectorAll("video").length).toBeLessThanOrEqual(1);
+  expect(container.querySelectorAll("video").length).toBe(1);
 });
 
 // The touch handlers sit on the carousel's swipeable track, a plain div one

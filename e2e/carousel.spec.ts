@@ -48,7 +48,21 @@ test("no video is loaded when the visitor asks for reduced motion", async ({ bro
 
 test("the carousel is operable from the keyboard alone", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("tab", { name: "Trader" }).focus();
+  // Press Tab from the top of the page rather than focusing the tab
+  // directly, so this exercises the roving tabindex (app-card.tsx sets
+  // tabIndex={-1} on every inactive slide) rather than bypassing it.
+  let reachedTablist = false;
+  for (let i = 0; i < 25; i++) {
+    await page.keyboard.press("Tab");
+    const focused = page.locator(":focus");
+    if ((await focused.getAttribute("role")) === "tab") {
+      reachedTablist = true;
+      break;
+    }
+  }
+  expect(reachedTablist).toBe(true);
+  await expect(page.locator(":focus")).toHaveAttribute("aria-selected", "true");
+
   await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("tab", { name: "Games DB" })).toHaveAttribute(
     "aria-selected",
@@ -57,18 +71,49 @@ test("the carousel is operable from the keyboard alone", async ({ page }) => {
 });
 
 test("the page renders in both themes", async ({ page }) => {
+  const backgrounds: Record<string, string> = {};
   for (const scheme of ["dark", "light"] as const) {
     await page.emulateMedia({ colorScheme: scheme });
     await page.goto("/");
-    await expect(page.getByRole("tablist")).toBeVisible();
+    const tablist = page.getByRole("tablist");
+    await expect(tablist).toBeVisible();
+    backgrounds[scheme] = await page.evaluate(
+      () => getComputedStyle(document.body).backgroundColor,
+    );
   }
+  // A scheme-independent assertion (just "visible") would still pass if the
+  // light theme rendered white text on a white background. Confirm the two
+  // schemes actually paint differently.
+  expect(backgrounds.dark).not.toBe(backgrounds.light);
 });
 
 test("a phone visitor sees one card and can open the app", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await expect(page.getByRole("link", { name: /Trader/ }).first()).toHaveAttribute(
-    "target",
-    "_blank",
-  );
+
+  // toBeVisible() doesn't account for an ancestor's overflow: hidden clip —
+  // both the active and the next card report visible under that check even
+  // though only one is actually on screen. Compare bounding boxes against
+  // the clipping viewport (the carousel's "overflow-hidden" track) instead.
+  const track = page.locator('[aria-roledescription="carousel"] .overflow-hidden').first();
+  const trackBox = await track.boundingBox();
+  expect(trackBox).not.toBeNull();
+
+  const activeCard = page.getByRole("link", { name: /Trader/ }).first();
+  await expect(activeCard).toBeVisible();
+  const activeBox = await activeCard.boundingBox();
+  expect(activeBox).not.toBeNull();
+  // The active card sits fully inside the clipping track.
+  expect(activeBox!.x).toBeGreaterThanOrEqual(trackBox!.x);
+  expect(activeBox!.x + activeBox!.width).toBeLessThanOrEqual(trackBox!.x + trackBox!.width);
+
+  const nextCard = page.getByRole("link", { name: /Games DB/ }).first();
+  const nextBox = await nextCard.boundingBox();
+  expect(nextBox).not.toBeNull();
+  // The next slide starts at or beyond the track's right edge, so the
+  // ancestor's overflow: hidden clips all of it — a phone visitor sees
+  // exactly one card, not a sliver of the next one.
+  expect(nextBox!.x).toBeGreaterThanOrEqual(trackBox!.x + trackBox!.width);
+
+  await expect(activeCard).toHaveAttribute("target", "_blank");
 });

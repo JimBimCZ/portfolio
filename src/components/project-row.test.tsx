@@ -77,7 +77,7 @@ test("shows the summary and the stack", () => {
 });
 
 test("links to the live demo separately from the title", () => {
-  renderRow({ live: "https://example.vercel.app" });
+  renderRow({ liveUrl: "https://example.vercel.app" });
   const live = screen.getByRole("link", { name: "Live demo" });
   expect(live).toHaveAttribute("href", "https://example.vercel.app");
   expect(live).toHaveAttribute("target", "_blank");

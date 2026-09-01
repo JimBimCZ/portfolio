@@ -88,9 +88,13 @@ export const tours = {
       });
     },
   },
-  // legal sits behind a real email/password sign-in. Until a demo account
-  // exists (LEGAL_DEMO_EMAIL / LEGAL_DEMO_PASSWORD unset), the tour is just
-  // the sign-in screen.
+  // legal sits behind a real email/password sign-in. LEGAL_DEMO_EMAIL and
+  // LEGAL_DEMO_PASSWORD must be set before running this capture: without
+  // them the poster is taken at the sign-in screen, overwriting the
+  // restored screenshot of a completed NDA with an empty login form again
+  // (see the fix report for 2026-08-31's whole-branch review). Do not run
+  // `npm run capture -- legal` until those are set and a demo account
+  // exists.
   legal: {
     url: "https://legal-seven-zeta.vercel.app",
     async run(page) {

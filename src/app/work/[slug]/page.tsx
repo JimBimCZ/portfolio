@@ -73,11 +73,11 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
         ))}
       </ul>
 
-      {(project.live || project.repo) && (
+      {(project.liveUrl || project.repo) && (
         <div className="mt-14 flex flex-wrap gap-6">
-          {project.live && (
+          {project.liveUrl && (
             <a
-              href={project.live}
+              href={project.liveUrl}
               target="_blank"
               rel="noreferrer"
               className="label border border-line px-5 py-3 hover:border-accent hover:text-accent"
@@ -98,7 +98,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
         </div>
       )}
 
-      {project.live && project.liveNote && (
+      {project.liveUrl && project.liveNote && (
         <p className="mt-6 max-w-xl text-sm text-muted">{project.liveNote}</p>
       )}
     </article>

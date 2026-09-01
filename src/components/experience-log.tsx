@@ -17,7 +17,7 @@ export function ExperienceLog({ roles }: { roles: Role[] }) {
           <dt className="font-mono text-sm text-dim">{role.period}</dt>
           <dd>
             <p className="font-semibold text-text">{role.role}</p>
-            <p className="mt-1 text-sm text-accent">{role.org}</p>
+            <p className="mt-1 text-sm text-text">{role.org}</p>
             <p className="mt-3 max-w-2xl leading-relaxed text-muted">{role.note}</p>
           </dd>
         </div>

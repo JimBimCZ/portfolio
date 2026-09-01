@@ -37,11 +37,11 @@ export function ProjectRow({ project }: { project: Project }) {
           </div>
           <p className="mt-2 max-w-xl text-muted">{project.summary}</p>
           <p className="label mt-4 text-muted">{project.stack.join(" / ")}</p>
-          {(project.live || project.repo) && (
+          {(project.liveUrl || project.repo) && (
             <div className="mt-4 flex flex-wrap gap-6">
-              {project.live && (
+              {project.liveUrl && (
                 <a
-                  href={project.live}
+                  href={project.liveUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="label relative text-muted hover:text-accent"

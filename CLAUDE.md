@@ -41,14 +41,15 @@ The bundled docs in `node_modules/next/dist/docs/` are the authority for this ve
 
 - `site.ts` — name, role, contact, nav, and the `manifest` rows shown in the spec block. Pages read from it; no page hardcodes personal copy.
 - `projects.ts` — the `Project[]` array plus `getProject` and `formatShipped`. Ordered newest first and rendered as a log keyed on `shipped` (an ISO year-month). There are deliberately no version numbers: neither repository tags releases, so a version would be invented.
+- `skills.ts` — the skill groups behind the home page's skill matrix, each backed by checkable `evidence` against a real project slug.
 
 Adding a project means adding one array entry. `/work/[slug]` picks it up through `generateStaticParams`, so every project page is prerendered at build time — the site has no runtime data source and deploys as static output.
 
-Screenshots live in `public/work/` and are referenced by `poster`. They are real captures of the running apps at 1440x900, not mockups; regenerate one by starting that project's Docker stack and capturing the same viewport. A test asserts that every declared `poster` exists on disk and has non-empty `posterAlt`, so a broken path fails the suite rather than the page.
+Screenshots live in `public/work/` and are referenced by `poster`. They are real captures of the running apps at 1440x900, not mockups; regenerate one with `npm run capture` from the live deployment (see Media contract below). A test asserts that every declared `poster` exists on disk and has non-empty `posterAlt`, so a broken path fails the suite rather than the page.
 
 `ProjectRow` puts a stretched link (`after:absolute after:inset-0`) on the title so the whole row is clickable. That is what keeps the repository link a valid sibling rather than an anchor nested inside another anchor — if you add more links to a row, they need `relative` to sit above the stretched one.
 
-Routes: `/` (hero + featured), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
+Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
 
 `src/components/` is presentational and unaware of routing, with one exception: `site-header.tsx` is a Client Component because it reads `usePathname` for the active nav state. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs.
 
