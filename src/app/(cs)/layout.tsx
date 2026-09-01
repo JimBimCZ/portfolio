@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getCopy } from "@/content/copy";
 import { site } from "@/content/site";
-import "./globals.css";
+import "../globals.css";
 
 const sans = Schibsted_Grotesk({
   variable: "--font-schibsted",
@@ -16,7 +16,7 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-const copy = getCopy("en");
+const copy = getCopy("cs");
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: copy.meta.home.title,
     description: copy.meta.home.description,
-    url: site.url,
+    url: `${site.url}/cs`,
     siteName: site.name,
     type: "website",
     images: [
@@ -42,10 +42,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function CzechRootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="cs"
       className={`${sans.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">

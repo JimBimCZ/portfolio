@@ -78,6 +78,15 @@ test("an unknown project shows the not-found page", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("an unmatched URL shows the global not-found page", async ({ page }) => {
+  const response = await page.goto("/no-such-page");
+
+  expect(response?.status()).toBe(404);
+  await expect(
+    page.getByRole("heading", { name: "That page does not exist." }),
+  ).toBeVisible();
+});
+
 test("the privacy notice is reachable from every page's footer", async ({ page }) => {
   await page.goto("/");
 
