@@ -1,8 +1,13 @@
 import { describe, expect, test } from "vitest";
 import { getCopy } from "./copy";
 import { LOCALES } from "./copy/types";
-import { projects } from "./projects";
-import { localiseCarousel, localiseProject, localiseProjects } from "./localise";
+import { projects, type ProjectSlug } from "./projects";
+import {
+  localiseCarousel,
+  localiseProject,
+  localiseProjects,
+  type Metric,
+} from "./localise";
 
 const en = getCopy("en");
 
@@ -25,25 +30,51 @@ describe("localiseProjects", () => {
     }
   });
 
-  test("pins specific value-to-label pairings, so a same-length transposition fails the suite", () => {
-    // Guards the hazard length-checking alone misses: values live in
-    // projects.ts, labels live in en.ts, and nothing but this assertion ties
-    // a given value to its correct label — a same-length swap, within a
-    // project or between two same-shaped projects, would otherwise pass
-    // silently. Pulled from localiseProjects(en)'s merged output, not
-    // restated from the dictionary, so a transposition in either source file
-    // actually fails this.
-    const localised = localiseProjects(en);
+  // Length-checking the zip (below) catches a mismatched count, but says
+  // nothing about pairing: values live in projects.ts, labels live in en.ts,
+  // and nothing but this table ties a given value to its correct label. A
+  // same-length transposition — two labels swapped within one project, or a
+  // whole labels array swapped between two same-shaped projects — would
+  // otherwise pass every other test in this file. Pin the full table, in
+  // order, for every project, so either source file failing to match the
+  // other fails loudly here instead of shipping a mislabelled number. This
+  // duplicates the data on purpose — that duplication is what makes an
+  // accidental edit visible. Values and labels below were read directly out
+  // of projects.ts and copy/en.ts, not derived from either at test time.
+  test("pins every value-to-label pair, in order, for every project", () => {
+    const expected: Record<ProjectSlug, Metric[]> = {
+      trader: [
+        { value: "2/sec", label: "price ticks streamed" },
+        { value: "846", label: "tests across the stack" },
+        { value: "Lévy", label: "closed-form price clock" },
+      ],
+      "games-db": [
+        { value: "245,025", label: "appids indexed" },
+        { value: "14,621", label: "hydrated with detail" },
+        { value: "pg_trgm", label: "trigram search" },
+      ],
+      "my-movies": [
+        { value: "9", label: "browse rows" },
+        { value: "Tag-based", label: "cache revalidation" },
+        { value: "Linkable", label: "search lives in the URL" },
+      ],
+      legal: [
+        { value: "11", label: "Common Paper templates" },
+        { value: "161", label: "tests across the stack" },
+      ],
+      "work-planner": [
+        { value: "Postgres", label: "Drizzle + Neon" },
+        { value: "291", label: "tests across the stack" },
+      ],
+    };
 
-    const trader = localised.find((p) => p.slug === "trader")!;
-    expect(trader.metrics.find((m) => m.value === "846")?.label).toBe(
-      "tests across the stack",
+    const actual = Object.fromEntries(
+      localiseProjects(en).map((project) => [project.slug, project.metrics]),
     );
 
-    const workPlanner = localised.find((p) => p.slug === "work-planner")!;
-    expect(workPlanner.metrics.find((m) => m.value === "Postgres")?.label).toBe(
-      "Drizzle + Neon",
-    );
+    // toEqual on the whole table also folds in the count-per-project check,
+    // so this and the length guard below can never disagree.
+    expect(actual).toEqual(expected);
   });
 
   test("throws when a project's labels and values are not the same length", () => {
