@@ -13,16 +13,15 @@ test("shows every group heading", () => {
 
 test("each evidence tag links to the app that proves the skill", () => {
   render(<SkillMatrix groups={skillGroups} />);
-  const first = skillGroups[0].skills[0];
-  const row = screen.getByRole("row", { name: new RegExp(first.name) });
-  for (const slug of first.evidence) {
-    const link = within(row).getByRole("link", { name: slug });
-    expect(link).toHaveAttribute("href", getProject(slug)!.liveUrl ?? `/work/${slug}`);
+  for (const group of skillGroups) {
+    for (const skill of group.skills) {
+      const row = screen.getByRole("row", { name: new RegExp(skill.name) });
+      for (const slug of skill.evidence) {
+        const link = within(row).getByRole("link", { name: slug });
+        // The case study is the fallback for a project with no live deployment,
+        // so a tag is never a dead end.
+        expect(link).toHaveAttribute("href", getProject(slug)!.liveUrl ?? `/work/${slug}`);
+      }
+    }
   }
-});
-
-test("a skill whose evidence has no live deployment still links to its case study", () => {
-  render(<SkillMatrix groups={skillGroups} />);
-  const link = screen.getAllByRole("link", { name: "kanban" })[0];
-  expect(link).toHaveAttribute("href", "/work/kanban");
 });

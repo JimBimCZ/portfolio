@@ -10,7 +10,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 test("marks the section the visitor is in as the current page", () => {
-  pathname.current = "/work/kanban";
+  pathname.current = "/work/trader";
   render(<SiteHeader />);
   expect(screen.getByRole("link", { name: "Work" })).toHaveAttribute(
     "aria-current",
