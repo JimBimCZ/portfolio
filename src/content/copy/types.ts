@@ -95,6 +95,7 @@ export type SkillCopy = { name: string; detail: string };
 export type SkillGroupCopy = { title: string; skills: Record<string, SkillCopy> };
 
 export type Copy = {
+  locale: Locale;
   ui: UiCopy;
   person: PersonCopy;
   pages: PagesCopy;

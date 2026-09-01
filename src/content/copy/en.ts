@@ -1,6 +1,7 @@
 import type { Copy } from "./types";
 
 export const en = {
+  locale: "en",
   ui: {
     nav: { work: "Work", about: "About", contact: "Contact" },
     navLabel: "Main",

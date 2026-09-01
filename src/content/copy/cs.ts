@@ -8,6 +8,7 @@ import type { Copy } from "./types";
  * English, the way Czech CVs and job listings keep them.
  */
 export const cs = {
+  locale: "cs",
   ui: {
     nav: { work: "Projekty", about: "O mně", contact: "Kontakt" },
     navLabel: "Hlavní navigace",

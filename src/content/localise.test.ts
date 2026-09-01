@@ -3,6 +3,7 @@ import { getCopy } from "./copy";
 import { LOCALES } from "./copy/types";
 import { projects, type ProjectSlug } from "./projects";
 import {
+  formatMetricValue,
   localiseCarousel,
   localiseProject,
   localiseProjects,
@@ -11,6 +12,31 @@ import {
 } from "./localise";
 
 const en = getCopy("en");
+const cs = getCopy("cs");
+
+describe("formatMetricValue", () => {
+  test("groups a comma-separated integer with spaces outside English", () => {
+    expect(formatMetricValue("245,025", "cs")).toBe("245 025");
+    expect(formatMetricValue("14,621", "cs")).toBe("14 621");
+  });
+
+  test("leaves a plain integer without a separator untouched", () => {
+    expect(formatMetricValue("846", "cs")).toBe("846");
+  });
+
+  test("leaves a non-numeric value untouched, comma or not", () => {
+    expect(formatMetricValue("Postgres", "cs")).toBe("Postgres");
+    expect(formatMetricValue("Drizzle + Neon", "cs")).toBe("Drizzle + Neon");
+    expect(formatMetricValue("2/sec", "cs")).toBe("2/sec");
+    expect(formatMetricValue("Tag-based", "cs")).toBe("Tag-based");
+  });
+
+  test("never changes English output, separator or not", () => {
+    expect(formatMetricValue("245,025", "en")).toBe("245,025");
+    expect(formatMetricValue("846", "en")).toBe("846");
+    expect(formatMetricValue("Postgres", "en")).toBe("Postgres");
+  });
+});
 
 describe("localiseProjects", () => {
   test("keeps the log's order and every project", () => {
@@ -75,6 +101,48 @@ describe("localiseProjects", () => {
 
     // toEqual on the whole table also folds in the count-per-project check,
     // so this and the length guard below can never disagree.
+    expect(actual).toEqual(expected);
+  });
+
+  // Same idea as the English table above, but this one exists to pin the
+  // *rendered* (post-formatting) value, not the raw one out of projects.ts —
+  // that is the only way this file can catch a regression in
+  // formatMetricValue itself, as opposed to a transposition between
+  // projects.ts and the dictionaries. games-db is the project with values
+  // that actually change shape in Czech ("245,025" -> "245 025"); the rest
+  // are included to confirm plain integers and non-numeric values render
+  // identically to their English counterparts.
+  test("pins the Czech-rendered value for every project's metrics", () => {
+    const expected: Record<ProjectSlug, Metric[]> = {
+      trader: [
+        { value: "2/sec", label: "streamované ceny" },
+        { value: "846", label: "testů napříč stackem" },
+        { value: "Lévy", label: "ceny v uzavřeném tvaru" },
+      ],
+      "games-db": [
+        { value: "245 025", label: "zaindexovaných appidů" },
+        { value: "14 621", label: "s načteným detailem" },
+        { value: "pg_trgm", label: "trigramové vyhledávání" },
+      ],
+      "my-movies": [
+        { value: "9", label: "řad k procházení" },
+        { value: "Tag-based", label: "invalidace cache" },
+        { value: "Linkable", label: "vyhledávání žije v URL" },
+      ],
+      legal: [
+        { value: "11", label: "šablon Common Paper" },
+        { value: "161", label: "testů napříč stackem" },
+      ],
+      "work-planner": [
+        { value: "Postgres", label: "Drizzle + Neon" },
+        { value: "291", label: "testů napříč stackem" },
+      ],
+    };
+
+    const actual = Object.fromEntries(
+      localiseProjects(cs).map((project) => [project.slug, project.metrics]),
+    );
+
     expect(actual).toEqual(expected);
   });
 
