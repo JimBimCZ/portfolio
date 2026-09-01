@@ -66,7 +66,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
         </div>
       </dl>
 
-      <h2 className="label mt-14 text-muted">What it changed</h2>
+      <h2 className="label mt-14 text-muted">What it brings</h2>
       <ul className="mt-6 grid gap-4">
         {project.highlights.map((highlight) => (
           <li key={highlight} className="flex gap-4 text-lg leading-relaxed">

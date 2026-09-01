@@ -6,9 +6,9 @@ export const site = {
   name: "Vit Busek",
   role: "Frontend & AI engineer",
   location: "Brno, CZ",
-  tagline: "I build AI features that behave like software, not demos.",
+  tagline: "I build robust software, and AI tooling is why it ships in days.",
   intro:
-    "Next.js on the front, FastAPI behind it, and model output constrained to a typed schema so the interface can trust what comes back.",
+    "Typed, tested, reviewed code — built through an AI-assisted workflow that turns the iteration cycle software usually measures in weeks into hours or days.",
   email: "busek.vit@gmail.com",
   phone: "+420 608 961 227",
   url: "https://www.vitbusek.dev",
