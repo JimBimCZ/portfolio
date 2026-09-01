@@ -6,6 +6,7 @@ import {
   localiseCarousel,
   localiseProject,
   localiseProjects,
+  localiseSkills,
   type Metric,
 } from "./localise";
 
@@ -101,5 +102,99 @@ describe("localiseCarousel", () => {
       "legal",
       "work-planner",
     ]);
+  });
+});
+
+describe("localiseSkills", () => {
+  test("every skill keeps its evidence and gains a name in each locale", () => {
+    for (const locale of LOCALES) {
+      for (const group of localiseSkills(getCopy(locale))) {
+        expect(group.title.length, locale).toBeGreaterThan(0);
+        for (const skill of group.skills) {
+          expect(skill.name.length, `${locale} ${group.title}`).toBeGreaterThan(0);
+          expect(skill.detail.length, `${locale} ${skill.name}`).toBeGreaterThan(0);
+          expect(skill.evidence.length, `${locale} ${skill.name}`).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
+
+  // The length checks above pass even if a name or detail is attached to the
+  // wrong id: skillStructure.ts holds ids, en.ts holds prose, and nothing but
+  // this table ties a given id to its correct name and detail. Two details
+  // swapped between same-shaped skills, or a skill matched against the wrong
+  // group, would otherwise slip through. Pin the full English table, in
+  // order, so a mismatch between the two source files fails loudly here.
+  // Read directly out of skills.ts and copy/en.ts, not derived from either.
+  test("pins every skill id to its name and detail, in order, per group", () => {
+    const expected = [
+      {
+        title: "Databases and data",
+        skills: [
+          { name: "Postgres", detail: "schema, indexing, migrations" },
+          { name: "Drizzle ORM", detail: "typed schema, generated migrations" },
+          { name: "Full-text search", detail: "pg_trgm trigram index" },
+          {
+            name: "Data pipelines",
+            detail: "backfill, retry with backoff, batched upserts",
+          },
+        ],
+      },
+      {
+        title: "Backend and integrations",
+        skills: [
+          { name: "FastAPI", detail: "typed routes, service layer" },
+          { name: "Third-party APIs", detail: "Steam, TMDB, OpenRouter" },
+          {
+            name: "Scheduled jobs",
+            detail: "a monthly cron job, advisory-locked queues, durable partial progress",
+          },
+          { name: "Auth", detail: "OAuth sign-in and sessions" },
+          {
+            name: "Caching",
+            detail: "tag-based revalidation with an on-demand purge endpoint",
+          },
+        ],
+      },
+      {
+        title: "Frontend",
+        skills: [
+          {
+            name: "React and Next.js",
+            detail: "App Router, server components by default",
+          },
+          { name: "Streaming UI", detail: "server-sent events, live price ticks" },
+          { name: "Drag and drop", detail: "keyboard-operable, correct ARIA roles" },
+          {
+            name: "Design systems",
+            detail: "Tailwind v4, semantic tokens, no dark: variants",
+          },
+        ],
+      },
+      {
+        title: "Delivery",
+        skills: [
+          {
+            name: "Testing",
+            detail: "unit, integration and Playwright end-to-end",
+          },
+          {
+            name: "Docker",
+            detail: "multi-stage builds, one origin, no CORS layer",
+          },
+          {
+            name: "CI/CD",
+            detail: "typecheck, lint and both suites on every pull request",
+          },
+        ],
+      },
+    ];
+
+    const actual = localiseSkills(en).map((group) => ({
+      title: group.title,
+      skills: group.skills.map((skill) => ({ name: skill.name, detail: skill.detail })),
+    }));
+
+    expect(actual).toEqual(expected);
   });
 });

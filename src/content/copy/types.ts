@@ -89,10 +89,14 @@ export type ProjectCopy = {
   liveNote?: string;
 };
 
+export type SkillCopy = { name: string; detail: string };
+export type SkillGroupCopy = { title: string; skills: Record<string, SkillCopy> };
+
 export type Copy = {
   ui: UiCopy;
   person: PersonCopy;
   pages: PagesCopy;
   meta: MetaCopy;
   projects: Record<ProjectSlug, ProjectCopy>;
+  skills: Record<string, SkillGroupCopy>;
 };

@@ -47,7 +47,7 @@ export default function PrivacyPage() {
       </div>
 
       <p className="mt-14 font-mono text-sm text-dim">
-        {copy.pages.privacy.updated} {formatShipped(copy.person.privacy.updated)}.
+        {copy.pages.privacy.updated} {formatShipped(copy.person.privacy.updated, "en")}.
       </p>
     </div>
   );

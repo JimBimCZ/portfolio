@@ -64,7 +64,7 @@ export function ProjectRow({
             </div>
           )}
           <span className="sr-only">
-            {copy.pages.work.shipped} {formatShipped(project.shipped)}
+            {copy.pages.work.shipped} {formatShipped(project.shipped, "en")}
           </span>
         </div>
 

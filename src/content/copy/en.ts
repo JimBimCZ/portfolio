@@ -270,4 +270,75 @@ export const en = {
         "Work Planner's sign-in screen: the app name above Continue with Google and Continue with GitHub buttons, with no guest or demo account available.",
     },
   },
+  skills: {
+    "databases-and-data": {
+      title: "Databases and data",
+      skills: {
+        postgres: { name: "Postgres", detail: "schema, indexing, migrations" },
+        drizzle: { name: "Drizzle ORM", detail: "typed schema, generated migrations" },
+        "full-text-search": { name: "Full-text search", detail: "pg_trgm trigram index" },
+        "data-pipelines": {
+          name: "Data pipelines",
+          detail: "backfill, retry with backoff, batched upserts",
+        },
+      },
+    },
+    "backend-and-integrations": {
+      title: "Backend and integrations",
+      skills: {
+        fastapi: { name: "FastAPI", detail: "typed routes, service layer" },
+        "third-party-apis": {
+          name: "Third-party APIs",
+          detail: "Steam, TMDB, OpenRouter",
+        },
+        "scheduled-jobs": {
+          name: "Scheduled jobs",
+          detail: "a monthly cron job, advisory-locked queues, durable partial progress",
+        },
+        auth: { name: "Auth", detail: "OAuth sign-in and sessions" },
+        caching: {
+          name: "Caching",
+          detail: "tag-based revalidation with an on-demand purge endpoint",
+        },
+      },
+    },
+    frontend: {
+      title: "Frontend",
+      skills: {
+        "react-and-nextjs": {
+          name: "React and Next.js",
+          detail: "App Router, server components by default",
+        },
+        "streaming-ui": {
+          name: "Streaming UI",
+          detail: "server-sent events, live price ticks",
+        },
+        "drag-and-drop": {
+          name: "Drag and drop",
+          detail: "keyboard-operable, correct ARIA roles",
+        },
+        "design-systems": {
+          name: "Design systems",
+          detail: "Tailwind v4, semantic tokens, no dark: variants",
+        },
+      },
+    },
+    delivery: {
+      title: "Delivery",
+      skills: {
+        testing: {
+          name: "Testing",
+          detail: "unit, integration and Playwright end-to-end",
+        },
+        docker: {
+          name: "Docker",
+          detail: "multi-stage builds, one origin, no CORS layer",
+        },
+        "ci-cd": {
+          name: "CI/CD",
+          detail: "typecheck, lint and both suites on every pull request",
+        },
+      },
+    },
+  },
 } satisfies Copy;

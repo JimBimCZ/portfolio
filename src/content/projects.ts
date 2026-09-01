@@ -1,3 +1,5 @@
+import type { Locale } from "./copy/types";
+
 /**
  * Real work, newest first. Add an entry and its detail page is generated.
  *
@@ -152,10 +154,12 @@ export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
 }
 
-/** "2026-08" -> "August 2026" */
-export function formatShipped(shipped: string) {
+const DATE_LOCALE: Record<Locale, string> = { en: "en-US", cs: "cs-CZ" };
+
+/** "2026-08" -> "August 2026" / "srpen 2026" */
+export function formatShipped(shipped: string, locale: Locale) {
   const [year, month] = shipped.split("-").map(Number);
-  return new Date(year, month - 1).toLocaleDateString("en-US", {
+  return new Date(year, month - 1).toLocaleDateString(DATE_LOCALE[locale], {
     month: "long",
     year: "numeric",
   });

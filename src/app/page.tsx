@@ -4,13 +4,13 @@ import { ExperienceLog } from "@/components/experience-log";
 import { SkillMatrix } from "@/components/skill-matrix";
 import { SpecBlock } from "@/components/spec-block";
 import { getCopy } from "@/content/copy";
-import { localiseCarousel } from "@/content/localise";
-import { skillGroups } from "@/content/skills";
+import { localiseCarousel, localiseSkills } from "@/content/localise";
 import { site } from "@/content/site";
 
 export default function Home() {
   const copy = getCopy("en");
   const carouselProjects = localiseCarousel(copy);
+  const skillGroups = localiseSkills(copy);
 
   return (
     <div className="mx-auto max-w-5xl px-6">

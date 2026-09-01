@@ -12,11 +12,19 @@ const carouselProjects = localiseCarousel(getCopy("en"));
 
 describe("formatShipped", () => {
   test("renders an ISO year-month as a readable date", () => {
-    expect(formatShipped("2026-08")).toBe("August 2026");
+    expect(formatShipped("2026-08", "en")).toBe("August 2026");
   });
 
   test("handles a January date without off-by-one in the month", () => {
-    expect(formatShipped("2025-01")).toBe("January 2025");
+    expect(formatShipped("2025-01", "en")).toBe("January 2025");
+  });
+
+  test("renders a Czech date in Czech, lower case as the language requires", () => {
+    expect(formatShipped("2026-08", "cs")).toBe("srpen 2026");
+  });
+
+  test("still renders English when asked for English", () => {
+    expect(formatShipped("2026-08", "en")).toBe("August 2026");
   });
 });
 

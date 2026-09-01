@@ -38,7 +38,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
         {copy.pages.project.back}
       </Link>
 
-      <p className="label mt-12 text-accent">{formatShipped(project.shipped)}</p>
+      <p className="label mt-12 text-accent">{formatShipped(project.shipped, "en")}</p>
       <h1 className="mt-4 font-display text-[clamp(2rem,5vw,3.25rem)] font-semibold tracking-[-0.03em]">
         {project.title}
       </h1>
