@@ -208,39 +208,16 @@ export const projects = [
       "Work Planner's sign-in screen: the app name above Continue with Google and Continue with GitHub buttons, with no guest or demo account available.",
     tour: "/work/work-planner.webm",
   },
-  {
-    slug: "kanban" as const,
-    title: "Kanban MVP",
-    shipped: "2026-08",
-    summary:
-      "A project board with an assistant that edits it for you — create, move, and rename cards by asking, or drag them yourself.",
-    role: "Solo build — frontend, backend, infrastructure",
-    stack: ["Next.js", "Tailwind", "FastAPI", "SQLite", "Docker"],
-    highlights: [
-      "The AI assistant creates, edits, moves, and renames cards from plain language, against the same API the UI uses.",
-      "Drag and drop across five renameable columns, persisted per user in SQLite.",
-      "Responsive board layout that holds up from phone to desktop.",
-      "Unit and end-to-end suites, plus a connectivity check for the model provider.",
-    ],
-    repo: "https://github.com/JimBimCZ/kanban",
-    status: "in-development",
-    metrics: [
-      { value: "5", label: "renameable columns" },
-      { value: "10", label: "tests across the stack" },
-    ],
-    poster: "/work/kanban.webp",
-    posterAlt: "The kanban board with cards distributed across its columns.",
-  },
 ] satisfies Project[];
 
 // `satisfies` (rather than a `: Project[]` annotation) keeps each entry's literal `slug`
-// type, so this resolves to a union of the six actual slugs, not plain `string`. See the
+// type, so this resolves to a union of the five actual slugs, not plain `string`. See the
 // `tsc` runs in the Task 2 fix report for a demonstration that a bogus `evidence` slug in
 // skills.ts is a compile error, not just a runtime test failure.
 export type ProjectSlug = (typeof projects)[number]["slug"];
 
-/** The home page carousel. kanban is deliberately absent — five slides already
- *  risk repetition and it is the weakest of the set. */
+/** The home page carousel. The order is declared here rather than taken from the
+ *  log, so the first slide stays a deliberate choice. */
 const CAROUSEL_ORDER = [
   "trader",
   "games-db",

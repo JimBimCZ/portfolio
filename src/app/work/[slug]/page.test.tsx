@@ -11,7 +11,7 @@ function argsFor(slug: string) {
 
 test("generates a route for every project", async () => {
   const params = await generateStaticParams();
-  expect(params).toContainEqual({ slug: "kanban" });
+  expect(params).toContainEqual({ slug: "trader" });
   expect(params).toContainEqual({ slug: "legal" });
 });
 
@@ -38,11 +38,11 @@ test("loads the poster as the page's LCP candidate", async () => {
 });
 
 test("links to the repository when the project has one", async () => {
-  render(await ProjectPage(argsFor("kanban")));
+  render(await ProjectPage(argsFor("games-db")));
 
   expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
     "href",
-    "https://github.com/JimBimCZ/kanban",
+    "https://github.com/JimBimCZ/games-db",
   );
 });
 

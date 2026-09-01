@@ -17,7 +17,7 @@ describe("formatShipped", () => {
 
 describe("getProject", () => {
   test("finds a project by slug", () => {
-    expect(getProject("kanban")?.title).toBe("Kanban MVP");
+    expect(getProject("trader")?.title).toBe("Trader");
   });
 
   test("returns undefined for an unknown slug", () => {
