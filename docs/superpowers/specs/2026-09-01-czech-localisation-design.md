@@ -113,8 +113,7 @@ src/content/copy/
 
 A dictionary covers:
 
-- **chrome** — nav labels, the availability status, footer links, the language
-  switch, carousel controls (`Previous app`, `Next app`, `Choose an application`,
+- **chrome** — nav labels, footer links, the language switch, carousel controls (`Previous app`, `Next app`, `Choose an application`,
   `Deployed applications`, `Open live app`, `Sign-in required`)
 - **pages** — every heading, button, and paragraph currently hardcoded in a page:
   `View work`, `Get in touch`, `What each one actually is`, `Track record`,
@@ -126,8 +125,10 @@ A dictionary covers:
   `posterAlt`, `liveNote`, and each metric's `label`
 - **skills** — group titles, skill names, details
 - **person** — `role`, `location`, `tagline`, `intro`, `status`, `ogImageAlt`,
-  `manifest` rows, `bio` paragraphs, per-role `note` and title in `experience`,
-  the toolkit rows, the whole `privacy` block
+  `manifest` rows, `bio` paragraphs, each `experience` entry's role title and
+  `note`, the toolkit rows, the whole `privacy` block. Role titles sit in the
+  dictionary but stay English on the Czech side, per the decision above — the
+  key exists so the wording is reviewable in one place, not so it is translated.
 - **metadata** — per-page title and description, and the `og` description
 
 Both dictionaries `satisfies Copy`, and the project record is keyed on
