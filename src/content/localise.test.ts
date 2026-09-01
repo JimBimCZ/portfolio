@@ -25,6 +25,27 @@ describe("localiseProjects", () => {
     }
   });
 
+  test("pins specific value-to-label pairings, so a same-length transposition fails the suite", () => {
+    // Guards the hazard length-checking alone misses: values live in
+    // projects.ts, labels live in en.ts, and nothing but this assertion ties
+    // a given value to its correct label — a same-length swap, within a
+    // project or between two same-shaped projects, would otherwise pass
+    // silently. Pulled from localiseProjects(en)'s merged output, not
+    // restated from the dictionary, so a transposition in either source file
+    // actually fails this.
+    const localised = localiseProjects(en);
+
+    const trader = localised.find((p) => p.slug === "trader")!;
+    expect(trader.metrics.find((m) => m.value === "846")?.label).toBe(
+      "tests across the stack",
+    );
+
+    const workPlanner = localised.find((p) => p.slug === "work-planner")!;
+    expect(workPlanner.metrics.find((m) => m.value === "Postgres")?.label).toBe(
+      "Drizzle + Neon",
+    );
+  });
+
   test("throws when a project's labels and values are not the same length", () => {
     const broken = {
       ...en,
