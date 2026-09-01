@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
+import { getCopy } from "./copy";
 import { site } from "./site";
 
 describe("site metadata", () => {
@@ -15,6 +16,6 @@ describe("site metadata", () => {
 
   test("the declared social card exists and is described", () => {
     expect(existsSync(join(process.cwd(), "public", site.ogImage))).toBe(true);
-    expect(site.ogImageAlt.length).toBeGreaterThan(0);
+    expect(getCopy("en").person.ogImageAlt.length).toBeGreaterThan(0);
   });
 });

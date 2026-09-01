@@ -1,11 +1,20 @@
 import { AppMedia } from "./app-media";
-import type { Project } from "@/content/projects";
+import type { Copy } from "@/content/copy";
+import type { LocalisedProject } from "@/content/localise";
 
 /**
  * One slide. The whole card is a single anchor, so it is keyboard-operable and
  * middle-clickable for free — no div with a click handler.
  */
-export function AppCard({ project, active }: { project: Project; active: boolean }) {
+export function AppCard({
+  project,
+  active,
+  copy,
+}: {
+  project: LocalisedProject;
+  active: boolean;
+  copy: Copy;
+}) {
   const host = project.liveUrl?.replace(/^https:\/\//, "") ?? "";
 
   return (
@@ -32,10 +41,10 @@ export function AppCard({ project, active }: { project: Project; active: boolean
         <span className="font-mono text-xs text-dim">{host}</span>
         {project.status === "in-development" && (
           <span className="label rounded border border-line px-1.5 py-0.5 text-dim">
-            In development
+            {copy.ui.status["in-development"]}
           </span>
         )}
-        <span className="label ml-auto text-accent">Open live app →</span>
+        <span className="label ml-auto text-accent">{copy.ui.carousel.openLiveApp}</span>
       </div>
 
       <AppMedia project={project} active={active} />
@@ -49,7 +58,7 @@ export function AppCard({ project, active }: { project: Project; active: boolean
         ))}
         {project.signInRequired && (
           <div className="ml-auto text-right text-xs text-dim">
-            <div>Sign-in required</div>
+            <div>{copy.ui.carousel.signInRequired}</div>
             {project.demo && (
               <div className="font-mono text-muted">
                 <span>{project.demo.email}</span> · <span>{project.demo.password}</span>

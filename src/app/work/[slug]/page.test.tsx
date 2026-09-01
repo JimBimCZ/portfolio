@@ -1,7 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
-import { getProject } from "@/content/projects";
+import { getCopy } from "@/content/copy";
+import { localiseProject } from "@/content/localise";
 import ProjectPage, { generateStaticParams } from "./page";
+
+function getProject(slug: string) {
+  return localiseProject(slug, getCopy("en"));
+}
 
 type PageArgs = Parameters<typeof ProjectPage>[0];
 

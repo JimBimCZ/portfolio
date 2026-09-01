@@ -1,19 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatShipped, type Project } from "@/content/projects";
-
-const STATUS_LABEL: Record<Project["status"], string> = {
-  live: "Live",
-  "in-development": "In development",
-  archived: "Archived",
-};
+import type { Copy } from "@/content/copy";
+import { formatShipped } from "@/content/projects";
+import type { LocalisedProject } from "@/content/localise";
 
 /**
  * One entry in the log. The title carries a stretched link so the whole row is
  * clickable, which leaves the repository link free to sit inside the row as a
  * sibling rather than an illegal nested anchor.
  */
-export function ProjectRow({ project }: { project: Project }) {
+export function ProjectRow({
+  project,
+  copy,
+}: {
+  project: LocalisedProject;
+  copy: Copy;
+}) {
   return (
     <li className="group relative border-t border-line">
       <div className="grid gap-x-8 gap-y-5 py-8 sm:grid-cols-[7rem_1fr] lg:grid-cols-[7rem_1fr_18rem]">
@@ -31,7 +33,7 @@ export function ProjectRow({ project }: { project: Project }) {
             </h3>
             {project.status !== "live" && (
               <span className="label rounded border border-line px-1.5 py-0.5 text-dim">
-                {STATUS_LABEL[project.status]}
+                {copy.ui.status[project.status]}
               </span>
             )}
           </div>
@@ -46,7 +48,7 @@ export function ProjectRow({ project }: { project: Project }) {
                   rel="noreferrer"
                   className="label relative text-muted hover:text-accent"
                 >
-                  Live demo
+                  {copy.pages.work.liveDemo}
                 </a>
               )}
               {project.repo && (
@@ -56,12 +58,14 @@ export function ProjectRow({ project }: { project: Project }) {
                   rel="noreferrer"
                   className="label relative text-muted hover:text-accent"
                 >
-                  GitHub
+                  {copy.pages.work.repo}
                 </a>
               )}
             </div>
           )}
-          <span className="sr-only">Shipped {formatShipped(project.shipped)}</span>
+          <span className="sr-only">
+            {copy.pages.work.shipped} {formatShipped(project.shipped, "en")}
+          </span>
         </div>
 
         {project.poster && (

@@ -1,9 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
-import type { Project } from "@/content/projects";
+import { getCopy } from "@/content/copy";
+import type { LocalisedProject } from "@/content/localise";
 import { ProjectRow } from "./project-row";
 
-const project: Project = {
+const copy = getCopy("en");
+
+const project: LocalisedProject = {
   slug: "example",
   title: "Example Project",
   shipped: "2026-08",
@@ -18,10 +21,10 @@ const project: Project = {
   metrics: [{ label: "tests", value: "1" }],
 };
 
-function renderRow(overrides: Partial<Project> = {}) {
+function renderRow(overrides: Partial<LocalisedProject> = {}) {
   return render(
     <ul>
-      <ProjectRow project={{ ...project, ...overrides }} />
+      <ProjectRow project={{ ...project, ...overrides }} copy={copy} />
     </ul>,
   );
 }

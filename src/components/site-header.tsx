@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getCopy } from "@/content/copy";
 import { site } from "@/content/site";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const copy = getCopy("en");
 
   return (
     <header className="border-b border-line">
@@ -16,7 +18,7 @@ export function SiteHeader() {
         <div className="hidden items-center gap-6 sm:flex">
           <p className="label flex items-center gap-2 text-muted">
             <span className="size-1.5 rounded-full bg-live" aria-hidden />
-            {site.status}
+            {copy.person.status}
           </p>
           <a
             href={`mailto:${site.email}`}
@@ -38,7 +40,7 @@ export function SiteHeader() {
                       active ? "text-accent" : "text-muted hover:text-text"
                     }`}
                   >
-                    {item.label}
+                    {copy.ui.nav[item.key]}
                   </Link>
                 </li>
               );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { getCopy } from "@/content/copy";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -15,16 +16,18 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const copy = getCopy("en");
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — ${site.role}`,
-    template: `%s — ${site.name}`,
+    default: copy.meta.home.title,
+    template: copy.meta.titleTemplate,
   },
-  description: site.intro,
+  description: copy.meta.home.description,
   openGraph: {
-    title: `${site.name} — ${site.role}`,
-    description: site.intro,
+    title: copy.meta.home.title,
+    description: copy.meta.home.description,
     url: site.url,
     siteName: site.name,
     type: "website",
@@ -33,7 +36,7 @@ export const metadata: Metadata = {
         url: site.ogImage,
         width: 1200,
         height: 630,
-        alt: site.ogImageAlt,
+        alt: copy.person.ogImageAlt,
       },
     ],
   },

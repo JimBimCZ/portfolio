@@ -1,12 +1,14 @@
 import { render, screen, within } from "@testing-library/react";
 import { expect, test } from "vitest";
-import { site } from "@/content/site";
+import { getCopy } from "@/content/copy";
 import AboutPage from "./page";
+
+const copy = getCopy("en");
 
 test("renders every bio paragraph", () => {
   render(<AboutPage />);
 
-  for (const paragraph of site.bio) {
+  for (const paragraph of copy.person.bio) {
     expect(screen.getByText(paragraph)).toBeInTheDocument();
   }
 });
@@ -17,11 +19,11 @@ test("lists every role with its employer and dates", () => {
   const entries = within(
     screen.getByRole("list", { name: /experience/i }),
   ).getAllByRole("listitem");
-  expect(entries).toHaveLength(site.experience.length);
+  expect(entries).toHaveLength(copy.person.experience.length);
 
-  site.experience.forEach((job, index) => {
+  copy.person.experience.forEach((job, index) => {
     const entry = within(entries[index]);
-    expect(entry.getByRole("heading", { level: 3 })).toHaveTextContent(job.role);
+    expect(entry.getByRole("heading", { level: 3 })).toHaveTextContent(job.title);
     expect(entry.getByText(job.org)).toBeInTheDocument();
     expect(entry.getByText(job.period)).toBeInTheDocument();
     expect(entry.getByText(job.note)).toBeInTheDocument();
@@ -31,7 +33,7 @@ test("lists every role with its employer and dates", () => {
 test("shows the skill groups from the toolkit", () => {
   render(<AboutPage />);
 
-  for (const [group, value] of site.skills) {
+  for (const [group, value] of copy.person.toolkit) {
     expect(screen.getByText(group)).toBeInTheDocument();
     expect(screen.getByText(value)).toBeInTheDocument();
   }

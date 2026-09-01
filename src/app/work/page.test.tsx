@@ -1,7 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
-import { projects } from "@/content/projects";
+import { getCopy } from "@/content/copy";
+import { localiseProjects } from "@/content/localise";
 import WorkPage from "./page";
+
+const projects = localiseProjects(getCopy("en"));
 
 test("lists every project with a link to its detail page", () => {
   render(<WorkPage />);

@@ -1,7 +1,8 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { expect, test, vi } from "vitest";
-import { carouselProjects } from "@/content/projects";
+import { getCopy } from "@/content/copy";
+import { localiseCarousel } from "@/content/localise";
 import { AppCarousel } from "./app-carousel";
 
 vi.stubGlobal("matchMedia", (query: string) => ({
@@ -11,15 +12,18 @@ vi.stubGlobal("matchMedia", (query: string) => ({
   removeEventListener: vi.fn(),
 }));
 
+const copy = getCopy("en");
+const carouselProjects = localiseCarousel(copy);
+
 test("opens on the first project", () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
     carouselProjects[0].title,
   );
 });
 
 test("the next control advances the active slide", async () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   await userEvent.click(screen.getByRole("button", { name: /next/i }));
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
     carouselProjects[1].title,
@@ -27,7 +31,7 @@ test("the next control advances the active slide", async () => {
 });
 
 test("the previous control wraps around from the first slide", async () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   await userEvent.click(screen.getByRole("button", { name: /previous/i }));
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
     carouselProjects.at(-1)!.title,
@@ -35,7 +39,7 @@ test("the previous control wraps around from the first slide", async () => {
 });
 
 test("a tab selects its project directly", async () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   await userEvent.click(screen.getByRole("tab", { name: carouselProjects[2].title }));
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
     carouselProjects[2].title,
@@ -43,7 +47,7 @@ test("a tab selects its project directly", async () => {
 });
 
 test("arrow keys move between slides once the tabs have focus", async () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   await userEvent.click(screen.getByRole("tab", { name: carouselProjects[0].title }));
   await userEvent.keyboard("{ArrowRight}");
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
@@ -52,7 +56,7 @@ test("arrow keys move between slides once the tabs have focus", async () => {
 });
 
 test("arrow keys keep moving the same way DOM focus follows the selected tab", async () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   await userEvent.click(screen.getByRole("tab", { name: carouselProjects[0].title }));
   await userEvent.keyboard("{ArrowRight}{ArrowRight}");
   expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName(
@@ -62,7 +66,7 @@ test("arrow keys keep moving the same way DOM focus follows the selected tab", a
 });
 
 test("exactly one video plays, however far you scroll the carousel", async () => {
-  const { container } = render(<AppCarousel projects={carouselProjects} />);
+  const { container } = render(<AppCarousel projects={carouselProjects} copy={copy} />);
   await userEvent.click(screen.getByRole("button", { name: /next/i }));
   await userEvent.click(screen.getByRole("button", { name: /next/i }));
   expect(container.querySelectorAll("video").length).toBe(1);
@@ -76,7 +80,7 @@ test("exactly one video plays, however far you scroll the carousel", async () =>
 // the region landmark that wraps the whole component.
 
 test("a left swipe advances to the next slide", () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   const region = screen.getByRole("region", { name: "Deployed applications" });
   const activeCard = within(region).getByRole("link", {
     name: new RegExp(carouselProjects[0].title),
@@ -89,7 +93,7 @@ test("a left swipe advances to the next slide", () => {
 });
 
 test("a right swipe returns to the previous slide", () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   const region = screen.getByRole("region", { name: "Deployed applications" });
   const activeCard = within(region).getByRole("link", {
     name: new RegExp(carouselProjects[0].title),
@@ -102,7 +106,7 @@ test("a right swipe returns to the previous slide", () => {
 });
 
 test("a short touch that is not a real swipe does not change the slide", () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   const region = screen.getByRole("region", { name: "Deployed applications" });
   const activeCard = within(region).getByRole("link", {
     name: new RegExp(carouselProjects[0].title),
@@ -115,7 +119,7 @@ test("a short touch that is not a real swipe does not change the slide", () => {
 });
 
 test("every project is reachable and links to its deployment", () => {
-  render(<AppCarousel projects={carouselProjects} />);
+  render(<AppCarousel projects={carouselProjects} copy={copy} />);
   for (const project of carouselProjects) {
     expect(
       screen.getByRole("link", { name: new RegExp(project.title) }),

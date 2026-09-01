@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getProject } from "@/content/projects";
-import type { SkillGroup } from "@/content/skills";
+import type { SkillGroup } from "@/content/localise";
 
 /**
  * Every skill names the shipped projects that prove it. An evidence tag opens

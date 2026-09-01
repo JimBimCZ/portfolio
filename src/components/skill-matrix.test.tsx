@@ -1,8 +1,11 @@
 import { render, screen, within } from "@testing-library/react";
 import { expect, test } from "vitest";
+import { getCopy } from "@/content/copy";
+import { localiseSkills } from "@/content/localise";
 import { getProject } from "@/content/projects";
-import { skillGroups } from "@/content/skills";
 import { SkillMatrix } from "./skill-matrix";
+
+const skillGroups = localiseSkills(getCopy("en"));
 
 test("shows every group heading", () => {
   render(<SkillMatrix groups={skillGroups} />);

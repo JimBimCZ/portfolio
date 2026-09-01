@@ -1,12 +1,10 @@
-import type { site } from "@/content/site";
-
-type Role = (typeof site.experience)[number];
+import type { JobCopy } from "@/content/copy/types";
 
 /**
  * A definition-style list over the employment history. Newest first, same
- * order as `site.experience`. No new content — it reads `site.ts`.
+ * order as `copy.person.experience`. No new content — it reads the dictionary.
  */
-export function ExperienceLog({ roles }: { roles: Role[] }) {
+export function ExperienceLog({ roles }: { roles: readonly JobCopy[] }) {
   return (
     <dl className="divide-y divide-line-soft border-t border-line">
       {roles.map((role) => (
@@ -16,7 +14,7 @@ export function ExperienceLog({ roles }: { roles: Role[] }) {
         >
           <dt className="font-mono text-sm text-dim">{role.period}</dt>
           <dd>
-            <p className="font-semibold text-text">{role.role}</p>
+            <p className="font-semibold text-text">{role.title}</p>
             <p className="mt-1 text-sm text-text">{role.org}</p>
             <p className="mt-3 max-w-2xl leading-relaxed text-muted">{role.note}</p>
           </dd>

@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { AppCard } from "./app-card";
-import type { Project } from "@/content/projects";
+import type { Copy } from "@/content/copy";
+import type { LocalisedProject } from "@/content/localise";
 
 /** Minimum horizontal travel, in pixels, before a touch counts as a swipe
  *  rather than a tap or scroll wobble. */
@@ -13,7 +14,13 @@ const SWIPE_THRESHOLD_PX = 40;
  * card's tour looping, and a carousel that moves on its own takes control away
  * from the person this page is trying to impress.
  */
-export function AppCarousel({ projects }: { projects: Project[] }) {
+export function AppCarousel({
+  projects,
+  copy,
+}: {
+  projects: LocalisedProject[];
+  copy: Copy;
+}) {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const move = (delta: number) =>
@@ -35,7 +42,7 @@ export function AppCarousel({ projects }: { projects: Project[] }) {
   };
 
   return (
-    <section aria-label="Deployed applications" aria-roledescription="carousel">
+    <section aria-label={copy.ui.carousel.region} aria-roledescription="carousel">
       <div className="relative">
         <div
           className="overflow-hidden"
@@ -53,23 +60,27 @@ export function AppCarousel({ projects }: { projects: Project[] }) {
                   position === index ? "opacity-100" : "opacity-35"
                 }`}
               >
-                <AppCard project={project} active={position === index} />
+                <AppCard project={project} active={position === index} copy={copy} />
               </div>
             ))}
           </div>
         </div>
 
-        <CarouselButton label="Previous app" onClick={() => move(-1)} className="left-0">
+        <CarouselButton
+          label={copy.ui.carousel.previous}
+          onClick={() => move(-1)}
+          className="left-0"
+        >
           ‹
         </CarouselButton>
-        <CarouselButton label="Next app" onClick={() => move(1)} className="right-0">
+        <CarouselButton label={copy.ui.carousel.next} onClick={() => move(1)} className="right-0">
           ›
         </CarouselButton>
       </div>
 
       <div
         role="tablist"
-        aria-label="Choose an application"
+        aria-label={copy.ui.carousel.tablist}
         className="mt-3 flex gap-1 overflow-x-auto rounded-lg border border-line-soft bg-raised p-1"
         onKeyDown={(event) => {
           if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;

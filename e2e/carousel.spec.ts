@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { carouselProjects } from "../src/content/projects";
+import { getCopy } from "../src/content/copy";
+import { localiseCarousel } from "../src/content/localise";
+
+const carouselProjects = localiseCarousel(getCopy("en"));
 
 test("the carousel opens on trader with its poster showing", async ({ page }) => {
   await page.goto("/");
