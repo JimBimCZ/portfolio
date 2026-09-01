@@ -44,7 +44,11 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
       </section>
 
       <div className="py-12">
-        <AppCarousel projects={carouselProjects} copy={copy} />
+        <AppCarousel
+          projects={carouselProjects}
+          labels={copy.ui.carousel}
+          inDevelopment={copy.ui.status["in-development"]}
+        />
       </div>
 
       <section aria-labelledby="what-each-one-is" className="py-16">

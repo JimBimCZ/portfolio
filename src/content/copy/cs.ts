@@ -10,6 +10,7 @@ import type { Copy } from "./types";
 export const cs = {
   ui: {
     nav: { work: "Projekty", about: "O mně", contact: "Kontakt" },
+    navLabel: "Hlavní navigace",
     privacy: "Soukromí",
     languageSwitch: { label: "Jazyk", en: "English", cs: "Čeština" },
     carousel: {

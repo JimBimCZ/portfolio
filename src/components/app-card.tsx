@@ -9,11 +9,13 @@ import type { LocalisedProject } from "@/content/localise";
 export function AppCard({
   project,
   active,
-  copy,
+  labels,
+  inDevelopment,
 }: {
   project: LocalisedProject;
   active: boolean;
-  copy: Copy;
+  labels: Copy["ui"]["carousel"];
+  inDevelopment: string;
 }) {
   const host = project.liveUrl?.replace(/^https:\/\//, "") ?? "";
 
@@ -41,10 +43,10 @@ export function AppCard({
         <span className="font-mono text-xs text-dim">{host}</span>
         {project.status === "in-development" && (
           <span className="label rounded border border-line px-1.5 py-0.5 text-dim">
-            {copy.ui.status["in-development"]}
+            {inDevelopment}
           </span>
         )}
-        <span className="label ml-auto text-accent">{copy.ui.carousel.openLiveApp}</span>
+        <span className="label ml-auto text-accent">{labels.openLiveApp}</span>
       </div>
 
       <AppMedia project={project} active={active} />
@@ -58,7 +60,7 @@ export function AppCard({
         ))}
         {project.signInRequired && (
           <div className="ml-auto text-right text-xs text-dim">
-            <div>{copy.ui.carousel.signInRequired}</div>
+            <div>{labels.signInRequired}</div>
             {project.demo && (
               <div className="font-mono text-muted">
                 <span>{project.demo.email}</span> · <span>{project.demo.password}</span>

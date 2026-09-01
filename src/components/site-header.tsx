@@ -5,7 +5,22 @@ import { usePathname } from "next/navigation";
 import { localePrefix, type Copy, type Locale } from "@/content/copy";
 import { site } from "@/content/site";
 
-export function SiteHeader({ copy, locale }: { copy: Copy; locale: Locale }) {
+/**
+ * Takes the four strings it renders rather than the whole dictionary: it is a
+ * Client Component, so every prop is serialised into the flight payload of
+ * every page on the site.
+ */
+export function SiteHeader({
+  nav,
+  navLabel,
+  status,
+  locale,
+}: {
+  nav: Copy["ui"]["nav"];
+  navLabel: string;
+  status: string;
+  locale: Locale;
+}) {
   const pathname = usePathname();
   const prefix = localePrefix(locale);
 
@@ -18,7 +33,7 @@ export function SiteHeader({ copy, locale }: { copy: Copy; locale: Locale }) {
         <div className="hidden items-center gap-6 sm:flex">
           <p className="label flex items-center gap-2 text-muted">
             <span className="size-1.5 rounded-full bg-live" aria-hidden />
-            {copy.person.status}
+            {status}
           </p>
           <a
             href={`mailto:${site.email}`}
@@ -27,7 +42,7 @@ export function SiteHeader({ copy, locale }: { copy: Copy; locale: Locale }) {
             {site.email}
           </a>
         </div>
-        <nav aria-label="Main">
+        <nav aria-label={navLabel}>
           <ul className="flex items-center gap-6">
             {site.nav.map((item) => {
               const href = `${prefix}${item.href}`;
@@ -41,7 +56,7 @@ export function SiteHeader({ copy, locale }: { copy: Copy; locale: Locale }) {
                       active ? "text-accent" : "text-muted hover:text-text"
                     }`}
                   >
-                    {copy.ui.nav[item.key]}
+                    {nav[item.key]}
                   </Link>
                 </li>
               );

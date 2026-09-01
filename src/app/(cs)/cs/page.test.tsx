@@ -40,6 +40,7 @@ test("keeps every internal link inside the Czech tree", () => {
 
   expect(internal.length).toBeGreaterThan(0);
   for (const href of internal) {
-    expect(href.startsWith("/cs/")).toBe(true);
+    // "/cs" exactly is the Czech home page — what the header's wordmark emits.
+    expect(href === "/cs" || href.startsWith("/cs/")).toBe(true);
   }
 });

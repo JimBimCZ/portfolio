@@ -24,7 +24,8 @@ const project = {
 } as LocalisedProject;
 
 test("the whole card is one link to the live deployment", () => {
-  render(<AppCard project={project} active copy={copy} />);
+  render(<AppCard project={project} active labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   const link = screen.getByRole("link", { name: /Trader/ });
   expect(link).toHaveAttribute("href", project.liveUrl);
   expect(link).toHaveAttribute("target", "_blank");
@@ -32,18 +33,21 @@ test("the whole card is one link to the live deployment", () => {
 });
 
 test("shows the metrics that carry the persuasion", () => {
-  render(<AppCard project={project} active copy={copy} />);
+  render(<AppCard project={project} active labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.getByText("501")).toBeInTheDocument();
   expect(screen.getByText("tests across the stack")).toBeInTheDocument();
 });
 
 test("says when a project is still in development", () => {
-  render(<AppCard project={{ ...project, status: "in-development" }} active copy={copy} />);
+  render(<AppCard project={{ ...project, status: "in-development" }} active labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.getByText("In development")).toBeInTheDocument();
 });
 
 test("does not label a finished project", () => {
-  render(<AppCard project={project} active copy={copy} />);
+  render(<AppCard project={project} active labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.queryByText("In development")).toBeNull();
 });
 
@@ -56,7 +60,8 @@ test("surfaces demo credentials for an app behind sign-in", () => {
         demo: { email: "demo@example.com", password: "hunter2" },
       }}
       active
-      copy={copy}
+      labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]}
     />,
   );
   expect(screen.getByText("demo@example.com")).toBeInTheDocument();
@@ -64,26 +69,31 @@ test("surfaces demo credentials for an app behind sign-in", () => {
 });
 
 test("warns that sign-in is required even before an account exists", () => {
-  render(<AppCard project={{ ...project, signInRequired: true }} active copy={copy} />);
+  render(<AppCard project={{ ...project, signInRequired: true }} active labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.getByText(/sign-in required/i)).toBeInTheDocument();
 });
 
 test("an inactive card's link drops out of the tab order, since it sits off-screen", () => {
-  render(<AppCard project={project} active={false} copy={copy} />);
+  render(<AppCard project={project} active={false} labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.getByRole("link", { name: /Trader/ })).toHaveAttribute("tabIndex", "-1");
 });
 
 test("the active card's link stays in the normal tab order", () => {
-  render(<AppCard project={project} active copy={copy} />);
+  render(<AppCard project={project} active labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.getByRole("link", { name: /Trader/ })).not.toHaveAttribute("tabIndex");
 });
 
 test("the active card's link is marked aria-current, so AT users can tell it apart from the other four", () => {
-  render(<AppCard project={project} active copy={copy} />);
+  render(<AppCard project={project} active labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.getByRole("link", { name: /Trader/ })).toHaveAttribute("aria-current", "true");
 });
 
 test("an inactive card's link carries no aria-current", () => {
-  render(<AppCard project={project} active={false} copy={copy} />);
+  render(<AppCard project={project} active={false} labels={copy.ui.carousel}
+      inDevelopment={copy.ui.status["in-development"]} />);
   expect(screen.getByRole("link", { name: /Trader/ })).not.toHaveAttribute("aria-current");
 });

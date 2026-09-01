@@ -1,8 +1,15 @@
 import Link from "next/link";
-import { localePrefix, type Copy, type Locale } from "@/content/copy";
+import { localePrefix, type Locale } from "@/content/copy";
 import { site } from "@/content/site";
 
-export function SiteFooter({ copy, locale }: { copy: Copy; locale: Locale }) {
+/** Takes the one string it renders, for the same reason as `SiteHeader`. */
+export function SiteFooter({
+  privacyLabel,
+  locale,
+}: {
+  privacyLabel: string;
+  locale: Locale;
+}) {
   const prefix = localePrefix(locale);
 
   return (
@@ -32,7 +39,7 @@ export function SiteFooter({ copy, locale }: { copy: Copy; locale: Locale }) {
               href={`${prefix}/privacy`}
               className="label text-muted hover:text-accent"
             >
-              {copy.ui.privacy}
+              {privacyLabel}
             </Link>
           </li>
         </ul>

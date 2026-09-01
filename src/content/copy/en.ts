@@ -3,6 +3,7 @@ import type { Copy } from "./types";
 export const en = {
   ui: {
     nav: { work: "Work", about: "About", contact: "Contact" },
+    navLabel: "Main",
     privacy: "Privacy",
     languageSwitch: { label: "Language", en: "English", cs: "Čeština" },
     carousel: {
