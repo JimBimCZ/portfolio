@@ -143,7 +143,10 @@ export const cs = {
       more: "Další se chystá",
       liveDemo: "Živé demo",
       repo: "GitHub",
-      shipped: "Nasazeno",
+      // A colon, unlike the English "Shipped August 2026": `formatShipped`
+      // returns a nominative month, and Czech would need a locative ("v
+      // srpnu") to read as a sentence. Label and value sidestep the case.
+      shipped: "Nasazeno:",
     },
     project: {
       back: "← Projekty",
@@ -169,7 +172,8 @@ export const cs = {
       lede: "Tohle je portfolio, ne produkt. Nesbírá o vás nic a krátká verze se vejde do jednoho rámečku.",
       responsible: "Správce",
       contact: "Kontakt",
-      updated: "Naposledy upraveno",
+      // Label and value, for the same reason as `work.shipped` above.
+      updated: "Naposledy upraveno:",
     },
     notFound: {
       code: "404",

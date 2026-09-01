@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Copy, Locale } from "@/content/copy";
+import { localePrefix, type Copy, type Locale } from "@/content/copy";
 import type { LocalisedProject } from "@/content/localise";
 import { formatShipped } from "@/content/projects";
 
@@ -15,7 +15,10 @@ export function ProjectPage({
 }) {
   return (
     <article className="mx-auto max-w-3xl px-6 py-20">
-      <Link href="/work" className="label text-muted hover:text-accent">
+      <Link
+        href={`${localePrefix(locale)}/work`}
+        className="label text-muted hover:text-accent"
+      >
         {copy.pages.project.back}
       </Link>
 

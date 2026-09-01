@@ -49,9 +49,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sans.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <SiteHeader />
+        <SiteHeader copy={copy} locale="en" />
         <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <SiteFooter copy={copy} locale="en" />
       </body>
     </html>
   );

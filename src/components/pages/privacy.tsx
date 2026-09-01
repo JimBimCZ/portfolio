@@ -38,6 +38,9 @@ export function PrivacyPage({ copy, locale }: { copy: Copy; locale: Locale }) {
         ))}
       </div>
 
+      {/* Label and value: `formatShipped` returns a nominative month, which
+          Czech cannot put after a preposition. The label carries the locale's
+          own separator — a colon in Czech, nothing in English. */}
       <p className="mt-14 font-mono text-sm text-dim">
         {copy.pages.privacy.updated} {formatShipped(copy.person.privacy.updated, locale)}.
       </p>

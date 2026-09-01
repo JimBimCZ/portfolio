@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { localePrefix, type Locale } from "@/content/copy";
 import { getProject } from "@/content/projects";
 import type { SkillGroup } from "@/content/localise";
 
@@ -7,7 +8,15 @@ import type { SkillGroup } from "@/content/localise";
  * the live deployment when one exists, and falls back to the case study page
  * when it does not — so a tag is never a dead end.
  */
-export function SkillMatrix({ groups }: { groups: SkillGroup[] }) {
+export function SkillMatrix({
+  groups,
+  locale,
+}: {
+  groups: SkillGroup[];
+  locale: Locale;
+}) {
+  const prefix = localePrefix(locale);
+
   return (
     <div className="space-y-12">
       {groups.map((group) => (
@@ -25,7 +34,7 @@ export function SkillMatrix({ groups }: { groups: SkillGroup[] }) {
                     <ul className="flex flex-wrap gap-x-4 gap-y-2">
                       {skill.evidence.map((slug) => {
                         const project = getProject(slug);
-                        const href = project?.liveUrl ?? `/work/${slug}`;
+                        const href = project?.liveUrl ?? `${prefix}/work/${slug}`;
                         const external = Boolean(project?.liveUrl);
                         return (
                           <li key={slug}>

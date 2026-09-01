@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { localePrefix, type Copy, type Locale } from "@/content/copy";
 import { site } from "@/content/site";
 
-export function SiteFooter() {
+export function SiteFooter({ copy, locale }: { copy: Copy; locale: Locale }) {
+  const prefix = localePrefix(locale);
+
   return (
     <footer className="mt-24 border-t border-line">
       <div className="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
@@ -25,8 +28,11 @@ export function SiteFooter() {
             </li>
           ))}
           <li>
-            <Link href="/privacy" className="label text-muted hover:text-accent">
-              Privacy
+            <Link
+              href={`${prefix}/privacy`}
+              className="label text-muted hover:text-accent"
+            >
+              {copy.ui.privacy}
             </Link>
           </li>
         </ul>

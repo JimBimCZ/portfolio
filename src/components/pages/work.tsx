@@ -13,7 +13,12 @@ export function WorkPage({ copy, locale }: { copy: Copy; locale: Locale }) {
       <p className="mt-4 max-w-lg text-lg text-muted">{copy.pages.work.lede}</p>
       <ul className="mt-14 border-b border-line">
         {projects.map((project) => (
-          <ProjectRow key={project.slug} project={project} copy={copy} />
+          <ProjectRow
+            key={project.slug}
+            project={project}
+            copy={copy}
+            locale={locale}
+          />
         ))}
       </ul>
       <p className="label mt-8 text-muted">{copy.pages.work.more}</p>

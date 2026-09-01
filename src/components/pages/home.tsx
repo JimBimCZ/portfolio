@@ -3,13 +3,14 @@ import { AppCarousel } from "@/components/app-carousel";
 import { ExperienceLog } from "@/components/experience-log";
 import { SkillMatrix } from "@/components/skill-matrix";
 import { SpecBlock } from "@/components/spec-block";
-import type { Copy, Locale } from "@/content/copy";
+import { localePrefix, type Copy, type Locale } from "@/content/copy";
 import { localiseCarousel, localiseSkills } from "@/content/localise";
 import { site } from "@/content/site";
 
 export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
   const carouselProjects = localiseCarousel(copy);
   const skillGroups = localiseSkills(copy);
+  const prefix = localePrefix(locale);
 
   return (
     <div className="mx-auto max-w-5xl px-6">
@@ -26,13 +27,13 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
-              href="/work"
+              href={`${prefix}/work`}
               className="label bg-accent px-5 py-3 text-canvas transition-opacity hover:opacity-85"
             >
               {copy.pages.home.viewWork}
             </Link>
             <Link
-              href="/contact"
+              href={`${prefix}/contact`}
               className="label border border-line px-5 py-3 text-text transition-colors hover:border-accent hover:text-accent"
             >
               {copy.pages.home.getInTouch}
@@ -51,7 +52,10 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
           <h2 id="what-each-one-is" className="label text-muted">
             {copy.pages.home.whatEachOneIs}
           </h2>
-          <Link href="/work" className="label text-muted hover:text-accent">
+          <Link
+            href={`${prefix}/work`}
+            className="label text-muted hover:text-accent"
+          >
             {copy.pages.home.allProjects}
           </Link>
         </div>
@@ -59,7 +63,10 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
           {carouselProjects.map((project) => (
             <li key={project.slug} className="py-6">
               <h3 className="font-display text-xl font-semibold tracking-tight">
-                <Link href={`/work/${project.slug}`} className="hover:text-accent">
+                <Link
+                  href={`${prefix}/work/${project.slug}`}
+                  className="hover:text-accent"
+                >
                   {project.title}
                 </Link>
               </h3>
@@ -77,7 +84,10 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
           <h2 id="track-record" className="label text-muted">
             {copy.pages.home.trackRecord}
           </h2>
-          <Link href="/about" className="label text-muted hover:text-accent">
+          <Link
+            href={`${prefix}/about`}
+            className="label text-muted hover:text-accent"
+          >
             {copy.pages.home.fullHistory}
           </Link>
         </div>
@@ -91,7 +101,7 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
           {copy.pages.home.skills}
         </h2>
         <div className="mt-8">
-          <SkillMatrix groups={skillGroups} />
+          <SkillMatrix groups={skillGroups} locale={locale} />
         </div>
       </section>
 
