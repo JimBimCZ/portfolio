@@ -25,6 +25,18 @@ describe("copy", () => {
     }
   });
 
+  // `dictionaries` in `./index` keys each Copy object by locale independently
+  // of the object's own `locale` field — nothing stops the two from drifting
+  // (a bad edit, or a third locale copy-pasted from an existing dictionary).
+  // localise.ts's formatMetricValue trusts `copy.locale` to decide whether to
+  // reformat a metric value, so a drift here would silently mis-format
+  // English (or under-format Czech) with no other test catching it directly.
+  test("each dictionary's own locale field matches the key it is registered under", () => {
+    for (const locale of LOCALES) {
+      expect(getCopy(locale).locale, locale).toBe(locale);
+    }
+  });
+
   // `global-not-found.tsx` has no parent layout, so it applies the template by
   // hand. Lose the placeholder and its title silently becomes the raw template.
   test("every title template keeps its placeholder", () => {
