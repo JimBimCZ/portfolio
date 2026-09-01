@@ -4,12 +4,13 @@ import { ExperienceLog } from "@/components/experience-log";
 import { SkillMatrix } from "@/components/skill-matrix";
 import { SpecBlock } from "@/components/spec-block";
 import { getCopy } from "@/content/copy";
-import { carouselProjects } from "@/content/projects";
+import { localiseCarousel } from "@/content/localise";
 import { skillGroups } from "@/content/skills";
 import { site } from "@/content/site";
 
 export default function Home() {
   const copy = getCopy("en");
+  const carouselProjects = localiseCarousel(copy);
 
   return (
     <div className="mx-auto max-w-5xl px-6">
@@ -43,7 +44,7 @@ export default function Home() {
       </section>
 
       <div className="py-12">
-        <AppCarousel projects={carouselProjects} />
+        <AppCarousel projects={carouselProjects} copy={copy} />
       </div>
 
       <section aria-labelledby="what-each-one-is" className="py-16">

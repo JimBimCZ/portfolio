@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useSyncExternalStore } from "react";
-import type { Project } from "@/content/projects";
+import type { LocalisedProject } from "@/content/localise";
 
 /**
  * The poster ships in the static HTML and is the LCP candidate, so a card is
@@ -12,7 +12,13 @@ import type { Project } from "@/content/projects";
  *
  * Under reduced motion no video is rendered at all — not a shorter one.
  */
-export function AppMedia({ project, active }: { project: Project; active: boolean }) {
+export function AppMedia({
+  project,
+  active,
+}: {
+  project: LocalisedProject;
+  active: boolean;
+}) {
   const reducedMotion = usePrefersReducedMotion();
   const showTour = active && Boolean(project.tour) && !reducedMotion;
 

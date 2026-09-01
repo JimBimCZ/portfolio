@@ -1,3 +1,5 @@
+import type { ProjectSlug } from "../projects";
+
 export const LOCALES = ["en", "cs"] as const;
 export type Locale = (typeof LOCALES)[number];
 
@@ -75,9 +77,22 @@ export type MetaCopy = {
   privacy: { title: string; description: string };
 };
 
+/** Prose that differs per project. Paired by index with the values in
+ *  `projects.ts`'s `metrics` — `localiseProjects` throws on a mismatch. */
+export type ProjectCopy = {
+  summary: string;
+  role: string;
+  highlights: readonly string[];
+  /** Parallel to the project's `metrics` values; `localiseProjects` throws on a mismatch. */
+  metricLabels: readonly string[];
+  posterAlt?: string;
+  liveNote?: string;
+};
+
 export type Copy = {
   ui: UiCopy;
   person: PersonCopy;
   pages: PagesCopy;
   meta: MetaCopy;
+  projects: Record<ProjectSlug, ProjectCopy>;
 };

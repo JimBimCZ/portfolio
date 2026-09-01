@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCopy } from "@/content/copy";
-import { formatShipped, getProject, projects } from "@/content/projects";
+import { localiseProject } from "@/content/localise";
+import { formatShipped, projects } from "@/content/projects";
 
 const copy = getCopy("en");
 
@@ -15,7 +16,7 @@ export async function generateMetadata(
   props: PageProps<"/work/[slug]">,
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const project = getProject(slug);
+  const project = localiseProject(slug, copy);
 
   if (!project) return {};
 
@@ -27,7 +28,7 @@ export async function generateMetadata(
 
 export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
   const { slug } = await props.params;
-  const project = getProject(slug);
+  const project = localiseProject(slug, copy);
 
   if (!project) notFound();
 

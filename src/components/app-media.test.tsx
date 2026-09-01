@@ -3,7 +3,7 @@ import { act } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, expect, test, vi } from "vitest";
-import type { Project } from "@/content/projects";
+import type { LocalisedProject } from "@/content/localise";
 import { AppMedia } from "./app-media";
 
 const project = {
@@ -12,7 +12,7 @@ const project = {
   poster: "/work/trader.webp",
   posterAlt: "The Trader terminal with a streaming watchlist.",
   tour: "/work/trader.webm",
-} as Project;
+} as LocalisedProject;
 
 /** jsdom has no matchMedia; every test declares what the user asked for. */
 function setReducedMotion(reduced: boolean) {

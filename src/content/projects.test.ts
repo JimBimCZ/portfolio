@@ -2,8 +2,13 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { tours } from "../../scripts/capture/tours.mjs";
+import { getCopy } from "./copy";
+import { localiseCarousel, localiseProjects } from "./localise";
 import { site } from "./site";
-import { carouselProjects, formatShipped, getProject, projects } from "./projects";
+import { formatShipped, getProject, projects } from "./projects";
+
+const localised = localiseProjects(getCopy("en"));
+const carouselProjects = localiseCarousel(getCopy("en"));
 
 describe("formatShipped", () => {
   test("renders an ISO year-month as a readable date", () => {
@@ -37,7 +42,7 @@ describe("projects", () => {
   });
 
   test("every entry carries the fields the pages render", () => {
-    for (const project of projects) {
+    for (const project of localised) {
       expect(project.shipped).toMatch(/^\d{4}-\d{2}$/);
       expect(project.title.length).toBeGreaterThan(0);
       expect(project.summary.length).toBeGreaterThan(0);
@@ -47,7 +52,7 @@ describe("projects", () => {
   });
 
   test("declared posters exist in public and are described for screen readers", () => {
-    for (const project of projects) {
+    for (const project of localised) {
       if (!project.poster) continue;
       expect(existsSync(join(process.cwd(), "public", project.poster))).toBe(true);
       expect(project.posterAlt?.length ?? 0).toBeGreaterThan(0);
