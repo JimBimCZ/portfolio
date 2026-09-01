@@ -33,6 +33,25 @@ test("always renders the poster, so the card is never empty", () => {
   ).toBeInTheDocument();
 });
 
+test("loads the poster eagerly even when the card is inactive", () => {
+  // Inactive cards sit off-screen via a CSS transform rather than being
+  // removed from the DOM, so native lazy loading never triggers for them —
+  // they need to load regardless of position.
+  render(<AppMedia project={project} active={false} />);
+  expect(screen.getByRole("img")).toHaveAttribute("loading", "eager");
+});
+
+test("marks only the active poster as the LCP candidate", () => {
+  // All posters load eagerly (above), but only the active one should be
+  // ranked as the page's LCP image — via fetchPriority, not the deprecated
+  // `priority` prop.
+  const { rerender } = render(<AppMedia project={project} active={false} />);
+  expect(screen.getByRole("img")).not.toHaveAttribute("fetchpriority");
+
+  rerender(<AppMedia project={project} active />);
+  expect(screen.getByRole("img")).toHaveAttribute("fetchpriority", "high");
+});
+
 test("plays the tour only on the active card", () => {
   const { container, rerender } = render(<AppMedia project={project} active={false} />);
   expect(container.querySelector("video")).toBeNull();

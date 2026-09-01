@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
+import { tours } from "../../scripts/capture/tours.mjs";
 import { site } from "./site";
 import { carouselProjects, formatShipped, getProject, projects } from "./projects";
 
@@ -45,11 +46,11 @@ describe("projects", () => {
     }
   });
 
-  test("declared screenshots exist in public and are described for screen readers", () => {
+  test("declared posters exist in public and are described for screen readers", () => {
     for (const project of projects) {
-      if (!project.image) continue;
-      expect(existsSync(join(process.cwd(), "public", project.image))).toBe(true);
-      expect(project.imageAlt?.length ?? 0).toBeGreaterThan(0);
+      if (!project.poster) continue;
+      expect(existsSync(join(process.cwd(), "public", project.poster))).toBe(true);
+      expect(project.posterAlt?.length ?? 0).toBeGreaterThan(0);
     }
   });
 });
@@ -103,6 +104,17 @@ describe("carousel media", () => {
     for (const project of carouselProjects) {
       if (!project.tour) continue;
       expect(existsSync(join(process.cwd(), "public", project.tour))).toBe(true);
+    }
+  });
+
+  // tours.mjs states this as an invariant in a comment ("URLs here must match
+  // `liveUrl`") but nothing enforced it — a moved deployment would silently
+  // capture the wrong app.
+  test("every tour's URL matches its project's liveUrl", () => {
+    for (const [slug, tour] of Object.entries(tours)) {
+      const project = getProject(slug);
+      expect(project, `no project for tour entry ${slug}`).toBeDefined();
+      expect(tour.url).toBe(project!.liveUrl);
     }
   });
 });

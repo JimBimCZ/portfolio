@@ -18,12 +18,8 @@ export type Project = {
   /** Two to four concrete facts. Anything checkable beats an adjective. */
   highlights: string[];
   repo?: string;
-  live?: string;
-  /** What a visitor should expect from `live`, when it differs from the repo. */
+  /** What a visitor should expect from `liveUrl`, when it differs from the repo. */
   liveNote?: string;
-  /** Path under /public. Screenshots are 1440x900, captured from the running app. */
-  image?: string;
-  imageAlt?: string;
   /** The deployment a visitor can open. Required when `status` is "live". */
   liveUrl?: string;
   status: "live" | "in-development" | "archived";
@@ -61,15 +57,11 @@ export const projects = [
       "The assistant executes trades through the same API the UI uses, and shows each fill inline as it happens. The live demo answers from its scripted client rather than the model, so leaving it up costs nothing.",
       "One codebase, two deployment shapes. Serverless has no background task and no disk, so prices become a closed-form function of the clock — Brownian motion by Lévy construction, 22 steps down a hashed tree rather than 172,800 summed half-second increments — and Postgres sits behind the same interface as SQLite. Routes, services and the frontend are untouched.",
       "Market data comes from a geometric Brownian motion simulator by default — per-ticker volatility, correlated sector moves, no API key. Real quotes are opt-in, and there is deliberately no silent fallback between them.",
-      "501 tests across the stack: 374 on the backend, 107 on the frontend, plus 20 Playwright specs run against the built container.",
+      "846 tests across the stack: 591 on the backend, 228 on the frontend, plus 27 Playwright specs run against the built container.",
     ],
     repo: "https://github.com/JimBimCZ/trader",
-    live: "https://trader-jimbimczs-projects.vercel.app",
     liveNote:
       "The demo runs the serverless build with no database attached, so the portfolio starts at $10,000 and resets whenever the instance is recycled.",
-    image: "/work/trader.webp",
-    imageAlt:
-      "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart, trade ticket, allocation panel, session P&L chart and positions table in the centre, and the assistant's prompt suggestions on the right.",
     liveUrl: "https://trader-jimbimczs-projects.vercel.app",
     status: "live",
     metrics: [
@@ -169,9 +161,6 @@ export const projects = [
       "One container, one origin. A multi-stage build compiles the Next.js export and FastAPI serves it, so there is no CORS layer to configure.",
     ],
     repo: "https://github.com/JimBimCZ/legal",
-    image: "/work/legal.webp",
-    imageAlt:
-      "Legal Document Creator's sign-in screen: an email and password form beneath the app name, with a Need an account? Sign up link below it.",
     liveUrl: "https://legal-seven-zeta.vercel.app",
     status: "live",
     signInRequired: true,
@@ -181,8 +170,7 @@ export const projects = [
     ],
     poster: "/work/legal.webp",
     posterAlt:
-      "Legal Document Creator's sign-in screen: an email and password form under the app name, with no demo account available yet.",
-    tour: "/work/legal.webm",
+      "A completed Mutual NDA in Legal Document Creator: every field filled and ready to download, with the chat panel showing the details that produced it.",
   },
   {
     slug: "work-planner" as const,
@@ -235,13 +223,13 @@ export const projects = [
       "Unit and end-to-end suites, plus a connectivity check for the model provider.",
     ],
     repo: "https://github.com/JimBimCZ/kanban",
-    image: "/work/kanban.webp",
-    imageAlt: "The kanban board with cards distributed across its columns.",
     status: "in-development",
     metrics: [
       { value: "5", label: "renameable columns" },
       { value: "10", label: "tests across the stack" },
     ],
+    poster: "/work/kanban.webp",
+    posterAlt: "The kanban board with cards distributed across its columns.",
   },
 ] satisfies Project[];
 

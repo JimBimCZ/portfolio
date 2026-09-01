@@ -23,7 +23,19 @@ export function AppMedia({ project, active }: { project: Project; active: boolea
         alt={project.posterAlt ?? ""}
         width={1440}
         height={900}
-        priority={active}
+        fetchPriority={active ? "high" : undefined}
+        // Every card's poster sits in the DOM at once (see AppCard), and
+        // inactive ones are shifted out of the viewport by the carousel's
+        // transform rather than removed — so browsers never consider them
+        // close enough to trigger native lazy loading, and a slide beyond
+        // the second could go undecoded until the visitor navigates to it.
+        // Every poster needs to load regardless of position; only the
+        // active card also gets `fetchPriority="high"`, which marks it as
+        // the LCP candidate. `priority` is deprecated in Next.js 16 in
+        // favour of `preload`, and the docs say not to combine `preload`
+        // with `loading="eager"` — `fetchPriority` is the documented way to
+        // rank one image over another when both load eagerly.
+        loading="eager"
         className="h-full w-full object-cover object-top"
       />
       {showTour && (

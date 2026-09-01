@@ -27,7 +27,7 @@ test("the work page lists every project with its screenshot", async ({ page }) =
   }
 
   const screenshots = page.getByRole("img");
-  await expect(screenshots).toHaveCount(projects.filter((p) => p.image).length);
+  await expect(screenshots).toHaveCount(projects.filter((p) => p.poster).length);
   for (const image of await screenshots.all()) {
     await expect(image).toBeVisible();
   }
@@ -53,20 +53,20 @@ test("screenshots actually load rather than rendering as broken images", async (
 
 test("the current section is marked in the navigation", async ({ page }) => {
   await page.goto("/work");
-  await expect(page.getByRole("link", { name: "Work" })).toHaveAttribute(
-    "aria-current",
-    "page",
-  );
+  // exact: true — the /work log now includes a "Work Planner" row, whose
+  // link name otherwise matches this substring query too.
+  await expect(
+    page.getByRole("link", { name: "Work", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
 
   await page.getByRole("link", { name: "About" }).click();
   await expect(page.getByRole("link", { name: "About" })).toHaveAttribute(
     "aria-current",
     "page",
   );
-  await expect(page.getByRole("link", { name: "Work" })).not.toHaveAttribute(
-    "aria-current",
-    "page",
-  );
+  await expect(
+    page.getByRole("link", { name: "Work", exact: true }),
+  ).not.toHaveAttribute("aria-current", "page");
 });
 
 test("an unknown project shows the not-found page", async ({ page }) => {
