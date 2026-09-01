@@ -1,7 +1,22 @@
 import { describe, expect, test } from "vitest";
-import { LOCALES, getCopy } from "./index";
+import { LOCALES, counterpart, getCopy } from "./index";
 import { cs } from "./cs";
 import { en } from "./en";
+
+describe("counterpart", () => {
+  test("maps an English path into the Czech tree", () => {
+    expect(counterpart("/work/trader")).toBe("/cs/work/trader");
+  });
+
+  test("maps a Czech path back into the English tree", () => {
+    expect(counterpart("/cs/work/trader")).toBe("/work/trader");
+  });
+
+  test("maps each home page to the other", () => {
+    expect(counterpart("/")).toBe("/cs");
+    expect(counterpart("/cs")).toBe("/");
+  });
+});
 
 describe("copy", () => {
   test("every locale resolves to a dictionary", () => {

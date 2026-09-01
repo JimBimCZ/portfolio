@@ -19,3 +19,16 @@ export function getCopy(locale: Locale): Copy {
 export function localePrefix(locale: Locale) {
   return locale === "en" ? "" : `/${locale}`;
 }
+
+/**
+ * The same page in the other language tree: "/cs/work/trader" -> "/work/trader",
+ * and "/work/trader" -> "/cs/work/trader". Exported for the language switch
+ * (a Client Component) and for server-side metadata code alike, so neither
+ * has to import from the other.
+ */
+export function counterpart(pathname: string) {
+  if (pathname === "/cs" || pathname.startsWith("/cs/")) {
+    return pathname.slice(3) || "/";
+  }
+  return pathname === "/" ? "/cs" : `/cs${pathname}`;
+}

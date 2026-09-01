@@ -54,6 +54,7 @@ export default function CzechRootLayout({ children }: LayoutProps<"/">) {
           navLabel={copy.ui.navLabel}
           status={copy.person.status}
           locale="cs"
+          languageSwitch={copy.ui.languageSwitch}
         />
         <main className="flex-1">{children}</main>
         <SiteFooter privacyLabel={copy.ui.privacy} locale="cs" />

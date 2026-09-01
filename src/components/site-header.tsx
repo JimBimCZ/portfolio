@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { localePrefix, type Copy, type Locale } from "@/content/copy";
 import { site } from "@/content/site";
+import { LanguageSwitch } from "./language-switch";
 
 /**
- * Takes the four strings it renders rather than the whole dictionary: it is a
+ * Takes the strings it renders rather than the whole dictionary: it is a
  * Client Component, so every prop is serialised into the flight payload of
  * every page on the site.
  */
@@ -15,11 +16,13 @@ export function SiteHeader({
   navLabel,
   status,
   locale,
+  languageSwitch,
 }: {
   nav: Copy["ui"]["nav"];
   navLabel: string;
   status: string;
   locale: Locale;
+  languageSwitch: Copy["ui"]["languageSwitch"];
 }) {
   const pathname = usePathname();
   const prefix = localePrefix(locale);
@@ -63,6 +66,7 @@ export function SiteHeader({
             })}
           </ul>
         </nav>
+        <LanguageSwitch languageSwitch={languageSwitch} />
       </div>
     </header>
   );

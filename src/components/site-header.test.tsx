@@ -16,6 +16,7 @@ function propsFor(dictionary: typeof copy) {
     nav: dictionary.ui.nav,
     navLabel: dictionary.ui.navLabel,
     status: dictionary.person.status,
+    languageSwitch: dictionary.ui.languageSwitch,
   };
 }
 
@@ -104,4 +105,16 @@ test("names the nav landmark in the language of the page", () => {
   expect(
     screen.getByRole("navigation", { name: csCopy.ui.navLabel }),
   ).toBeInTheDocument();
+});
+
+// The language switch is the whole feature's entry point — it has to be on
+// the header, offering the counterpart of the page you are actually on.
+test("renders the language switch, offering the Czech counterpart of the page", () => {
+  pathname.current = "/work/trader";
+  render(<SiteHeader {...propsFor(copy)} locale="en" />);
+
+  expect(screen.getByRole("link", { name: "Čeština" })).toHaveAttribute(
+    "href",
+    "/cs/work/trader",
+  );
 });
