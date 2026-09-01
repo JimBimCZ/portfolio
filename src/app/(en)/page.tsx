@@ -4,7 +4,7 @@ import { getCopy } from "@/content/copy";
 import { alternatesFor } from "@/content/metadata";
 
 export const metadata: Metadata = {
-  alternates: alternatesFor("/"),
+  alternates: alternatesFor("/", "en"),
 };
 
 export default function Home() {

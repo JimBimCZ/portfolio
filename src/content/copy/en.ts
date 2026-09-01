@@ -24,6 +24,7 @@ export const en = {
   person: {
     role: "Frontend & AI engineer",
     location: "Brno, CZ",
+    locationWithTimezone: "Brno, CZ — CET",
     tagline: "I build robust software, and AI tooling is why it ships in days.",
     intro:
       "Typed, tested, reviewed code — built through an AI-assisted workflow that turns the iteration cycle software usually measures in weeks into hours or days.",

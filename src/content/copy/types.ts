@@ -34,6 +34,8 @@ export type JobCopy = {
 export type PersonCopy = {
   role: string;
   location: string;
+  /** Location plus timezone abbreviation, as read on the contact page and the spec block's "based" row. */
+  locationWithTimezone: string;
   tagline: string;
   intro: string;
   status: string;

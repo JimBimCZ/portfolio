@@ -34,7 +34,7 @@ export function ContactPage({ copy }: { copy: Copy }) {
         </div>
         <div className="grid gap-1 sm:grid-cols-[6rem_1fr] sm:gap-4">
           <dt className="label text-muted">{copy.pages.contact.based}</dt>
-          <dd className="font-mono text-sm text-muted">{copy.person.location} — CET</dd>
+          <dd className="font-mono text-sm text-muted">{copy.person.locationWithTimezone}</dd>
         </div>
       </dl>
 

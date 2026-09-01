@@ -39,9 +39,9 @@ The bundled docs in `node_modules/next/dist/docs/` are the authority for this ve
 
 **Content is data, not markup.** Everything editable lives in `src/content/`:
 
-- `site.ts` — name, role, contact, nav, and the `manifest` rows shown in the spec block. Pages read from it; no page hardcodes personal copy.
+- `site.ts` — locale-invariant facts: name, email, phone, the canonical URL, external links, and nav. Role and the `manifest` rows shown in the spec block are prose now, not facts, and live in the copy dictionaries (`copy.person.role`, `copy.person.manifest`) instead. Pages read facts from `site.ts` and prose from `getCopy(locale)`; no page hardcodes personal copy.
 - `projects.ts` — the `Project[]` array plus `getProject` and `formatShipped`. Ordered newest first and rendered as a log keyed on `shipped` (an ISO year-month). There are deliberately no version numbers: neither repository tags releases, so a version would be invented.
-- `skills.ts` — the skill groups behind the home page's skill matrix, each backed by checkable `evidence` against a real project slug.
+- `skills.ts` — the skill matrix's structure: group and skill ids, each skill backed by checkable `evidence` against a real project slug. Names and details are prose and live in the copy dictionaries, keyed by these ids.
 
 Adding a project means adding one array entry. `/work/[slug]` picks it up through `generateStaticParams`, so every project page is prerendered at build time — the site has no runtime data source and deploys as static output.
 
@@ -49,9 +49,9 @@ Screenshots live in `public/work/` and are referenced by `poster`. They are real
 
 `ProjectRow` puts a stretched link (`after:absolute after:inset-0`) on the title so the whole row is clickable. That is what keeps the repository link a valid sibling rather than an anchor nested inside another anchor — if you add more links to a row, they need `relative` to sit above the stretched one.
 
-Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
+Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, `/privacy`, plus `not-found.tsx`. There is no single `layout.tsx` anymore — each route group under `src/app/` (`(en)/`, `(cs)/cs/`) owns its own, and each one owns the two fonts, its metadata template, and its header/footer shell. See Localisation below for how the Czech tree mirrors this.
 
-`src/components/` is presentational and unaware of routing, with one exception: `site-header.tsx` is a Client Component because it reads `usePathname` for the active nav state. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs.
+`src/components/` is presentational and mostly unaware of routing. The four Client Components are the exceptions: `site-header.tsx` and `language-switch.tsx` both read `usePathname` (for the active nav state, and to compute the other tree's URL); `app-carousel.tsx` and `app-media.tsx` are Client Components for unrelated browser-API reasons. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs. Most of `components/pages/*.tsx` also take a `locale` prop and build locale-prefixed hrefs (`home.tsx`, `work.tsx`, `project.tsx`, `privacy.tsx`); `about.tsx`, `contact.tsx` and `not-found.tsx` don't need to.
 
 ### Media contract
 

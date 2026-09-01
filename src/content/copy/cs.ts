@@ -31,6 +31,7 @@ export const cs = {
   person: {
     role: "Frontend a AI vývojář",
     location: "Brno, ČR",
+    locationWithTimezone: "Brno, ČR — SEČ",
     tagline: "Vyvíjím software, na který je spoleh — a díky AI nástrojům ho dodávám v řádu dnů, ne měsíců.",
     intro:
       "Typovaný a otestovaný kód, který prošel review — vzniká ve workflow s podporou AI, díky kterému se iterační cyklus zkrátí z týdnů na hodiny nebo dny.",
@@ -216,7 +217,7 @@ export const cs = {
       role: "Sólo projekt — frontend, backend, infrastruktura",
       highlights: [
         "Asistent zadává obchody přes stejné API jako samotné UI a každé plnění ukazuje rovnou v konverzaci. Živé demo odpovídá ze skriptovaného klienta, ne z modelu, takže jeho provoz nic nestojí.",
-        "Jedna kódová báze, dva tvary nasazení. Serverless nemá úlohu běžící na pozadí ani disk, takže se z ceny stává funkce času v uzavřeném tvaru — Brownův pohyb Lévyho konstrukcí, 22 kroků hashovaným stromem místo 172 800 sečtených půlsekundových přírůstků — a Postgres sedí za stejným rozhraním jako SQLite. Routy, služby ani frontend se nemění.",
+        "Jedna kódová báze, dva tvary nasazení. Serverless nemá úlohu běžící na pozadí ani disk, takže se z ceny stává funkce času v uzavřeném tvaru — Brownův pohyb Lévyho konstrukcí, 22 kroků hashovaným stromem místo 172 800 sečtených půlsekundových přírůstků — a Postgres sedí za stejným rozhraním jako SQLite. Routy, služby ani frontend se nemění.",
         "Tržní data jdou ve výchozím stavu ze simulátoru geometrického Brownova pohybu — volatilita zvlášť pro každý ticker, korelované pohyby sektorů, žádný API klíč. Reálné kurzy se musí zapnout a mezi oběma režimy záměrně není žádný tichý fallback.",
         "846 testů napříč stackem: 591 na backendu, 228 na frontendu a k tomu 27 Playwright testů proti sestavenému kontejneru.",
       ],
@@ -224,14 +225,14 @@ export const cs = {
       posterAlt:
         "Terminál Trader po nákupu pěti akcií AAPL: vlevo watchlist s deseti tickery, uprostřed graf ceny AAPL nad otevřenou pozicí a graf zisku a ztráty za relaci, vpravo návrhy promptů pro asistenta.",
       liveNote:
-        "Demo běží v serverless variantě bez připojené databáze, takže portfolio startuje na 10 000 $ a resetuje se pokaždé, když se instance recykluje.",
+        "Demo běží v serverless variantě bez připojené databáze, takže portfolio startuje na 10 000 $ a resetuje se pokaždé, když se instance recykluje.",
     },
     "games-db": {
       summary:
         "Osobní katalog PC her, který si celý obchod Steamu zaindexuje do Postgresu, takže procházení, filtrování ani vyhledávání rate-limitované API Steamu vůbec nepotřebují.",
       role: "Sólo projekt — frontend, backend, infrastruktura",
       highlights: [
-        "Vlastní index katalogu Steamu — 245 025 appidů, 14 621 z nich načtených do plného detailu — protože Steam žádný endpoint /discover ani /trending k procházení nemá.",
+        "Vlastní index katalogu Steamu — 245 025 appidů, 14 621 z nich načtených do plného detailu — protože Steam žádný endpoint /discover ani /trending k procházení nemá.",
         "Vyhledávání běží nad trigramovým indexem v Postgresu (pg_trgm), ne nad Steamem.",
         "Jedna plánovaná úloha — měsíční cron v GitHub Actions obnovuje ceny — a k tomu tři CLI úlohy (synchronizace katalogu, synchronizace seznamů, načtení detailů) spouštěné ručně. Načtení detailů, obnova cen i synchronizace seznamů si berou advisory lock v Postgresu, aby neběžely dvě kopie naráz; synchronizace katalogu ho nepotřebuje.",
         "Přihlášení přes GitHub OAuth kvůli osobní knihovně; procházení a vyhledávání funguje komukoli, přihlášenému i nepřihlášenému.",

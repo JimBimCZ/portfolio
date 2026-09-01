@@ -27,5 +27,5 @@ test("links the phone number as a dialable tel with no spaces", () => {
 test("shows where he is based", () => {
   render(<ContactPage copy={copy} />);
 
-  expect(screen.getByText(`${copy.person.location} — CET`)).toBeInTheDocument();
+  expect(screen.getByText(copy.person.locationWithTimezone)).toBeInTheDocument();
 });

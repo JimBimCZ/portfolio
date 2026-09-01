@@ -15,13 +15,15 @@ const THOUSANDS_SEPARATED_INTEGER = /^\d{1,3}(,\d{3})*$/;
  * English thousands separator ("245,025"). English rendering must not change
  * at all, so this is a no-op for "en". Everywhere else, a comma is read as a
  * decimal point, so a value that is unambiguously a grouped integer gets its
- * commas swapped for the space `copy/cs.ts` already uses in prose ("245 025").
- * Anything that is not a plain integer is returned untouched.
+ * commas swapped for the non-breaking space `Intl.NumberFormat("cs-CZ")`
+ * groups with, and `copy/cs.ts`'s prose already uses ("245 025") — a
+ * plain space would let a number break across a line. Anything that is not a
+ * plain integer is returned untouched.
  */
 export function formatMetricValue(value: string, locale: Locale): string {
   if (locale === "en") return value;
   if (!THOUSANDS_SEPARATED_INTEGER.test(value)) return value;
-  return value.replace(/,/g, " ");
+  return value.replace(/,/g, " ");
 }
 
 export type LocalisedProject = Omit<ProjectData, "metrics"> & {

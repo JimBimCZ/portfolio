@@ -8,7 +8,7 @@ const copy = getCopy("en");
 export const metadata: Metadata = {
   title: copy.meta.about.title,
   description: copy.meta.about.description,
-  alternates: alternatesFor("/about"),
+  alternates: alternatesFor("/about", "en"),
 };
 
 export default function Page() {

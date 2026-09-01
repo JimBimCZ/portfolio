@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ContactPage } from "@/components/pages/contact";
-import { counterpart, getCopy } from "@/content/copy";
+import { getCopy } from "@/content/copy";
 import { alternatesFor } from "@/content/metadata";
 
 const copy = getCopy("cs");
@@ -8,7 +8,7 @@ const copy = getCopy("cs");
 export const metadata: Metadata = {
   title: copy.meta.contact.title,
   description: copy.meta.contact.description,
-  alternates: { ...alternatesFor("/contact"), canonical: counterpart("/contact") },
+  alternates: alternatesFor("/contact", "cs"),
 };
 
 export default function CzechContact() {

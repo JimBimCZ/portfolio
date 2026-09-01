@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/pages/home";
-import { counterpart, getCopy } from "@/content/copy";
+import { getCopy } from "@/content/copy";
 import { alternatesFor } from "@/content/metadata";
 
 export const metadata: Metadata = {
-  alternates: { ...alternatesFor("/"), canonical: counterpart("/") },
+  alternates: alternatesFor("/", "cs"),
 };
 
 export default function CzechHome() {

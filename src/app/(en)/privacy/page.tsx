@@ -8,7 +8,7 @@ const copy = getCopy("en");
 export const metadata: Metadata = {
   title: copy.meta.privacy.title,
   description: copy.meta.privacy.description,
-  alternates: alternatesFor("/privacy"),
+  alternates: alternatesFor("/privacy", "en"),
 };
 
 export default function Page() {

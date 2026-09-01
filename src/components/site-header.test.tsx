@@ -56,12 +56,16 @@ test("offers a mailto link for direct contact", () => {
   expect(link).toHaveAttribute("href", `mailto:${site.email}`);
 });
 
-test("hides availability and email below the sm breakpoint", () => {
+// The reveal width is 860px, not a named Tailwind breakpoint: below it the
+// row does not have room for the longer Czech nav and language switch, so
+// the cluster stays hidden until the width where that holds for both
+// languages (measured empirically — see the 2026-09-01 review, finding 1).
+test("hides availability and email below the width the row actually fits", () => {
   render(<SiteHeader {...propsFor(copy)} locale="en" />);
   const link = screen.getByRole("link", { name: site.email });
   const group = link.closest(".hidden");
   expect(group).not.toBeNull();
-  expect(group).toHaveClass("sm:flex");
+  expect(group).toHaveClass("min-[860px]:flex");
 });
 
 test("names the sections in the language of the page it sits on", () => {

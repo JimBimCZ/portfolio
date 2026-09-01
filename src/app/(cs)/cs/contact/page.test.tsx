@@ -16,6 +16,7 @@ test("renders the Czech contact copy with the shared address", () => {
     "href",
     `mailto:${site.email}`,
   );
+  expect(screen.getByText(copy.person.locationWithTimezone)).toBeInTheDocument();
 });
 
 test("titles the page in Czech", () => {

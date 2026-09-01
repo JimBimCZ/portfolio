@@ -16,8 +16,8 @@ const cs = getCopy("cs");
 
 describe("formatMetricValue", () => {
   test("groups a comma-separated integer with spaces outside English", () => {
-    expect(formatMetricValue("245,025", "cs")).toBe("245 025");
-    expect(formatMetricValue("14,621", "cs")).toBe("14 621");
+    expect(formatMetricValue("245,025", "cs")).toBe("245 025");
+    expect(formatMetricValue("14,621", "cs")).toBe("14 621");
   });
 
   test("leaves a plain integer without a separator untouched", () => {
@@ -109,7 +109,7 @@ describe("localiseProjects", () => {
   // that is the only way this file can catch a regression in
   // formatMetricValue itself, as opposed to a transposition between
   // projects.ts and the dictionaries. games-db is the project with values
-  // that actually change shape in Czech ("245,025" -> "245 025"); the rest
+  // that actually change shape in Czech ("245,025" -> "245 025"); the rest
   // are included to confirm plain integers and non-numeric values render
   // identically to their English counterparts.
   test("pins the Czech-rendered value for every project's metrics", () => {
@@ -120,8 +120,8 @@ describe("localiseProjects", () => {
         { value: "Lévy", label: "ceny v uzavřeném tvaru" },
       ],
       "games-db": [
-        { value: "245 025", label: "zaindexovaných appidů" },
-        { value: "14 621", label: "s načteným detailem" },
+        { value: "245 025", label: "zaindexovaných appidů" },
+        { value: "14 621", label: "s načteným detailem" },
         { value: "pg_trgm", label: "trigramové vyhledávání" },
       ],
       "my-movies": [

@@ -23,7 +23,7 @@ export async function generateMetadata(
   return {
     title: project.title,
     description: project.summary,
-    alternates: alternatesFor(`/work/${slug}`),
+    alternates: alternatesFor(`/work/${slug}`, "en"),
   };
 }
 

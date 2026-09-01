@@ -96,7 +96,7 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
           </Link>
         </div>
         <div className="mt-8">
-          <ExperienceLog roles={copy.person.experience} />
+          <ExperienceLog roles={copy.person.experience} locale={locale} />
         </div>
       </section>
 

@@ -1,4 +1,4 @@
-import { counterpart } from "./copy";
+import { counterpart, type Locale } from "./copy";
 
 /**
  * Narrower than `Metadata["alternates"]`, which makes every field optional —
@@ -17,16 +17,17 @@ type Alternates = {
 
 /**
  * Relates an English path to its Czech counterpart for search engines.
- * `canonical` defaults to the English path passed in — a Czech route
- * overrides it with its own URL via `counterpart` — `languages` lists both
- * trees, and `x-default` falls back to English for readers whose language
- * Google cannot match. `path` is always the English path; `counterpart`
- * (already used to link the two trees for the language switch) does the
- * English-to-Czech translation.
+ * `path` is always the English path; `counterpart` (already used to link the
+ * two trees for the language switch) does the English-to-Czech translation.
+ * `locale` picks which tree's URL is `canonical` — there is no default, so a
+ * Czech page cannot forget to pass it and self-canonicalise to English (the
+ * mistake this signature exists to close off). `languages` lists both trees
+ * regardless of locale, and `x-default` falls back to English for readers
+ * whose language Google cannot match.
  */
-export function alternatesFor(path: string): Alternates {
+export function alternatesFor(path: string, locale: Locale): Alternates {
   return {
-    canonical: path,
+    canonical: locale === "cs" ? counterpart(path) : path,
     languages: {
       en: path,
       cs: counterpart(path),

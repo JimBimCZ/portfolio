@@ -23,8 +23,11 @@ test("lists every role with its employer and dates", () => {
 
   copy.person.experience.forEach((job, index) => {
     const entry = within(entries[index]);
-    expect(entry.getByRole("heading", { level: 3 })).toHaveTextContent(job.title);
-    expect(entry.getByText(job.org)).toBeInTheDocument();
+    const heading = entry.getByRole("heading", { level: 3 });
+    expect(heading).toHaveTextContent(job.title);
+    expect(heading).not.toHaveAttribute("lang");
+    const org = entry.getByText(job.org);
+    expect(org).not.toHaveAttribute("lang");
     expect(entry.getByText(job.period)).toBeInTheDocument();
     expect(entry.getByText(job.note)).toBeInTheDocument();
   });

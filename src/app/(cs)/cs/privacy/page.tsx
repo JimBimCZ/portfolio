@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PrivacyPage } from "@/components/pages/privacy";
-import { counterpart, getCopy } from "@/content/copy";
+import { getCopy } from "@/content/copy";
 import { alternatesFor } from "@/content/metadata";
 
 const copy = getCopy("cs");
@@ -8,7 +8,7 @@ const copy = getCopy("cs");
 export const metadata: Metadata = {
   title: copy.meta.privacy.title,
   description: copy.meta.privacy.description,
-  alternates: { ...alternatesFor("/privacy"), canonical: counterpart("/privacy") },
+  alternates: alternatesFor("/privacy", "cs"),
 };
 
 export default function CzechPrivacy() {

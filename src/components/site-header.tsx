@@ -33,7 +33,13 @@ export function SiteHeader({
         <Link href={prefix || "/"} className="label text-text hover:text-accent">
           {site.name}
         </Link>
-        <div className="hidden items-center gap-6 sm:flex">
+        {/*
+          The status/email cluster only fits once the row has room for the
+          longer Czech nav and language switch too — reveal it at the width
+          where that holds (measured empirically), not at a generic
+          breakpoint that happens to work for English alone.
+        */}
+        <div className="hidden items-center gap-6 min-[860px]:flex">
           <p className="label flex items-center gap-2 text-muted">
             <span className="size-1.5 rounded-full bg-live" aria-hidden />
             {status}
