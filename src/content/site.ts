@@ -11,7 +11,11 @@ export const site = {
     "Next.js on the front, FastAPI behind it, and model output constrained to a typed schema so the interface can trust what comes back.",
   email: "busek.vit@gmail.com",
   phone: "+420 608 961 227",
-  url: "https://example.com",
+  url: "https://www.vitbusek.dev",
+  /** Social card, 1200x630. Built from the lead app's poster by `node scripts/capture/og.mjs`. */
+  ogImage: "/og.jpg",
+  ogImageAlt:
+    "The Trader terminal: a watchlist of streaming prices, an open AAPL position and the assistant panel.",
   status: "Open to new work",
   /** Rendered as the spec block on the home and about pages. Keys stay short. */
   manifest: [

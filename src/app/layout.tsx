@@ -28,6 +28,14 @@ export const metadata: Metadata = {
     url: site.url,
     siteName: site.name,
     type: "website",
+    images: [
+      {
+        url: site.ogImage,
+        width: 1200,
+        height: 630,
+        alt: site.ogImageAlt,
+      },
+    ],
   },
 };
 

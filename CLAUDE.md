@@ -62,6 +62,7 @@ Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), 
 - `prefers-reduced-motion: reduce` renders no video at all, on any card.
 - Containers are locked to `aspect-ratio: 16/10`, so media loading cannot shift the layout.
 - There are no iframes. Embedding the apps was specced and rejected — see the spec.
+- `public/og.jpg` is the social card: 1200x630 JPEG, built from `trader.webp` by `node scripts/capture/og.mjs`. JPEG because LinkedIn still renders WebP cards unreliably. Rebuild it whenever that poster is recaptured; `site.ts` declares it and a test asserts it exists.
 
 ## Styling conventions
 
