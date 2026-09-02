@@ -37,13 +37,26 @@ test("English URLs are untouched by the Czech tree", async ({ page }) => {
   }
 });
 
-test("an unknown Czech project shows the Czech not-found page", async ({ page }) => {
-  await page.goto("/cs/work/does-not-exist");
-  await expect(page.locator("html")).toHaveAttribute("lang", "cs");
-  // "404" alone is identical in both dictionaries, so it would still pass if
-  // the page silently fell back to English copy. Assert the Czech title
-  // itself, read from the same dictionary the page renders from.
-  await expect(
-    page.getByRole("heading", { name: getCopy("cs").pages.notFound.title }),
-  ).toBeVisible();
-});
+// Two different ways to 404 under /cs, which used to end up in different
+// languages. An unknown slug throws notFound() inside the group. A URL matching
+// no page at all used to reach no route in the group and fell through to the
+// English global page; the catch-all at (cs)/cs/[...rest] now keeps it here.
+for (const [name, path] of [
+  ["an unknown Czech project", "/cs/work/does-not-exist"],
+  ["an unmatched Czech URL", "/cs/no-such-page"],
+] as const) {
+  test(`${name} shows the Czech not-found page`, async ({ page }) => {
+    const response = await page.goto(path);
+
+    expect(response?.status()).toBe(404);
+    await expect(page.locator("html")).toHaveAttribute("lang", "cs");
+    // "404" alone is identical in both dictionaries, so it would still pass if
+    // the page silently fell back to English copy. Assert the Czech title
+    // itself, read from the same dictionary the page renders from.
+    await expect(
+      page.getByRole("heading", { name: getCopy("cs").pages.notFound.title }),
+    ).toBeVisible();
+    // The Czech shell, not the shell-less global page.
+    await expect(page.getByRole("banner")).toBeVisible();
+  });
+}

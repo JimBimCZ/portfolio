@@ -48,8 +48,15 @@ type PageModule = {
   }) => Metadata | Promise<Metadata>;
 };
 
+/**
+ * `(cs)/cs/[...rest]` only calls `notFound()`, so it has no canonical of its
+ * own — the 404 it renders should not advertise itself to crawlers as a page.
+ */
+const isCatchAll = (route: string) =>
+  route.split("/").some((segment) => segment.startsWith("[..."));
+
 describe("Czech page canonicals", () => {
-  for (const route of collectRoutes(CS_ROOT).sort()) {
+  for (const route of collectRoutes(CS_ROOT).filter((r) => !isCatchAll(r)).sort()) {
     test(route || "home", async () => {
       const specifier = `@/app/(cs)/cs${route ? `/${route}` : ""}/page`;
       const mod: PageModule = await import(specifier);
