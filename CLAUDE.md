@@ -39,9 +39,9 @@ The bundled docs in `node_modules/next/dist/docs/` are the authority for this ve
 
 **Content is data, not markup.** Everything editable lives in `src/content/`:
 
-- `site.ts` — name, role, contact, nav, and the `manifest` rows shown in the spec block. Pages read from it; no page hardcodes personal copy.
+- `site.ts` — locale-invariant facts: name, email, phone, the canonical URL, external links, and nav. Role and the `manifest` rows shown in the spec block are prose now, not facts, and live in the copy dictionaries (`copy.person.role`, `copy.person.manifest`) instead. Pages read facts from `site.ts` and prose from `getCopy(locale)`; no page hardcodes personal copy.
 - `projects.ts` — the `Project[]` array plus `getProject` and `formatShipped`. Ordered newest first and rendered as a log keyed on `shipped` (an ISO year-month). There are deliberately no version numbers: neither repository tags releases, so a version would be invented.
-- `skills.ts` — the skill groups behind the home page's skill matrix, each backed by checkable `evidence` against a real project slug.
+- `skills.ts` — the skill matrix's structure: group and skill ids, each skill backed by checkable `evidence` against a real project slug. Names and details are prose and live in the copy dictionaries, keyed by these ids.
 
 Adding a project means adding one array entry. `/work/[slug]` picks it up through `generateStaticParams`, so every project page is prerendered at build time — the site has no runtime data source and deploys as static output.
 
@@ -49,9 +49,9 @@ Screenshots live in `public/work/` and are referenced by `poster`. They are real
 
 `ProjectRow` puts a stretched link (`after:absolute after:inset-0`) on the title so the whole row is clickable. That is what keeps the repository link a valid sibling rather than an anchor nested inside another anchor — if you add more links to a row, they need `relative` to sit above the stretched one.
 
-Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, plus `not-found.tsx`. `layout.tsx` owns the two fonts, the metadata template (`%s — Vit Busek`), and the header/footer shell.
+Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, `/privacy`, plus `not-found.tsx`. There is no single `layout.tsx` anymore — each route group under `src/app/` (`(en)/`, `(cs)/cs/`) owns its own, and each one owns the two fonts, its metadata template, and its header/footer shell. See Localisation below for how the Czech tree mirrors this.
 
-`src/components/` is presentational and unaware of routing, with one exception: `site-header.tsx` is a Client Component because it reads `usePathname` for the active nav state. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs.
+`src/components/` is presentational and mostly unaware of routing. The four Client Components are the exceptions: `site-header.tsx` and `language-switch.tsx` both read `usePathname` (for the active nav state, and to compute the other tree's URL); `app-carousel.tsx` and `app-media.tsx` are Client Components for unrelated browser-API reasons. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs. Most of `components/pages/*.tsx` also take a `locale` prop and build locale-prefixed hrefs (`home.tsx`, `work.tsx`, `project.tsx`, `privacy.tsx`); `about.tsx`, `contact.tsx` and `not-found.tsx` don't need to.
 
 ### Media contract
 
@@ -63,6 +63,18 @@ Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), 
 - Containers are locked to `aspect-ratio: 16/10`, so media loading cannot shift the layout.
 - There are no iframes. Embedding the apps was specced and rejected — see the spec.
 - `public/og.jpg` is the social card: 1200x630 JPEG, built from `trader.webp` by `node scripts/capture/og.mjs`. JPEG because LinkedIn still renders WebP cards unreliably. Rebuild it whenever that poster is recaptured; `site.ts` declares it and a test asserts it exists.
+
+### Localisation
+
+The site is served in two languages: English at `/`, `/work`, `/work/[slug]`, `/about`, `/contact`, `/privacy`, and Czech at the same paths under `/cs`. Slugs stay English in both trees — `/cs/work/trader`, not a translated slug.
+
+This is two route groups under `src/app/`, `(en)/` and `(cs)/cs/`, each with its own `layout.tsx` (own `<html lang>`, own metadata, own instance of `SiteHeader`/`SiteFooter`). The shape is deliberately asymmetric: `(en)/` sits at the root because English is the primary tree, `(cs)/cs/` nests an extra `cs` segment because a route group's folder name is invisible to the URL — the segment has to be a real path piece. Each group also carries its own `not-found.tsx` for a `notFound()` thrown inside that tree (an unknown slug on `/work/[slug]` or `/cs/work/[slug]`), so the 404 body renders in the right language. A URL that matches no route at all — `/nonsense`, `/cs/nonsense` — never reaches either group; it falls through to the root `global-not-found.tsx`, which is intentionally English-only and shell-less (no header, no `<html lang="cs">`) because it bypasses layouts entirely.
+
+Prose lives in `src/content/copy/`: `types.ts` defines the `Copy` type, `en.ts` and `cs.ts` are the two dictionaries (each checked with `satisfies Copy`), and `index.ts` exports `getCopy(locale)`, `localePrefix(locale)` (`""` for English, `"/cs"` for Czech — every internal href is built from it so a page never links out of its own tree), and `counterpart(pathname)` (the same page in the other language, used by the header's language switch and by hreflang/canonical metadata).
+
+`Copy["projects"]` is `Record<ProjectSlug, ProjectCopy>` — keyed by the same `ProjectSlug` union `projects.ts` derives from the `Project[]` array. That's what makes adding a project without Czech prose a compile error: widen the slug union and `cs.ts`'s `satisfies Copy` check fails until you add the matching entry. Facts (employer, period, metric values, dates as ISO strings) stay single-source in `src/content/projects.ts` and `site.ts` — never duplicated per locale — while prose (summaries, highlights, taglines, section bodies) is per-locale in the dictionaries.
+
+`src/content/localise.ts` holds the `localise*` selectors that merge the two: `localiseProjects`/`localiseProject`/`localiseCarousel` pair `projects.ts`'s data with a `Copy`'s per-project text by slug (and throw if a project's `metrics` and its copy's `metricLabels` don't line up 1:1), `localiseSkills` does the same for the skill matrix, and `formatMetricValue` applies the locale's thousands separator to a metric's data value (`245,025` in English, `245 025` in Czech, joined with a non-breaking space so the number can't break across lines) without touching values that aren't plain integers. Components never read `projects.ts` or `skills.ts` directly for display — they go through a `localise*` selector with a `Copy`, so a page can't accidentally render English data under `/cs` or vice versa.
 
 ## Styling conventions
 

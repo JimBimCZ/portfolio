@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Copy } from "@/content/copy";
+import { localePrefix, type Copy, type Locale } from "@/content/copy";
 import { formatShipped } from "@/content/projects";
 import type { LocalisedProject } from "@/content/localise";
 
@@ -12,9 +12,11 @@ import type { LocalisedProject } from "@/content/localise";
 export function ProjectRow({
   project,
   copy,
+  locale,
 }: {
   project: LocalisedProject;
   copy: Copy;
+  locale: Locale;
 }) {
   return (
     <li className="group relative border-t border-line">
@@ -25,7 +27,7 @@ export function ProjectRow({
           <div className="flex flex-wrap items-baseline gap-3">
             <h3 className="font-display text-2xl font-semibold tracking-tight">
               <Link
-                href={`/work/${project.slug}`}
+                href={`${localePrefix(locale)}/work/${project.slug}`}
                 className="after:absolute after:inset-0 group-hover:text-accent"
               >
                 {project.title}
@@ -63,8 +65,10 @@ export function ProjectRow({
               )}
             </div>
           )}
+          {/* Label and value, not a sentence: `formatShipped` returns a
+              nominative month, which Czech cannot put after a preposition. */}
           <span className="sr-only">
-            {copy.pages.work.shipped} {formatShipped(project.shipped, "en")}
+            {copy.pages.work.shipped} {formatShipped(project.shipped, locale)}
           </span>
         </div>
 
