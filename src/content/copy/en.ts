@@ -22,7 +22,7 @@ export const en = {
     },
   },
   person: {
-    role: "Frontend & AI engineer",
+    role: "Full-stack & AI engineer",
     location: "Brno, CZ",
     locationWithTimezone: "Brno, CZ — CET",
     tagline: "I build robust software, and AI tooling is why it ships in days.",
@@ -33,16 +33,18 @@ export const en = {
       "The Trader terminal: a watchlist of streaming prices, an open AAPL position and the assistant panel.",
     /** Rendered as the spec block on the home and about pages. Keys stay short. */
     manifest: [
-      ["role", "Frontend & AI engineer"],
+      ["role", "Full-stack & AI engineer"],
+      ["depth", "Senior on the frontend, backend to production"],
       ["focus", "LLM features with typed, testable output"],
-      ["stack", "TypeScript, Next.js, React, FastAPI"],
+      ["stack", "TypeScript, Next.js, React, FastAPI, Postgres"],
       ["based", "Brno, CZ — CET"],
       ["status", "Open to new work"],
     ],
     /** The about page reads these as paragraphs, in order. */
     bio: [
-      "Senior frontend developer, by way of live sound and lighting engineering in the UK music industry. It is an unconventional route into the job, and it left me with two habits worth keeping: technical precision, and the communication that comes from working in a crew where everything has to be right before the doors open.",
+      "Full-stack engineer, senior on the frontend, by way of live sound and lighting engineering in the UK music industry. It is an unconventional route into the job, and it left me with two habits worth keeping: technical precision, and the communication that comes from working in a crew where everything has to be right before the doors open.",
       "The day work is React and TypeScript at a senior level — features built and maintained in codebases other people have to live with, state handled with Redux and React Context, and production issues traced through CloudWatch logs and SQL rather than guessed at.",
+      "The applications in the work log are solo builds, end to end — Postgres schemas and migrations behind Drizzle, FastAPI services, OAuth sign-in and sessions, scheduled jobs, and the Docker images and CI that ship them. The frontend depth comes from the day job; the rest of the stack comes from building and running these.",
       "The other half is agentic AI engineering: LLM-native workflows, custom MCP servers, and multi-agent systems tuned to stay reliable and cheap enough to actually run. I am at my best working closely with other people, shipping solutions that meet the client's need on the date agreed.",
     ],
     /** Newest first. The about page renders this as a log. */
@@ -76,13 +78,22 @@ export const en = {
     toolkit: [
       [
         "frontend",
-        "TypeScript, React 16–19, Next.js, Redux, React Context, Tailwind CSS, Material UI, Node.js / Express",
+        "TypeScript, React 16–19, Next.js, Redux, React Context, Tailwind CSS, Material UI",
+      ],
+      [
+        "backend",
+        "Node.js / Express, FastAPI, REST and SSE, OAuth sessions, scheduled jobs",
+      ],
+      [
+        "data",
+        "Postgres, SQLite, Drizzle ORM, schema design and migrations, pg_trgm full-text search",
       ],
       [
         "agentic ai",
         "Agentic coding, MCP server design, multi-agent orchestration, agent cost optimisation, LLM evals, prompt engineering",
       ],
-      ["testing", "Jest, React Testing Library, AWS CloudWatch, SQL / dBeaver, Git"],
+      ["testing", "Jest, React Testing Library, Playwright, AWS CloudWatch, SQL / dBeaver, Git"],
+      ["infrastructure", "Docker, Vercel, CI/CD"],
       ["languages", "Czech — native, English — fluent"],
     ],
     /**
@@ -176,7 +187,7 @@ export const en = {
   meta: {
     titleTemplate: "%s — Vit Busek",
     home: {
-      title: "Vit Busek — Frontend & AI engineer",
+      title: "Vit Busek — Full-stack & AI engineer",
       description:
         "Typed, tested, reviewed code — built through an AI-assisted workflow that turns the iteration cycle software usually measures in weeks into hours or days.",
     },
@@ -187,7 +198,7 @@ export const en = {
     about: {
       title: "About",
       description:
-        "Senior frontend developer, by way of live sound and lighting engineering in the UK music industry. It is an unconventional route into the job, and it left me with two habits worth keeping: technical precision, and the communication that comes from working in a crew where everything has to be right before the doors open.",
+        "Full-stack engineer, senior on the frontend, by way of live sound and lighting engineering in the UK music industry. It is an unconventional route into the job, and it left me with two habits worth keeping: technical precision, and the communication that comes from working in a crew where everything has to be right before the doors open.",
     },
     contact: {
       title: "Contact",
