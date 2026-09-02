@@ -29,7 +29,7 @@ export const cs = {
     },
   },
   person: {
-    role: "Frontend a AI vývojář",
+    role: "Full-stack a AI vývojář",
     location: "Brno, ČR",
     locationWithTimezone: "Brno, ČR — SEČ",
     tagline: "Vyvíjím software, na který je spoleh — a díky AI nástrojům ho dodávám v řádu dnů, ne měsíců.",
@@ -40,16 +40,18 @@ export const cs = {
       "Terminál Trader: watchlist se streamovanými cenami, otevřená pozice AAPL a panel s asistentem.",
     /** Rendered as the spec block on the home and about pages. Keys stay short. */
     manifest: [
-      ["role", "Frontend a AI vývojář"],
+      ["role", "Full-stack a AI vývojář"],
+      ["hloubka", "Senior na frontendu, backend až do produkce"],
       ["zaměření", "LLM funkce s typovaným a testovatelným výstupem"],
-      ["stack", "TypeScript, Next.js, React, FastAPI"],
+      ["stack", "TypeScript, Next.js, React, FastAPI, Postgres"],
       ["sídlo", "Brno, ČR — SEČ"],
       ["stav", "Otevřen novým projektům"],
     ],
     /** The about page reads these as paragraphs, in order. */
     bio: [
-      "Senior frontend vývojář, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
+      "Full-stack vývojář, senior na frontendu, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
       "Běžnou náplní dne je React a TypeScript na seniorní úrovni — funkce, které vznikají a dál se udržují v kódu, se kterým musí žít i ostatní, stav řešený přes Redux a React Context a produkční problémy dohledané v CloudWatch logách a v SQL, ne odhadované.",
+      "Aplikace v přehledu práce jsou sólo projekty od začátku do konce — schémata a migrace v Postgresu přes Drizzle, služby ve FastAPI, přihlášení přes OAuth a správa sessions, naplánované úlohy a k tomu Docker image a CI, které to všechno nasazují. Seniorita na frontendu je z běžné práce, zbytek stacku z toho, že tohle musím postavit a provozovat sám.",
       "Druhá polovina je agentic AI: workflow postavená kolem LLM, vlastní MCP servery a multiagentní systémy vyladěné tak, aby byly spolehlivé a zároveň dost levné na to, aby se daly reálně provozovat. Nejlíp mi to jde v úzké spolupráci s ostatními — dodávat řešení, které sedne na potřebu klienta, v termínu, na kterém jsme se domluvili.",
     ],
     /** Newest first. The about page renders this as a log. */
@@ -83,13 +85,22 @@ export const cs = {
     toolkit: [
       [
         "frontend",
-        "TypeScript, React 16–19, Next.js, Redux, React Context, Tailwind CSS, Material UI, Node.js / Express",
+        "TypeScript, React 16–19, Next.js, Redux, React Context, Tailwind CSS, Material UI",
+      ],
+      [
+        "backend",
+        "Node.js / Express, FastAPI, REST a SSE, OAuth sessions, naplánované úlohy",
+      ],
+      [
+        "data",
+        "Postgres, SQLite, Drizzle ORM, návrh schématu a migrace, fulltext přes pg_trgm",
       ],
       [
         "agentic ai",
         "Agentic coding, návrh MCP serverů, orchestrace více agentů, optimalizace nákladů agentů, LLM evals, prompt engineering",
       ],
-      ["testování", "Jest, React Testing Library, AWS CloudWatch, SQL / dBeaver, Git"],
+      ["testování", "Jest, React Testing Library, Playwright, AWS CloudWatch, SQL / dBeaver, Git"],
+      ["infrastruktura", "Docker, Vercel, CI/CD"],
       ["jazyky", "Čeština — rodilý mluvčí, angličtina — plynule"],
     ],
     /**
@@ -187,7 +198,7 @@ export const cs = {
   meta: {
     titleTemplate: "%s — Vit Busek",
     home: {
-      title: "Vit Busek — Frontend a AI vývojář",
+      title: "Vit Busek — Full-stack a AI vývojář",
       description:
         "Typovaný a otestovaný kód, který prošel review — vzniká ve workflow s podporou AI, díky kterému se iterační cyklus zkrátí z týdnů na hodiny nebo dny.",
     },
@@ -198,7 +209,7 @@ export const cs = {
     about: {
       title: "O mně",
       description:
-        "Senior frontend vývojář, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
+        "Full-stack vývojář, senior na frontendu, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
     },
     contact: {
       title: "Kontakt",

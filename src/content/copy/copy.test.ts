@@ -60,7 +60,7 @@ describe("person copy", () => {
   test("every locale carries the whole bio and CV", () => {
     for (const locale of LOCALES) {
       const { person } = getCopy(locale);
-      expect(person.bio.length, locale).toBe(3);
+      expect(person.bio.length, locale).toBe(4);
       expect(person.experience.length, locale).toBe(4);
       for (const job of person.experience) {
         expect(job.title.length, `${locale} ${job.org}`).toBeGreaterThan(0);
@@ -95,6 +95,29 @@ function leaves(node: unknown, prefix = ""): { path: string; value: unknown }[] 
     leaves(child, prefix ? `${prefix}.${key}` : key),
   );
 }
+
+// The role label is written in three places per dictionary: `person.role` (the
+// hero eyebrow), the `role` row of the spec block, and the home page's
+// <title>. They drifted apart once already — the site claimed one role in its
+// heading and another in its metadata — so tie them together here rather than
+// trusting three hand-edited strings to stay in step.
+describe("the role label", () => {
+  test("reads the same in the spec block as in the hero", () => {
+    for (const locale of LOCALES) {
+      const copy = getCopy(locale);
+      const row = copy.person.manifest.find(([key]) => key === "role");
+      expect(row, `${locale}: no role row in the manifest`).toBeDefined();
+      expect(row?.[1], locale).toBe(copy.person.role);
+    }
+  });
+
+  test("is what the home page titles itself with", () => {
+    for (const locale of LOCALES) {
+      const copy = getCopy(locale);
+      expect(copy.meta.home.title.endsWith(copy.person.role), locale).toBe(true);
+    }
+  });
+});
 
 describe("the Czech dictionary", () => {
   test("covers exactly the keys English covers", () => {
