@@ -11,6 +11,17 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
   const carouselProjects = localiseCarousel(copy);
   const skillGroups = localiseSkills(copy);
   const prefix = localePrefix(locale);
+  /*
+   * The Czech tagline is 92 characters to English's 64, so at the English
+   * scale it wraps to eight lines and pushes both CTAs below the fold at
+   * 1440x900. Scaled down by a sixth it wraps to six lines that occupy the
+   * same height the English five do, which keeps the two heroes equally
+   * weighted rather than making the Czech one merely smaller.
+   */
+  const heroScale =
+    locale === "cs"
+      ? "text-[clamp(2rem,5.75vw,3.75rem)]"
+      : "text-[clamp(2.5rem,7vw,4.5rem)]";
 
   return (
     <div className="mx-auto max-w-5xl px-6">
@@ -19,7 +30,9 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
           <p className="label text-accent">
             {copy.person.role} · {copy.person.location}
           </p>
-          <h1 className="mt-6 font-display text-[clamp(2.5rem,7vw,4.5rem)] font-semibold leading-[0.95] tracking-[-0.03em]">
+          <h1
+            className={`mt-6 font-display ${heroScale} font-semibold leading-[0.95] tracking-[-0.03em]`}
+          >
             {copy.person.tagline}
           </h1>
           <p className="mt-8 max-w-md text-lg leading-relaxed text-muted">
