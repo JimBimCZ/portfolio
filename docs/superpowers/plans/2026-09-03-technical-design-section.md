@@ -180,7 +180,7 @@ export const architecture: Record<ProjectSlug, Architecture> = {
       { from: "client", to: "server", protocol: "GET /api/*" },
       { from: "server", to: "client", protocol: "SSE /api/market/stream" },
       { from: "server", to: "data", protocol: "asyncpg" },
-      { from: "server", to: "external", protocol: "litellm" },
+      { from: "server", to: "external", protocol: "litellm (container build)" },
     ],
   },
   "games-db": {

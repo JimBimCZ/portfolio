@@ -133,7 +133,9 @@ English; they live in the copy dictionaries (see "Copy model").
 
 The deployed system — the Vercel serverless build a visitor can open. The
 container build differs and is covered by a decision line rather than a second
-diagram.
+diagram. Where the two diverge on the diagram itself, the label says so: that
+build pins `LLM_MOCK=true` and does not install `litellm`, so its OpenRouter
+edge is qualified rather than drawn as a call the deployment actually makes.
 
 | Band | Nodes |
 |---|---|
@@ -143,7 +145,7 @@ diagram.
 | external | OpenRouter *(container build only)* |
 
 Edges: client → server `GET /api/*`; server → client `SSE /api/market/stream`
-(gutter, upward); server → data `asyncpg`; server → external `litellm`.
+(gutter, upward); server → data `asyncpg`; server → external `litellm (container build)`.
 
 Decisions:
 1. **One FastAPI app, two deployments.** The container build simulates prices
