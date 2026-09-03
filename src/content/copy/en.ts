@@ -232,6 +232,31 @@ export const en = {
         "846 tests across the stack: 591 on the backend, 228 on the frontend, plus 27 Playwright specs run against the built container.",
       ],
       metricLabels: ["price ticks streamed", "tests across the stack", "closed-form price clock"],
+      design: {
+        notes: {
+          fastapi: "One serverless function, api/index.py.",
+          market: "Deterministic prices, two ticks a second.",
+          postgres: "Driven by asyncpg.",
+          openrouter: "Container build only.",
+        },
+        decisions: [
+          {
+            choice: "One FastAPI app, two deployments.",
+            because:
+              "The container build simulates prices with numpy against SQLite and calls a real model; the Vercel function computes them in closed form, talks to Postgres and ships LLM_MOCK=true. The routes are identical, so the frontend never learns which one it reached.",
+          },
+          {
+            choice: "SSE, not WebSockets.",
+            because:
+              "Prices only ever flow one way. STREAM_MAX_SECONDS is 55, which keeps a stream inside Vercel's sixty-second ceiling for a function.",
+          },
+          {
+            choice: "The frontend is a static export on the CDN.",
+            because:
+              "vercel.json rewrites only /api/* into Python, so no page render ever passes through the function.",
+          },
+        ],
+      },
       posterAlt:
         "The Trader terminal after a five-share AAPL buy: a ten-ticker watchlist on the left, an AAPL price chart above the open position and a session P&L chart in the centre, and the assistant's prompt suggestions on the right.",
       liveNote:
@@ -248,6 +273,31 @@ export const en = {
         "GitHub OAuth sign-in for a personal library; browsing and search work for anyone, signed in or not.",
       ],
       metricLabels: ["appids indexed", "hydrated with detail", "trigram search"],
+      design: {
+        notes: {
+          modules: "Catalogue, browse, detail, library, account.",
+          steam: "Its own rate limiter and TTL cache.",
+          drizzle: "Four checked-in migrations.",
+          trgm: "On game.name.",
+        },
+        decisions: [
+          {
+            choice: "Search is Postgres, not a search service.",
+            because:
+              "One pg_trgm GIN index on game.name covers 245,025 rows. Nothing to keep in sync, and no second datastore to pay for.",
+          },
+          {
+            choice: "Migrations are generated and checked in.",
+            because:
+              "db/migrations holds all four SQL files, and the pg_trgm extension is created by migration 0003 — not by a manual step someone has to remember against a new database.",
+          },
+          {
+            choice: "The Steam client owns its own rate limiter and cache.",
+            because:
+              "A page render cannot fan out into an unbounded number of upstream calls, whatever the page asks for.",
+          },
+        ],
+      },
       posterAlt:
         "Games DB's home page: a featured game banner above a Top Sellers grid of game cover art, prices, and discount badges.",
     },
@@ -262,6 +312,30 @@ export const en = {
         "GitHub and Google OAuth sign-in for a personal watchlist; every browse, detail, and search route works without an account.",
       ],
       metricLabels: ["browse rows", "cache revalidation", "search lives in the URL"],
+      design: {
+        notes: {
+          tmdb: "Typed client, cache tags per endpoint.",
+          auth: "Auth.js with the Drizzle adapter.",
+          watchlist: "Server Actions.",
+        },
+        decisions: [
+          {
+            choice: "TMDB responses are cached by tag, through Next's own data cache.",
+            because:
+              "Windows run from a day for configuration down to five minutes for search, so a browse page costs nothing upstream.",
+          },
+          {
+            choice: "/api/revalidate purges a tag on demand.",
+            because:
+              "A correction does not have to wait out its window before a reader sees it.",
+          },
+          {
+            choice: "Sessions live in the same Postgres as the watchlist.",
+            because:
+              "One database and one migration history, through the Auth.js Drizzle adapter.",
+          },
+        ],
+      },
       posterAlt:
         "My Movies' home page: a full-bleed hero for a trending title with its synopsis and a More Info button, above a Trending This Week row of poster thumbnails.",
     },
@@ -276,6 +350,30 @@ export const en = {
         "One container, one origin. A multi-stage build compiles the Next.js export and FastAPI serves it, so there is no CORS layer to configure.",
       ],
       metricLabels: ["Common Paper templates", "tests across the stack"],
+      design: {
+        notes: {
+          pdf: "The PDF is built in the browser.",
+          fastapi: "Routes: auth, documents, chat, saved, demo.",
+          templates: "Indexed by catalog.json.",
+        },
+        decisions: [
+          {
+            choice: "Templates are markdown files in the repository.",
+            because:
+              "catalog.json indexes them, so there is no CMS and no content rows in the database — a template change arrives as a diff someone can review.",
+          },
+          {
+            choice: "The frontend and the API ship as one container.",
+            because:
+              "Dockerfile.vercel builds both and every path is rewritten to that one service, so there is no cross-origin hop and no CORS layer to configure.",
+          },
+          {
+            choice: "The PDF is rendered in the browser.",
+            because:
+              "The server never generates a document, so no request holds a rendering process open.",
+          },
+        ],
+      },
       posterAlt:
         "A completed Mutual NDA in Legal Document Creator: every field filled and ready to download, with the chat panel showing the details that produced it.",
     },
@@ -290,6 +388,30 @@ export const en = {
         "291 tests across the stack: 211 unit and component, 80 Playwright end-to-end.",
       ],
       metricLabels: ["Drizzle + Neon", "tests across the stack"],
+      design: {
+        notes: {
+          actions: "lib/actions — the whole write surface.",
+          proxy: "Sends unauthenticated /boards/* to sign-in.",
+          s3: "Reached over presigned URLs.",
+        },
+        decisions: [
+          {
+            choice: "Writes go through Server Actions, not route handlers.",
+            because:
+              "app/api holds only auth, Pusher auth, attachment redirects and health; everything else lives in lib/actions next to its tests.",
+          },
+          {
+            choice: "Cards carry fractional ranks.",
+            because:
+              "Dragging a card writes one row instead of renumbering the column it landed in.",
+          },
+          {
+            choice: "Attachments go straight to S3 over presigned URLs.",
+            because:
+              "File bytes never pass through the app, which keeps uploads clear of the function's request limits.",
+          },
+        ],
+      },
       posterAlt:
         "Work Planner's sign-in screen: the app name above Continue with Google and Continue with GitHub buttons, with no guest or demo account available.",
     },

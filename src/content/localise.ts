@@ -1,6 +1,7 @@
-import type { Copy, Locale } from "./copy/types";
+import type { Copy, DesignDecision, Locale } from "./copy/types";
 import { CAROUSEL_ORDER, getProject, projects, type ProjectData, type ProjectSlug } from "./projects";
 import { skillStructure } from "./skills";
+import { BANDS, architecture, type ArchEdge, type ArchNode, type Band } from "./architecture";
 
 export type Metric = { label: string; value: string };
 
@@ -90,4 +91,44 @@ export function localiseSkills(copy: Copy): SkillGroup[] {
       }),
     };
   });
+}
+
+export type LocalisedNode = ArchNode & { note?: string };
+export type LocalisedBand = { band: Band; title: string; nodes: LocalisedNode[] };
+export type LocalisedArchitecture = {
+  bands: LocalisedBand[];
+  edges: readonly ArchEdge[];
+  decisions: readonly DesignDecision[];
+};
+
+/**
+ * Pairs a project's wiring with the reader's language: band titles and node
+ * notes come from the dictionary, everything structural from architecture.ts.
+ *
+ * Bands come back in `BANDS` order with the empty ones dropped, so the
+ * renderer can index rows off the array position and does not have to know
+ * which bands a given project happens to use.
+ */
+export function localiseArchitecture(slug: string, copy: Copy): LocalisedArchitecture {
+  const data = architecture[slug as ProjectSlug];
+  if (!data) throw new Error(`no architecture for project: ${slug}`);
+
+  const { decisions, notes = {} } = copy.projects[slug as ProjectSlug].design;
+
+  // A renamed node id would otherwise drop its note without a word, leaving
+  // the diagram quietly less informative than it reads in the dictionary.
+  const ids = new Set(data.nodes.map((node) => node.id));
+  for (const id of Object.keys(notes)) {
+    if (!ids.has(id)) throw new Error(`${slug}: note for unknown node ${id}`);
+  }
+
+  const bands = BANDS.map((band) => ({
+    band,
+    title: copy.architecture.bands[band],
+    nodes: data.nodes
+      .filter((node) => node.band === band)
+      .map((node) => ({ ...node, note: notes[node.id] })),
+  })).filter((band) => band.nodes.length > 0);
+
+  return { bands, edges: data.edges, decisions };
 }

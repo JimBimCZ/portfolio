@@ -82,6 +82,9 @@ export type MetaCopy = {
   privacy: { title: string; description: string };
 };
 
+/** One architectural choice and the reason for it. */
+export type DesignDecision = { choice: string; because: string };
+
 /** Prose that differs per project. Paired by index with the values in
  *  `projects.ts`'s `metrics` — `localiseProjects` throws on a mismatch. */
 export type ProjectCopy = {
@@ -92,6 +95,12 @@ export type ProjectCopy = {
   metricLabels: readonly string[];
   posterAlt?: string;
   liveNote?: string;
+  /** The technical design section's prose. At most three decisions, and notes
+   *  keyed by the node ids in `src/content/architecture.ts`. */
+  design: {
+    decisions: readonly DesignDecision[];
+    notes?: Readonly<Record<string, string>>;
+  };
 };
 
 export type SkillCopy = { name: string; detail: string };

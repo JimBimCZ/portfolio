@@ -144,6 +144,9 @@ describe("the Czech dictionary", () => {
     expect(cs.person.bio).not.toEqual(en.person.bio);
     for (const slug of Object.keys(en.projects) as (keyof typeof en.projects)[]) {
       expect(cs.projects[slug].summary, slug).not.toBe(en.projects[slug].summary);
+      expect(cs.projects[slug].design.decisions[0].because, slug).not.toBe(
+        en.projects[slug].design.decisions[0].because,
+      );
     }
   });
 });
@@ -159,5 +162,30 @@ describe("architecture copy", () => {
   test("the section heading and diagram label differ between locales", () => {
     expect(cs.architecture.heading).not.toBe(en.architecture.heading);
     expect(cs.architecture.diagramLabel).not.toBe(en.architecture.diagramLabel);
+  });
+});
+
+describe("design decisions", () => {
+  test("every project gives one to three decisions in every locale", () => {
+    for (const locale of LOCALES) {
+      const { projects } = getCopy(locale);
+      for (const [slug, project] of Object.entries(projects)) {
+        expect(project.design.decisions.length, `${locale}.${slug}`).toBeGreaterThan(0);
+        expect(project.design.decisions.length, `${locale}.${slug}`).toBeLessThanOrEqual(3);
+      }
+    }
+  });
+
+  // A decision that only names a choice is a stack list with extra steps. The
+  // reason is the part worth reading.
+  test("every decision states a reason, not just a choice", () => {
+    for (const locale of LOCALES) {
+      for (const [slug, project] of Object.entries(getCopy(locale).projects)) {
+        for (const decision of project.design.decisions) {
+          expect(decision.choice.trim().length, `${locale}.${slug}`).toBeGreaterThan(0);
+          expect(decision.because.trim().length, `${locale}.${slug}`).toBeGreaterThan(20);
+        }
+      }
+    }
   });
 });

@@ -2,8 +2,10 @@ import { describe, expect, test } from "vitest";
 import { getCopy } from "./copy";
 import { LOCALES } from "./copy/types";
 import { projects, type ProjectSlug } from "./projects";
+import { BANDS, architecture } from "./architecture";
 import {
   formatMetricValue,
+  localiseArchitecture,
   localiseCarousel,
   localiseProject,
   localiseProjects,
@@ -264,5 +266,75 @@ describe("localiseSkills", () => {
     }));
 
     expect(actual).toEqual(expected);
+  });
+});
+
+describe("localiseArchitecture", () => {
+  test("returns bands top to bottom", () => {
+    const { bands } = localiseArchitecture("games-db", en);
+    expect(bands.map((band) => band.band)).toEqual(["client", "server", "data", "external"]);
+    expect(bands[0].title).toBe("Client");
+    expect(bands[0].nodes.map((node) => node.id)).toEqual(["next", "rsc"]);
+  });
+
+  // Every project currently fills all four bands, so this asserts the rule
+  // rather than a case: what comes back is exactly the bands that have nodes,
+  // never an empty one the renderer would draw as a blank box.
+  test("returns exactly the bands that have nodes", () => {
+    for (const { slug } of projects) {
+      const { bands } = localiseArchitecture(slug, en);
+      const expected = BANDS.filter((band) =>
+        architecture[slug].nodes.some((node) => node.band === band),
+      );
+      expect(bands.map((band) => band.band), slug).toEqual(expected);
+      for (const band of bands) {
+        expect(band.nodes.length, `${slug}/${band.band}`).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  test("titles each band in the reader's language", () => {
+    const { bands } = localiseArchitecture("games-db", cs);
+    expect(bands.map((band) => band.title)).toEqual([
+      "Klient",
+      "Server",
+      "Data",
+      "Externí služby",
+    ]);
+  });
+
+  test("attaches each note to its node and leaves the rest without one", () => {
+    const { bands } = localiseArchitecture("trader", en);
+    const server = bands.find((band) => band.band === "server")!;
+    expect(server.nodes.find((node) => node.id === "fastapi")?.note).toBe(
+      "One serverless function, api/index.py.",
+    );
+    expect(server.nodes.find((node) => node.id === "assistant")?.note).toBeUndefined();
+  });
+
+  test("carries the edges and decisions through untouched", () => {
+    const result = localiseArchitecture("trader", en);
+    expect(result.edges).toEqual(architecture.trader.edges);
+    expect(result.decisions).toEqual(en.projects.trader.design.decisions);
+  });
+
+  // A renamed node id would otherwise silently drop its note, leaving the
+  // diagram quietly less informative rather than failing.
+  test("throws when a note names a node the diagram does not have", () => {
+    const copy = {
+      ...en,
+      projects: {
+        ...en.projects,
+        trader: {
+          ...en.projects.trader,
+          design: { ...en.projects.trader.design, notes: { "no-such-node": "orphaned" } },
+        },
+      },
+    };
+    expect(() => localiseArchitecture("trader", copy)).toThrow(/no-such-node/);
+  });
+
+  test("throws on a project it has no diagram for", () => {
+    expect(() => localiseArchitecture("not-a-project", en)).toThrow(/not-a-project/);
   });
 });
