@@ -31,11 +31,28 @@ function collectRoutes(dir: string, base = ""): string[] {
   return routes;
 }
 
+/**
+ * Catch-all segments are exempt. A catch-all renders no page of its own — the
+ * Czech one at `(cs)/cs/[...rest]` exists only to call `notFound()`, so an
+ * unmatched `/cs/...` URL 404s inside the Czech group rather than falling
+ * through to the English global page. It has no English counterpart because
+ * the global page is already English, and it cannot produce the dead language
+ * switch this test guards against: it renders a 404, whose switch points at
+ * another 404.
+ */
+const isCatchAll = (route: string) =>
+  route.split("/").some((segment) => segment.startsWith("[..."));
+
 describe("route parity between the English and Czech trees", () => {
   test("every route with a page exists in both trees", () => {
-    const en = collectRoutes(EN_ROOT).sort();
-    const cs = collectRoutes(CS_ROOT).sort();
+    const en = collectRoutes(EN_ROOT).filter((r) => !isCatchAll(r)).sort();
+    const cs = collectRoutes(CS_ROOT).filter((r) => !isCatchAll(r)).sort();
 
     expect(cs).toEqual(en);
+  });
+
+  test("the Czech catch-all is the only unpaired route", () => {
+    expect(collectRoutes(CS_ROOT).filter(isCatchAll)).toEqual(["[...rest]"]);
+    expect(collectRoutes(EN_ROOT).filter(isCatchAll)).toEqual([]);
   });
 });
