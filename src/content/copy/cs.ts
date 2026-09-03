@@ -254,7 +254,7 @@ export const cs = {
           {
             choice: "Jedna aplikace ve FastAPI, dvě nasazení.",
             because:
-              "Kontejnerový build simuluje ceny přes numpy nad SQLite a volá skutečný model; funkce na Vercelu je počítá uzavřeným vzorcem, mluví s Postgresem a běží s LLM_MOCK=true. Routy jsou stejné, takže frontend nepozná, ke které se dostal.",
+              "Kontejnerový build simuluje ceny přes numpy a odpovídá skutečným modelem; funkce na Vercelu je počítá uzavřeným vzorcem a běží s LLM_MOCK=true. Obě varianty mluví se stejným Postgresem a routy jsou stejné, takže frontend nepozná, ke které z nich se dostal.",
           },
           {
             choice: "SSE, ne WebSockety.",
@@ -264,7 +264,7 @@ export const cs = {
           {
             choice: "Frontend je statický export na CDN.",
             because:
-              "vercel.json přesměrovává do Pythonu jen /api/*, takže vykreslení stránky nikdy neprochází funkcí.",
+              "Jediné, co vercel.json přepisuje na funkci v Pythonu, jsou cesty /api/*, takže vykreslení stránky nikdy neprochází funkcí.",
           },
         ],
       },
@@ -287,7 +287,7 @@ export const cs = {
       design: {
         notes: {
           modules: "Katalog, procházení, detail, knihovna, účet.",
-          steam: "Vlastní omezovač frekvence a TTL cache.",
+          steam: "Vlastní rate limiter a TTL cache.",
           drizzle: "Čtyři zaverzované migrace.",
           trgm: "Nad game.name.",
         },
@@ -303,9 +303,9 @@ export const cs = {
               "V db/migrations leží všechny čtyři SQL soubory a rozšíření pg_trgm zakládá migrace 0003 — ne ruční krok, který si někdo musí u nové databáze pamatovat.",
           },
           {
-            choice: "Klient Steamu si nese vlastní omezovač frekvence a cache.",
+            choice: "Klient Steamu si nese vlastní rate limiter a cache.",
             because:
-              "Vykreslení stránky se nemůže rozpadnout do neomezeného počtu volání nahoru, ať si stránka řekne o cokoli.",
+              "Vykreslení stránky se nemůže rozpadnout do neomezeného počtu volání na Steam Web API, ať si stránka řekne o cokoli.",
           },
         ],
       },
@@ -333,15 +333,10 @@ export const cs = {
           {
             choice: "Odpovědi z TMDB se cachují podle tagů v datové cache Nextu.",
             because:
-              "Okna sahají od jednoho dne pro konfiguraci po pět minut pro vyhledávání, takže stránka s procházením nestojí nahoře nic.",
+              "Okna sahají od jednoho dne pro konfiguraci po pět minut pro vyhledávání, takže stránka s procházením žádné další volání na TMDB nespustí.",
           },
           {
-            choice: "/api/revalidate na vyžádání zneplatní tag.",
-            because:
-              "Oprava nemusí čekat, až vyprší okno, aby ji čtenář uviděl.",
-          },
-          {
-            choice: "Sezení leží ve stejném Postgresu jako watchlist.",
+            choice: "Relace leží ve stejném Postgresu jako watchlist.",
             because:
               "Jedna databáze a jedna historie migrací, přes adaptér Auth.js pro Drizzle.",
           },
@@ -372,11 +367,6 @@ export const cs = {
             choice: "Šablony jsou markdownové soubory v repozitáři.",
             because:
               "Indexuje je catalog.json, takže není potřeba CMS ani řádky s obsahem v databázi — změna šablony přijde jako diff, který jde zrevidovat.",
-          },
-          {
-            choice: "Frontend a API se nasazují jako jeden kontejner.",
-            because:
-              "Dockerfile.vercel staví oboje a všechny cesty míří na tuhle jednu službu, takže nevzniká přechod mezi originy ani vrstva CORS, kterou by bylo třeba nastavovat.",
           },
           {
             choice: "PDF se vykresluje v prohlížeči.",

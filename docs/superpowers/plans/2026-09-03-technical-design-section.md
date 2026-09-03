@@ -608,7 +608,7 @@ In `src/content/copy/en.ts`, add a `design` block to each project entry, after i
           {
             choice: "One FastAPI app, two deployments.",
             because:
-              "The container build simulates prices with numpy against SQLite and calls a real model; the Vercel function computes them in closed form, talks to Postgres and ships LLM_MOCK=true. The routes are identical, so the frontend never learns which one it reached.",
+              "The container build simulates prices with numpy and answers through a real model; the Vercel function computes them in closed form and ships LLM_MOCK=true. Both talk to the same Postgres, and the routes are identical, so the frontend never learns which build it reached.",
           },
           {
             choice: "SSE, not WebSockets.",

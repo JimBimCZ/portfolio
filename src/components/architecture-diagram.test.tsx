@@ -69,6 +69,37 @@ test("reads in Czech under the Czech dictionary", () => {
   expect(screen.getByText("Postgres (Neon)")).toBeInTheDocument();
 });
 
+// No project's edges all run downward between adjacent bands, so this shape
+// exists only in the type — but `repeat(0, …)` is invalid CSS and would take
+// the whole track list with it, including the `minmax(0, 1fr)` that keeps a
+// long node name from widening the page.
+test("keeps a usable track list when a project has no gutter edges", () => {
+  render(
+    <ArchitectureDiagram
+      label="Architecture diagram"
+      architecture={{
+        bands: [
+          {
+            band: "client",
+            title: "Client",
+            nodes: [{ id: "next", band: "client", name: "Next.js" }],
+          },
+          {
+            band: "server",
+            title: "Server",
+            nodes: [{ id: "api", band: "server", name: "app/api" }],
+          },
+        ],
+        edges: [{ from: "client", to: "server", protocol: "GET /api/*" }],
+        decisions: [],
+      }}
+    />,
+  );
+  const diagram = screen.getByRole("group", { name: "Architecture diagram" });
+  expect(diagram.style.gridTemplateColumns).toBe("minmax(0, 1fr)");
+  expect(within(diagram).queryAllByTestId("gutter-edge")).toHaveLength(0);
+});
+
 test("places each band on its own grid row and each gutter edge in its own lane", () => {
   renderFor("work-planner");
   const diagram = screen.getByRole("group", { name: "Architecture diagram" });
@@ -78,8 +109,17 @@ test("places each band on its own grid row and each gutter edge in its own lane"
 
   // Three of work-planner's five edges are non-adjacent or upward, so each
   // needs a lane of its own — overlapping them would draw one line over another.
-  const lanes = within(diagram)
-    .getAllByTestId("gutter-edge")
-    .map((edge) => edge.style.gridColumn);
+  const gutterEdges = within(diagram).getAllByTestId("gutter-edge");
+  const lanes = gutterEdges.map((edge) => edge.style.gridColumn);
   expect(new Set(lanes).size).toBe(3);
+
+  // Distinct lanes alone would still pass with an off-by-one in the span, which
+  // is what makes a line stop short of the band it connects to. server → S3
+  // runs rows 3-7, and Pusher → client and client → S3 both run 1-7; a row span
+  // ends one line past its last row, hence the 8.
+  expect(gutterEdges.map((edge) => edge.style.gridRow)).toEqual([
+    "3 / 8",
+    "1 / 8",
+    "1 / 8",
+  ]);
 });

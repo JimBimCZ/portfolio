@@ -243,7 +243,7 @@ export const en = {
           {
             choice: "One FastAPI app, two deployments.",
             because:
-              "The container build simulates prices with numpy against SQLite and calls a real model; the Vercel function computes them in closed form, talks to Postgres and ships LLM_MOCK=true. The routes are identical, so the frontend never learns which one it reached.",
+              "The container build simulates prices with numpy and answers through a real model; the Vercel function computes them in closed form and ships LLM_MOCK=true. Both talk to the same Postgres, and the routes are identical, so the frontend never learns which build it reached.",
           },
           {
             choice: "SSE, not WebSockets.",
@@ -325,11 +325,6 @@ export const en = {
               "Windows run from a day for configuration down to five minutes for search, so a browse page costs nothing upstream.",
           },
           {
-            choice: "/api/revalidate purges a tag on demand.",
-            because:
-              "A correction does not have to wait out its window before a reader sees it.",
-          },
-          {
             choice: "Sessions live in the same Postgres as the watchlist.",
             because:
               "One database and one migration history, through the Auth.js Drizzle adapter.",
@@ -361,11 +356,6 @@ export const en = {
             choice: "Templates are markdown files in the repository.",
             because:
               "catalog.json indexes them, so there is no CMS and no content rows in the database — a template change arrives as a diff someone can review.",
-          },
-          {
-            choice: "The frontend and the API ship as one container.",
-            because:
-              "Dockerfile.vercel builds both and every path is rewritten to that one service, so there is no cross-origin hop and no CORS layer to configure.",
           },
           {
             choice: "The PDF is rendered in the browser.",

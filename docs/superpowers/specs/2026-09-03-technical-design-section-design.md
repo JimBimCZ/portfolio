@@ -149,9 +149,10 @@ Edges: client → server `GET /api/*`; server → client `SSE /api/market/stream
 
 Decisions:
 1. **One FastAPI app, two deployments.** The container build simulates prices
-   with numpy against SQLite and calls a real LLM; the Vercel function computes
-   them, talks to Postgres and ships `LLM_MOCK=true`. Same routes either way,
-   so the frontend does not know which one it is talking to.
+   with numpy and calls a real LLM; the Vercel function computes them in closed
+   form and ships `LLM_MOCK=true`. Both talk to the same Postgres, and the
+   routes are the same either way, so the frontend does not know which one it
+   is talking to.
 2. **SSE, not WebSockets.** Prices flow one direction only. `STREAM_MAX_SECONDS`
    is 55, which keeps a stream inside Vercel's 60-second function ceiling.
 3. **The frontend is a static export on the CDN.** `vercel.json` rewrites only

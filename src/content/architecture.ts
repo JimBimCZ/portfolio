@@ -23,7 +23,11 @@ export type ArchNode = {
   /** Stable key. The copy dictionaries hang optional notes off it. */
   id: string;
   band: Band;
-  /** A component or technology name. A fact — "Postgres" is not translated. */
+  /**
+   * A technology's own name ("Postgres") or the path the component lives at
+   * ("server/steam"). Both are facts and read the same in every locale —
+   * anything that would have to be worded is a `note` in the dictionaries.
+   */
   name: string;
 };
 
@@ -51,8 +55,8 @@ export const architecture: Record<ProjectSlug, Architecture> = {
       { id: "zustand", band: "client", name: "Zustand" },
       { id: "charts", band: "client", name: "lightweight-charts" },
       { id: "fastapi", band: "server", name: "FastAPI" },
-      { id: "market", band: "server", name: "Market source" },
-      { id: "assistant", band: "server", name: "LLM assistant" },
+      { id: "market", band: "server", name: "app/market" },
+      { id: "assistant", band: "server", name: "app/llm" },
       { id: "postgres", band: "data", name: "Postgres" },
       { id: "openrouter", band: "external", name: "OpenRouter" },
     ],
@@ -69,7 +73,7 @@ export const architecture: Record<ProjectSlug, Architecture> = {
       { id: "rsc", band: "client", name: "React Server Components" },
       { id: "modules", band: "server", name: "server/ modules" },
       { id: "auth", band: "server", name: "Auth.js" },
-      { id: "steam", band: "server", name: "Steam client" },
+      { id: "steam", band: "server", name: "server/steam" },
       { id: "postgres", band: "data", name: "Postgres (Neon)" },
       { id: "drizzle", band: "data", name: "Drizzle ORM" },
       { id: "trgm", band: "data", name: "pg_trgm GIN index" },
@@ -104,9 +108,9 @@ export const architecture: Record<ProjectSlug, Architecture> = {
       { id: "pdf", band: "client", name: "@react-pdf/renderer" },
       { id: "fastapi", band: "server", name: "FastAPI" },
       { id: "oauth", band: "server", name: "GitHub OAuth" },
-      { id: "chat", band: "server", name: "Document chat" },
+      { id: "chat", band: "server", name: "app/document_chat.py" },
       { id: "sqlite", band: "data", name: "SQLite" },
-      { id: "templates", band: "data", name: "11 markdown templates" },
+      { id: "templates", band: "data", name: "templates/*.md" },
       { id: "openrouter", band: "external", name: "OpenRouter" },
     ],
     edges: [
@@ -125,7 +129,7 @@ export const architecture: Record<ProjectSlug, Architecture> = {
       { id: "proxy", band: "server", name: "proxy.ts" },
       { id: "postgres", band: "data", name: "Postgres (Neon)" },
       { id: "drizzle", band: "data", name: "Drizzle ORM" },
-      { id: "ranks", band: "data", name: "Fractional card ranks" },
+      { id: "ranks", band: "data", name: "cards.rank" },
       { id: "pusher", band: "external", name: "Pusher" },
       { id: "s3", band: "external", name: "S3" },
     ],

@@ -35,13 +35,23 @@ export function ArchitectureDiagram({
   const gutter = placed.filter(({ from, to }) => to - from !== 2);
   const content = gutter.length + 1;
 
+  // `repeat(0, …)` is invalid, and an invalid track list takes the whole
+  // declaration down with it — including the `minmax(0, 1fr)` that stops a long
+  // node name from widening the grid past the viewport. No project has zero
+  // gutter edges today; one whose edges all run down between adjacent bands
+  // would.
+  const columns =
+    gutter.length > 0
+      ? `repeat(${gutter.length}, 1.25rem) minmax(0, 1fr)`
+      : "minmax(0, 1fr)";
+
   return (
     <>
       <div
         role="group"
         aria-label={label}
         className="mt-6 grid gap-x-2"
-        style={{ gridTemplateColumns: `repeat(${gutter.length}, 1.25rem) minmax(0, 1fr)` }}
+        style={{ gridTemplateColumns: columns }}
       >
         {gutter.map(({ edge, from, to }, lane) => (
           <GutterEdge
@@ -81,7 +91,12 @@ export function ArchitectureDiagram({
             className="flex items-center gap-3 py-1 pl-6"
           >
             <span aria-hidden className="h-8 w-px bg-line" />
-            <span className="label text-dim">{edge.protocol}</span>
+            {/* Protocols are facts and stay English in both trees, so under
+                `lang="cs"` they are an English run and marked as one — the same
+                rule `experience-log.tsx` applies to job titles. */}
+            <span className="label text-dim" lang="en">
+              {edge.protocol}
+            </span>
           </p>
         ))}
       </div>
@@ -137,7 +152,11 @@ function GutterEdge({
           upward ? "top-3 border-l border-t" : "bottom-3 border-b border-r"
         }`}
       />
-      <span className="label relative rotate-180 bg-canvas py-2 text-dim [writing-mode:vertical-rl]">
+      {/* English inside the Czech tree, like the inline connector above. */}
+      <span
+        lang="en"
+        className="label relative rotate-180 bg-canvas py-2 text-dim [writing-mode:vertical-rl]"
+      >
         {protocol}
       </span>
     </span>

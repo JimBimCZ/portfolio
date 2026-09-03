@@ -7,7 +7,7 @@ import ProjectPage, { generateStaticParams } from "./page";
 
 // The page is rendered standalone in these tests, without `layout.tsx`'s
 // <main>, so queries run directly against `screen` rather than scoped
-// `within(getByRole("main"))` — see the task-6 brief's note on this.
+// `within(getByRole("main"))`.
 
 function getProject(slug: string) {
   return localiseProject(slug, getCopy("en"));
