@@ -221,6 +221,16 @@ export const cs = {
         "Co si tenhle web zaznamenává, což je skoro nic: žádné cookies, žádná analytika, žádné sledovací skripty.",
     },
   },
+  architecture: {
+    heading: "Technický návrh",
+    diagramLabel: "Diagram architektury",
+    bands: {
+      client: "Klient",
+      server: "Server",
+      data: "Data",
+      external: "Externí služby",
+    },
+  },
   projects: {
     trader: {
       summary:

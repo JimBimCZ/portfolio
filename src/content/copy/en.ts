@@ -210,6 +210,16 @@ export const en = {
         "What this site records, which is almost nothing: no cookies, no analytics, no tracking scripts.",
     },
   },
+  architecture: {
+    heading: "Technical design",
+    diagramLabel: "Architecture diagram",
+    bands: {
+      client: "Client",
+      server: "Server",
+      data: "Data",
+      external: "External",
+    },
+  },
   projects: {
     trader: {
       summary:

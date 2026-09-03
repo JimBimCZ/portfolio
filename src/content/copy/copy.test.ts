@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import { LOCALES, counterpart, getCopy } from "./index";
 import { cs } from "./cs";
 import { en } from "./en";
+import { BANDS } from "../architecture";
 
 describe("counterpart", () => {
   test("maps an English path into the Czech tree", () => {
@@ -144,5 +145,19 @@ describe("the Czech dictionary", () => {
     for (const slug of Object.keys(en.projects) as (keyof typeof en.projects)[]) {
       expect(cs.projects[slug].summary, slug).not.toBe(en.projects[slug].summary);
     }
+  });
+});
+
+describe("architecture copy", () => {
+  test("names every band in every locale", () => {
+    for (const locale of LOCALES) {
+      const { bands } = getCopy(locale).architecture;
+      expect(Object.keys(bands).sort(), locale).toEqual(BANDS.slice().sort());
+    }
+  });
+
+  test("the section heading and diagram label differ between locales", () => {
+    expect(cs.architecture.heading).not.toBe(en.architecture.heading);
+    expect(cs.architecture.diagramLabel).not.toBe(en.architecture.diagramLabel);
   });
 });

@@ -1,4 +1,5 @@
 import type { ProjectSlug } from "../projects";
+import type { Band } from "../architecture";
 
 export const LOCALES = ["en", "cs"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -96,12 +97,23 @@ export type ProjectCopy = {
 export type SkillCopy = { name: string; detail: string };
 export type SkillGroupCopy = { title: string; skills: Record<string, SkillCopy> };
 
+/** The strings the technical design section shares across every project. */
+export type ArchitectureCopy = {
+  /** The section's <h2>. */
+  heading: string;
+  /** Accessible name of the diagram's group landmark. */
+  diagramLabel: string;
+  /** Band titles, in the reader's language. */
+  bands: Record<Band, string>;
+};
+
 export type Copy = {
   locale: Locale;
   ui: UiCopy;
   person: PersonCopy;
   pages: PagesCopy;
   meta: MetaCopy;
+  architecture: ArchitectureCopy;
   projects: Record<ProjectSlug, ProjectCopy>;
   skills: Record<string, SkillGroupCopy>;
 };
