@@ -1,8 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
 import { getCopy } from "@/content/copy";
-import { localiseProject } from "@/content/localise";
+import { localiseArchitecture, localiseProject } from "@/content/localise";
+import { projects } from "@/content/projects";
 import ProjectPage, { generateStaticParams } from "./page";
+
+// The page is rendered standalone in these tests, without `layout.tsx`'s
+// <main>, so queries run directly against `screen` rather than scoped
+// `within(getByRole("main"))` — see the task-6 brief's note on this.
 
 function getProject(slug: string) {
   return localiseProject(slug, getCopy("en"));
@@ -69,4 +74,24 @@ test("notes what to expect from a live demo when the project has a note", async 
 
 test("an unknown slug does not render a page", async () => {
   await expect(ProjectPage(argsFor("no-such-project"))).rejects.toThrow();
+});
+
+test("shows the technical design of every project", async () => {
+  for (const { slug } of projects) {
+    const { unmount } = render(await ProjectPage(argsFor(slug)));
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Technical design" }),
+      slug,
+    ).toBeInTheDocument();
+
+    const architecture = localiseArchitecture(slug, getCopy("en"));
+    for (const band of architecture.bands) {
+      expect(screen.getByRole("heading", { level: 3, name: band.title }), slug)
+        .toBeInTheDocument();
+    }
+    for (const decision of architecture.decisions) {
+      expect(screen.getByText(decision.choice), slug).toBeInTheDocument();
+    }
+    unmount();
+  }
 });
