@@ -1030,11 +1030,16 @@ test("names every node, with its note where it has one", () => {
 // The protocol is the part of an edge a screen reader can get at; the rule and
 // the arrow tick are decorative. Losing it would leave the relationships
 // invisible to anyone not looking at the picture.
+// work-planner deliberately names both a node and an edge "Server Actions" —
+// the node is where writes live, the edge is how the browser reaches it — so
+// this asserts at least one match rather than exactly one.
 test("labels every edge with its protocol, whichever way it runs", () => {
   const { edges } = renderFor("work-planner");
   expect(edges.length).toBe(5);
+  const diagram = screen.getByRole("group", { name: "Architecture diagram" });
   for (const edge of edges) {
-    expect(screen.getByText(edge.protocol)).toBeInTheDocument();
+    expect(within(diagram).getAllByText(edge.protocol).length, edge.protocol)
+      .toBeGreaterThan(0);
   }
 });
 
@@ -1180,7 +1185,10 @@ export function ArchitectureDiagram({
           <li key={decision.choice} className="flex gap-4 leading-relaxed">
             <span aria-hidden className="mt-3 h-px w-6 shrink-0 bg-accent" />
             <span>
-              {decision.choice} <span className="text-muted">{decision.because}</span>
+              {/* The choice is its own element, not a bare text node, so that a
+                  test can query it apart from the reason that follows it. */}
+              <span className="text-text">{decision.choice}</span>{" "}
+              <span className="text-muted">{decision.because}</span>
             </span>
           </li>
         ))}
@@ -1318,6 +1326,8 @@ test("renders the technical design in Czech", async () => {
   expect(
     within(main).getByText(copy.projects["work-planner"].design.decisions[0].choice),
   ).toBeInTheDocument();
+  // Testing Library matches on a whole element's text, so this only resolves
+  // because the choice has a wrapper of its own in ArchitectureDiagram.
   // Technology names are facts, so they read the same in both trees.
   expect(within(main).getByText("Drizzle ORM")).toBeInTheDocument();
 });
@@ -1402,7 +1412,10 @@ test("a project page shows its architecture and the decisions behind it", async 
   ).toBeVisible();
   await expect(main.getByRole("heading", { level: 3, name: "Client" })).toBeVisible();
   await expect(main.getByText("SSE /api/market/stream")).toBeVisible();
-  await expect(main.getByText("One FastAPI app, two deployments.")).toBeVisible();
+  // Playwright's getByText is substring-matching and strict: the decision text
+  // appears in the <li>, the wrapping <span> and the inner one, so take the
+  // first rather than tripping strict mode on three legitimate matches.
+  await expect(main.getByText("One FastAPI app, two deployments.").first()).toBeVisible();
 });
 
 // Work Planner has the densest diagram — four bands, eleven nodes and three
@@ -1437,8 +1450,9 @@ test("the technical design section is translated", async ({ page }) => {
   await expect(
     main.getByText(getCopy("cs").projects["games-db"].design.decisions[0].choice),
   ).toBeVisible();
-  // Protocols are facts and stay in English in both trees.
-  await expect(main.getByText("Drizzle")).toBeVisible();
+  // Protocols are facts and stay in English in both trees. `exact` matters:
+  // without it this also matches the node "Drizzle ORM" and the stack row.
+  await expect(main.getByText("Drizzle", { exact: true })).toBeVisible();
 });
 ```
 
