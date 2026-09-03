@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArchitectureDiagram } from "@/components/architecture-diagram";
 import { localePrefix, type Copy, type Locale } from "@/content/copy";
-import type { LocalisedProject } from "@/content/localise";
+import { localiseArchitecture, type LocalisedProject } from "@/content/localise";
 import { formatShipped } from "@/content/projects";
 
 export function ProjectPage({
@@ -13,6 +14,8 @@ export function ProjectPage({
   copy: Copy;
   locale: Locale;
 }) {
+  const architecture = localiseArchitecture(project.slug, copy);
+
   return (
     <article className="mx-auto max-w-3xl px-6 py-20">
       <Link
@@ -63,6 +66,12 @@ export function ProjectPage({
           </li>
         ))}
       </ul>
+
+      <h2 className="label mt-14 text-muted">{copy.architecture.heading}</h2>
+      <ArchitectureDiagram
+        architecture={architecture}
+        label={copy.architecture.diagramLabel}
+      />
 
       {(project.liveUrl || project.repo) && (
         <div className="mt-14 flex flex-wrap gap-6">

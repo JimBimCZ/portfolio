@@ -6,6 +6,10 @@ import CzechProject, { generateStaticParams } from "./page";
 
 const copy = getCopy("cs");
 
+// The page is rendered standalone in these tests, without `layout.tsx`'s
+// <main>, so queries run directly against `screen` rather than scoped
+// `within(getByRole("main"))`.
+
 type PageArgs = Parameters<typeof CzechProject>[0];
 
 function argsFor(slug: string) {
@@ -42,4 +46,22 @@ test("sends the reader back to the Czech log", async () => {
 
 test("an unknown slug does not render a page", async () => {
   await expect(CzechProject(argsFor("no-such-project"))).rejects.toThrow();
+});
+
+test("renders the technical design in Czech", async () => {
+  render(await CzechProject(argsFor("work-planner")));
+
+  expect(
+    screen.getByRole("heading", { level: 2, name: copy.architecture.heading }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { level: 3, name: copy.architecture.bands.client }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(copy.projects["work-planner"].design.decisions[0].choice),
+  ).toBeInTheDocument();
+  // Testing Library matches on a whole element's text, so this only resolves
+  // because the choice has a wrapper of its own in ArchitectureDiagram.
+  // Technology names are facts, so they read the same in both trees.
+  expect(screen.getByText("Drizzle ORM")).toBeInTheDocument();
 });

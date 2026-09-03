@@ -221,6 +221,16 @@ export const cs = {
         "Co si tenhle web zaznamenává, což je skoro nic: žádné cookies, žádná analytika, žádné sledovací skripty.",
     },
   },
+  architecture: {
+    heading: "Technický návrh",
+    diagramLabel: "Diagram architektury",
+    bands: {
+      client: "Klient",
+      server: "Server",
+      data: "Data",
+      external: "Externí služby",
+    },
+  },
   projects: {
     trader: {
       summary:
@@ -233,6 +243,31 @@ export const cs = {
         "846 testů napříč stackem: 591 na backendu, 228 na frontendu a k tomu 27 Playwright testů proti sestavenému kontejneru.",
       ],
       metricLabels: ["streamované ceny", "testů napříč stackem", "ceny v uzavřeném tvaru"],
+      design: {
+        notes: {
+          fastapi: "Jedna serverless funkce, api/index.py.",
+          market: "Deterministické ceny, dva ticky za sekundu.",
+          postgres: "Přes asyncpg.",
+          openrouter: "Jen v kontejnerovém buildu.",
+        },
+        decisions: [
+          {
+            choice: "Jedna aplikace ve FastAPI, dvě nasazení.",
+            because:
+              "Kontejnerový build simuluje ceny přes numpy a odpovídá skutečným modelem; funkce na Vercelu je počítá uzavřeným vzorcem a běží s LLM_MOCK=true. Obě varianty mluví se stejným Postgresem a routy jsou stejné, takže frontend nepozná, ke které z nich se dostal.",
+          },
+          {
+            choice: "SSE, ne WebSockety.",
+            because:
+              "Ceny tečou jen jedním směrem. STREAM_MAX_SECONDS je 55, takže se stream vejde do šedesátisekundového limitu funkce na Vercelu.",
+          },
+          {
+            choice: "Frontend je statický export na CDN.",
+            because:
+              "Jediné, co vercel.json přepisuje na funkci v Pythonu, jsou cesty /api/*, takže vykreslení stránky nikdy neprochází funkcí.",
+          },
+        ],
+      },
       posterAlt:
         "Terminál Trader po nákupu pěti akcií AAPL: vlevo watchlist s deseti tickery, uprostřed graf ceny AAPL nad otevřenou pozicí a graf zisku a ztráty za relaci, vpravo návrhy promptů pro asistenta.",
       liveNote:
@@ -249,6 +284,31 @@ export const cs = {
         "Přihlášení přes GitHub OAuth kvůli osobní knihovně; procházení a vyhledávání funguje komukoli, přihlášenému i nepřihlášenému.",
       ],
       metricLabels: ["zaindexovaných appidů", "s načteným detailem", "trigramové vyhledávání"],
+      design: {
+        notes: {
+          modules: "Katalog, procházení, detail, knihovna, účet.",
+          steam: "Vlastní rate limiter a TTL cache.",
+          drizzle: "Čtyři zaverzované migrace.",
+          trgm: "Nad game.name.",
+        },
+        decisions: [
+          {
+            choice: "Vyhledávání běží na Postgresu, ne na vyhledávací službě.",
+            because:
+              "Jeden GIN index pg_trgm nad game.name pokrývá 245 025 řádků. Není co synchronizovat a není třeba platit druhé úložiště.",
+          },
+          {
+            choice: "Migrace se generují a verzují.",
+            because:
+              "V db/migrations leží všechny čtyři SQL soubory a rozšíření pg_trgm zakládá migrace 0003 — ne ruční krok, který si někdo musí u nové databáze pamatovat.",
+          },
+          {
+            choice: "Klient Steamu si nese vlastní rate limiter a cache.",
+            because:
+              "Vykreslení stránky se nemůže rozpadnout do neomezeného počtu volání na Steam Web API, ať si stránka řekne o cokoli.",
+          },
+        ],
+      },
       posterAlt:
         "Úvodní stránka Games DB: banner s vybranou hrou nad mřížkou Top Sellers s obaly her, cenami a slevovými štítky.",
     },
@@ -263,6 +323,25 @@ export const cs = {
         "Přihlášení přes GitHub a Google OAuth kvůli osobnímu watchlistu; procházení, detaily i vyhledávání fungují bez účtu.",
       ],
       metricLabels: ["řad k procházení", "invalidace cache", "vyhledávání žije v URL"],
+      design: {
+        notes: {
+          tmdb: "Typovaný klient, cache tagy podle endpointu.",
+          auth: "Auth.js s adaptérem pro Drizzle.",
+          watchlist: "Server Actions.",
+        },
+        decisions: [
+          {
+            choice: "Odpovědi z TMDB se cachují podle tagů v datové cache Nextu.",
+            because:
+              "Okna sahají od jednoho dne pro konfiguraci po pět minut pro vyhledávání, takže stránka s procházením žádné další volání na TMDB nespustí.",
+          },
+          {
+            choice: "Relace leží ve stejném Postgresu jako watchlist.",
+            because:
+              "Jedna databáze a jedna historie migrací, přes adaptér Auth.js pro Drizzle.",
+          },
+        ],
+      },
       posterAlt:
         "Úvodní stránka My Movies: přes celou šířku hero s právě populárním titulem, jeho anotací a tlačítkem More Info, pod ním řada Trending This Week s náhledy plakátů.",
     },
@@ -277,6 +356,25 @@ export const cs = {
         "Jeden kontejner, jeden origin. Vícefázový build zkompiluje export Next.js a FastAPI ho servíruje, takže není potřeba nastavovat žádnou CORS vrstvu.",
       ],
       metricLabels: ["šablon Common Paper", "testů napříč stackem"],
+      design: {
+        notes: {
+          pdf: "PDF se sestavuje v prohlížeči.",
+          fastapi: "Routy: auth, documents, chat, saved, demo.",
+          templates: "Indexované přes catalog.json.",
+        },
+        decisions: [
+          {
+            choice: "Šablony jsou markdownové soubory v repozitáři.",
+            because:
+              "Indexuje je catalog.json, takže není potřeba CMS ani řádky s obsahem v databázi — změna šablony přijde jako diff, který jde zrevidovat.",
+          },
+          {
+            choice: "PDF se vykresluje v prohlížeči.",
+            because:
+              "Server žádný dokument negeneruje, takže žádný požadavek nedrží otevřený vykreslovací proces.",
+          },
+        ],
+      },
       posterAlt:
         "Hotová Mutual NDA v Legal Document Creatoru: všechna pole vyplněná a dokument připravený ke stažení, vedle něj panel konverzace s detaily, ze kterých vznikl.",
     },
@@ -291,6 +389,30 @@ export const cs = {
         "291 testů napříč stackem: 211 unit a komponentových, 80 end-to-end v Playwrightu.",
       ],
       metricLabels: ["Drizzle + Neon", "testů napříč stackem"],
+      design: {
+        notes: {
+          actions: "lib/actions — celá zapisovací plocha.",
+          proxy: "Nepřihlášené požadavky na /boards/* posílá na přihlášení.",
+          s3: "Dostupné přes předpodepsané URL.",
+        },
+        decisions: [
+          {
+            choice: "Zápisy jdou přes Server Actions, ne přes route handlery.",
+            because:
+              "V app/api zůstalo jen přihlášení, autorizace Pusheru, přesměrování příloh a health; všechno ostatní leží v lib/actions vedle svých testů.",
+          },
+          {
+            choice: "Karty nesou zlomkové pořadí.",
+            because:
+              "Přetažení karty zapíše jeden řádek místo přečíslování celého sloupce, do kterého karta spadla.",
+          },
+          {
+            choice: "Přílohy jdou rovnou do S3 přes předpodepsané URL.",
+            because:
+              "Bajty souboru nikdy neprocházejí aplikací, takže se nahrávání nezadrhne o limity požadavku ve funkci.",
+          },
+        ],
+      },
       posterAlt:
         "Přihlašovací obrazovka Work Planneru: název aplikace nad tlačítky Continue with Google a Continue with GitHub, žádný hostovský ani demo účet.",
     },

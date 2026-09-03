@@ -1,4 +1,5 @@
 import type { ProjectSlug } from "../projects";
+import type { Band } from "../architecture";
 
 export const LOCALES = ["en", "cs"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -81,6 +82,9 @@ export type MetaCopy = {
   privacy: { title: string; description: string };
 };
 
+/** One architectural choice and the reason for it. */
+export type DesignDecision = { choice: string; because: string };
+
 /** Prose that differs per project. Paired by index with the values in
  *  `projects.ts`'s `metrics` — `localiseProjects` throws on a mismatch. */
 export type ProjectCopy = {
@@ -91,10 +95,26 @@ export type ProjectCopy = {
   metricLabels: readonly string[];
   posterAlt?: string;
   liveNote?: string;
+  /** The technical design section's prose. At most three decisions, and notes
+   *  keyed by the node ids in `src/content/architecture.ts`. */
+  design: {
+    decisions: readonly DesignDecision[];
+    notes?: Readonly<Record<string, string>>;
+  };
 };
 
 export type SkillCopy = { name: string; detail: string };
 export type SkillGroupCopy = { title: string; skills: Record<string, SkillCopy> };
+
+/** The strings the technical design section shares across every project. */
+export type ArchitectureCopy = {
+  /** The section's <h2>. */
+  heading: string;
+  /** Accessible name of the diagram's group landmark. */
+  diagramLabel: string;
+  /** Band titles, in the reader's language. */
+  bands: Record<Band, string>;
+};
 
 export type Copy = {
   locale: Locale;
@@ -102,6 +122,7 @@ export type Copy = {
   person: PersonCopy;
   pages: PagesCopy;
   meta: MetaCopy;
+  architecture: ArchitectureCopy;
   projects: Record<ProjectSlug, ProjectCopy>;
   skills: Record<string, SkillGroupCopy>;
 };

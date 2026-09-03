@@ -122,3 +122,33 @@ test("the contact page exposes a usable mailto link", async ({ page }) => {
     page.getByRole("main").getByRole("link", { name: "busek.vit@gmail.com" }),
   ).toHaveAttribute("href", "mailto:busek.vit@gmail.com");
 });
+
+test("a project page shows its architecture and the decisions behind it", async ({ page }) => {
+  await page.goto("/work/trader");
+  const main = page.getByRole("main");
+
+  await expect(
+    main.getByRole("heading", { level: 2, name: "Technical design" }),
+  ).toBeVisible();
+  await expect(main.getByRole("heading", { level: 3, name: "Client" })).toBeVisible();
+  await expect(main.getByText("SSE /api/market/stream")).toBeVisible();
+  // Playwright's getByText is substring-matching and strict: the decision text
+  // appears in the <li>, the wrapping <span> and the inner one, so take the
+  // first rather than tripping strict mode on three legitimate matches.
+  await expect(main.getByText("One FastAPI app, two deployments.").first()).toBeVisible();
+});
+
+// Work Planner has the densest diagram — four bands, eleven nodes and three
+// gutter lanes — so it is where a layout that does not fit shows up first.
+test("the densest diagram fits a phone without scrolling sideways", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto("/work/work-planner");
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Technical design" }),
+  ).toBeVisible();
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+});
