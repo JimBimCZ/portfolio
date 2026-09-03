@@ -47,3 +47,21 @@ test("an unknown Czech project shows the Czech not-found page", async ({ page })
     page.getByRole("heading", { name: getCopy("cs").pages.notFound.title }),
   ).toBeVisible();
 });
+
+test("the technical design section is translated", async ({ page }) => {
+  await page.goto("/cs/work/games-db");
+  const main = page.getByRole("main");
+
+  await expect(
+    main.getByRole("heading", { level: 2, name: getCopy("cs").architecture.heading }),
+  ).toBeVisible();
+  await expect(
+    main.getByRole("heading", { level: 3, name: getCopy("cs").architecture.bands.external }),
+  ).toBeVisible();
+  await expect(
+    main.getByText(getCopy("cs").projects["games-db"].design.decisions[0].choice),
+  ).toBeVisible();
+  // Protocols are facts and stay in English in both trees. `exact` matters:
+  // without it this also matches the node "Drizzle ORM" and the stack row.
+  await expect(main.getByText("Drizzle", { exact: true })).toBeVisible();
+});
