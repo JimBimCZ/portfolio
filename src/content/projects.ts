@@ -42,7 +42,6 @@ export const projects = [
     stack: [
       "Next.js",
       "FastAPI",
-      "SQLite",
       "Postgres",
       "SSE",
       "OpenRouter",

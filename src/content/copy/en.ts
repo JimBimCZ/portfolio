@@ -217,7 +217,7 @@ export const en = {
       role: "Solo build — frontend, backend, infrastructure",
       highlights: [
         "The assistant executes trades through the same API the UI uses, and shows each fill inline as it happens. The live demo answers from its scripted client rather than the model, so leaving it up costs nothing.",
-        "One codebase, two deployment shapes. Serverless has no background task and no disk, so prices become a closed-form function of the clock — Brownian motion by Lévy construction, 22 steps down a hashed tree rather than 172,800 summed half-second increments — and Postgres sits behind the same interface as SQLite. Routes, services and the frontend are untouched.",
+        "One codebase, two deployment shapes. Serverless has no background task, so prices become a closed-form function of the clock — Brownian motion by Lévy construction, 22 steps down a hashed tree rather than 172,800 summed half-second increments — and one factory picks between that and the simulator at startup. Routes, services and the frontend are untouched.",
         "Market data comes from a geometric Brownian motion simulator by default — per-ticker volatility, correlated sector moves, no API key. Real quotes are opt-in, and there is deliberately no silent fallback between them.",
         "846 tests across the stack: 591 on the backend, 228 on the frontend, plus 27 Playwright specs run against the built container.",
       ],
