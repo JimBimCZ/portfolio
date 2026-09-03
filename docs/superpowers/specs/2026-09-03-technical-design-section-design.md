@@ -1,7 +1,27 @@
 # Technical design section
 
 Date: 2026-09-03
-Status: approved design, not yet implemented
+Status: implemented on `feat/technical-design-section`
+
+## As shipped
+
+The design below is the record of what was decided before implementation. Three
+things changed during it, and the code is authoritative where they differ:
+
+- **Node names that were prose became paths.** "Market source", "LLM assistant",
+  "Steam client", "Document chat", "11 markdown templates" and "Fractional card
+  ranks" were English prose sitting in the facts file, so they stayed English
+  under `/cs`. They are now `app/market`, `app/llm`, `server/steam`,
+  `app/document_chat.py`, `templates/*.md` and `cards.rank` — real paths, which
+  are genuinely locale-invariant.
+- **Legal and My Movies ship two decisions, not three.** Legal's "one container,
+  one origin" and My Movies' "/api/revalidate purges a tag on demand" each
+  restated a highlight already on the same page, so they were dropped rather
+  than replaced. The copy test permits one to three.
+- **Trader's first decision no longer mentions SQLite.** Trader has none —
+  `backend/app/db/factory.py` reads "Connect to Postgres. There is no second
+  option." The container build differs by numpy simulation and a real model, not
+  by database.
 
 ## Goal
 
