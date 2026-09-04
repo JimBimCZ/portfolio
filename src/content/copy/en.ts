@@ -492,7 +492,7 @@ export const en = {
         ],
       },
       posterAlt:
-        "Work Planner's public demo board: five columns from Ready to work through to Done, each holding cards tagged with labels and due dates, and a Sign in button in the corner.",
+        "Work Planner's public demo board: three columns — Ready to work, In progress and In testing — holding cards tagged with labels, due dates and an attachment count.",
     },
   },
   skills: {

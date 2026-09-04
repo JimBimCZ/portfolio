@@ -503,7 +503,7 @@ export const cs = {
         ],
       },
       posterAlt:
-        "Veřejná demo nástěnka Work Planneru: pět sloupců od Ready to work po Done, v nich karty se štítky a termíny, v rohu tlačítko Sign in.",
+        "Veřejná demo nástěnka Work Planneru: tři sloupce — Ready to work, In progress a In testing — a v nich karty se štítky, termíny a počtem příloh.",
     },
   },
   skills: {

@@ -4,7 +4,7 @@
  * Deliberately not the carousel's first slide — that order is about what a
  * visitor should meet first on the site, while this crops to 1200x630 and is
  * judged on its own. Trader's dense chart survives that crop; work-planner's
- * board, which leads the carousel, is mostly empty below the columns.
+ * board, which leads the carousel, loses its lower row of cards to it.
  *
  * Run after a capture that changes `public/work/trader.webp`:
  *   node scripts/capture/og.mjs
