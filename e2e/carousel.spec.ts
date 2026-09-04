@@ -4,15 +4,17 @@ import { localiseCarousel } from "../src/content/localise";
 
 const carouselProjects = localiseCarousel(getCopy("en"));
 
-// Whatever the second slide happens to be. The tests below are about the
-// controls moving one slide, not about which project sits there.
+// Whatever the first two slides happen to be. The tests below are about the
+// controls moving one slide, not about which project sits there — CAROUSEL_ORDER
+// is a deliberate editorial choice and gets to change without breaking them.
+const first = carouselProjects[0].title;
 const second = carouselProjects[1].title;
 
-test("the carousel opens on trader with its poster showing", async ({ page }) => {
+test("the carousel opens on the first slide with its poster showing", async ({ page }) => {
   await page.goto("/");
   const tabs = page.getByRole("tab");
   await expect(tabs.first()).toHaveAttribute("aria-selected", "true");
-  await expect(tabs.first()).toHaveAccessibleName("Trader");
+  await expect(tabs.first()).toHaveAccessibleName(first);
   await expect(page.getByRole("img").first()).toBeVisible();
 });
 
@@ -108,7 +110,7 @@ test("a phone visitor sees one card and can open the app", async ({ page }) => {
   const trackBox = await track.boundingBox();
   expect(trackBox).not.toBeNull();
 
-  const activeCard = page.getByRole("link", { name: /Trader/ }).first();
+  const activeCard = page.getByRole("link", { name: new RegExp(first) }).first();
   await expect(activeCard).toBeVisible();
   const activeBox = await activeCard.boundingBox();
   expect(activeBox).not.toBeNull();
@@ -116,7 +118,7 @@ test("a phone visitor sees one card and can open the app", async ({ page }) => {
   expect(activeBox!.x).toBeGreaterThanOrEqual(trackBox!.x);
   expect(activeBox!.x + activeBox!.width).toBeLessThanOrEqual(trackBox!.x + trackBox!.width);
 
-  const nextCard = page.getByRole("link", { name: /Games DB/ }).first();
+  const nextCard = page.getByRole("link", { name: new RegExp(second) }).first();
   const nextBox = await nextCard.boundingBox();
   expect(nextBox).not.toBeNull();
   // The next slide starts at or beyond the track's right edge, so the

@@ -49,7 +49,13 @@ describe("copy", () => {
   test("the nav names every section the site routes to", () => {
     for (const locale of LOCALES) {
       const { nav } = getCopy(locale).ui;
-      expect(Object.keys(nav).sort(), locale).toEqual(["about", "contact", "work"]);
+      expect(Object.keys(nav).sort(), locale).toEqual([
+        "about",
+        "contact",
+        "experience",
+        "skills",
+        "work",
+      ]);
       for (const [key, label] of Object.entries(nav)) {
         expect(label.length, `${locale}.${key}`).toBeGreaterThan(0);
       }

@@ -1,5 +1,10 @@
 /**
- * Builds the social card from the lead app's poster.
+ * Builds the social card from trader's poster.
+ *
+ * Deliberately not the carousel's first slide — that order is about what a
+ * visitor should meet first on the site, while this crops to 1200x630 and is
+ * judged on its own. Trader's dense chart survives that crop; work-planner's
+ * board, which leads the carousel, is mostly empty below the columns.
  *
  * Run after a capture that changes `public/work/trader.webp`:
  *   node scripts/capture/og.mjs

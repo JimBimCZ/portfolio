@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { getCopy } from "../src/content/copy";
+import { localiseCarousel } from "../src/content/localise";
+
+// Project titles are facts, identical in both dictionaries.
+const carouselProjects = localiseCarousel(getCopy("cs"));
 
 test("a visitor switches to Czech and stays on the same page", async ({ page }) => {
   await page.goto("/work/trader");
@@ -26,7 +30,9 @@ test("the Czech home page carries Czech copy and a working carousel", async ({ p
   });
   await expect(region).toBeVisible();
   await page.getByRole("button", { name: getCopy("cs").ui.carousel.next }).click();
-  await expect(page.getByRole("tab", { selected: true })).not.toHaveText("Trader");
+  await expect(page.getByRole("tab", { selected: true })).toHaveText(
+    carouselProjects[1].title,
+  );
 });
 
 test("English URLs are untouched by the Czech tree", async ({ page }) => {

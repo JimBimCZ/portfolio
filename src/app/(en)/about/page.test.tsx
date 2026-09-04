@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
 import { AboutPage } from "@/components/pages/about";
 import { getCopy } from "@/content/copy";
@@ -13,24 +13,15 @@ test("renders every bio paragraph", () => {
   }
 });
 
-test("lists every role with its employer and dates", () => {
+// The employment history lives on /experience now. It used to be duplicated
+// here as a second hand-rolled list of the same dictionary entries, which is
+// what this asserts is gone — /experience owns it, via ExperienceLog.
+test("no longer carries its own copy of the employment history", () => {
   render(<AboutPage copy={copy} />);
 
-  const entries = within(
-    screen.getByRole("list", { name: /experience/i }),
-  ).getAllByRole("listitem");
-  expect(entries).toHaveLength(copy.person.experience.length);
-
-  copy.person.experience.forEach((job, index) => {
-    const entry = within(entries[index]);
-    const heading = entry.getByRole("heading", { level: 3 });
-    expect(heading).toHaveTextContent(job.title);
-    expect(heading).not.toHaveAttribute("lang");
-    const org = entry.getByText(job.org);
-    expect(org).not.toHaveAttribute("lang");
-    expect(entry.getByText(job.period)).toBeInTheDocument();
-    expect(entry.getByText(job.note)).toBeInTheDocument();
-  });
+  for (const job of copy.person.experience) {
+    expect(screen.queryByText(job.note)).not.toBeInTheDocument();
+  }
 });
 
 test("shows the skill groups from the toolkit", () => {
