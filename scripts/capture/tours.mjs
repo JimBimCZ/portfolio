@@ -16,6 +16,12 @@
  * whose resting state is already good (games-db, my-movies, and legal's
  * sign-in screen) don't define one.
  *
+ * A tour can also set `posterClip` ({ width, height } in CSS pixels, from the
+ * top left) to frame the poster on part of the viewport while the video still
+ * records all of it. Keep it at 16:10 — the card locks its container to that
+ * ratio, and a clip of any other shape is resized into it and comes out
+ * squashed.
+ *
  * URLs here must match `liveUrl` in src/content/projects.ts, which is the
  * source of truth for where each app is deployed.
  */
@@ -124,6 +130,14 @@ export const tours = {
   // app's own keyboard path and moves a card every time.
   "work-planner": {
     url: "https://work-planner-seven.vercel.app",
+    // Three columns rather than all five. The board is wide and short — its
+    // content stops 368px down a 900px viewport — so a full-viewport still
+    // spends most of a 16:10 card on empty column. 936x585 ends on the gap
+    // after "In testing", so no card is sliced, and the cards land about
+    // 1.5x larger, which is the difference between legible and not at the
+    // size the carousel actually renders. The video is uncropped: the drag
+    // crosses columns and needs the width.
+    posterClip: { width: 936, height: 585 },
     async prepare(page) {
       await maybe(async () => {
         await page.getByRole("button", { name: "Skip" }).click();

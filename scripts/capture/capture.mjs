@@ -68,7 +68,18 @@ for (const [slug, tour] of targets) {
     // Poster after prepare (if any), before the rest of the tour moves
     // anything, so the still is a settled state rather than a half-finished
     // interaction.
-    const shot = await page.screenshot();
+    //
+    // `posterClip` frames the still on part of the viewport instead of all of
+    // it. It applies to the poster alone — the video still records the whole
+    // 1440x900 page, because a tour that moves something across the screen
+    // needs the room. Playwright's clip is in CSS pixels and handles the
+    // context's deviceScaleFactor, so a clip smaller than the viewport is
+    // still captured at 2x and downscaled into the poster rather than
+    // stretched up to it. Keep a clip at 16:10, the ratio the card locks its
+    // container to; anything else is resized to that and comes out squashed.
+    const shot = await page.screenshot(
+      tour.posterClip ? { clip: { x: 0, y: 0, ...tour.posterClip } } : undefined,
+    );
     await sharp(shot).resize(VIEWPORT.width, VIEWPORT.height).webp({ quality: 82 })
       .toFile(join(OUT, `${slug}.webp`));
 
