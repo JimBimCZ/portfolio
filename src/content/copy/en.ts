@@ -477,10 +477,38 @@ export const en = {
       skills: {
         postgres: { name: "Postgres", detail: "schema, indexing, migrations" },
         drizzle: { name: "Drizzle ORM", detail: "typed schema, generated migrations" },
-        "full-text-search": { name: "Full-text search", detail: "pg_trgm trigram index" },
-        "data-pipelines": {
-          name: "Data pipelines",
-          detail: "backfill, retry with backoff, batched upserts",
+        "full-text-search": {
+          name: "Full-text search",
+          detail: "pg_trgm trigrams, and generated tsvector columns indexed twice — simple for identifiers, english for prose",
+        },
+        "background-work": {
+          name: "Background work",
+          detail: "a monthly cron job, advisory-locked queues, backfill with retry and backoff, durable partial progress",
+        },
+      },
+    },
+    "ai-and-retrieval": {
+      title: "AI and retrieval",
+      skills: {
+        rag: {
+          name: "Retrieval-augmented generation",
+          detail: "three arms — vector, identifier and BM25 prose — combined by reciprocal rank fusion; nothing retrieved refuses the question instead of guessing at it",
+        },
+        "vector-search": {
+          name: "Vector search",
+          detail: "pgvector with an HNSW cosine index over 384-dimension embeddings computed in-process, so indexed text never leaves the container",
+        },
+        "llm-integration": {
+          name: "LLM integration",
+          detail: "four answering providers behind one interface, with per-user and deployment-wide spend ceilings checked before a call can cost anything",
+        },
+        "prompt-security": {
+          name: "Prompt injection defence",
+          detail: "retrieved text travels inside tags the application writes, tag-shaped spans are escaped rather than stripped, and citations are validated before the first word of prose streams",
+        },
+        "pii-anonymisation": {
+          name: "PII anonymisation",
+          detail: "names, e-mail addresses and phone numbers become placeholders before anything crosses a network boundary; the mapping back lives in the request and dies with it",
         },
       },
     },
@@ -490,16 +518,11 @@ export const en = {
         fastapi: { name: "FastAPI", detail: "typed routes, service layer" },
         "third-party-apis": {
           name: "Third-party APIs",
-          detail: "Steam, TMDB, OpenRouter",
+          detail: "Steam, TMDB, OpenRouter, with tag-based cache revalidation and an on-demand purge endpoint",
         },
-        "scheduled-jobs": {
-          name: "Scheduled jobs",
-          detail: "a monthly cron job, advisory-locked queues, durable partial progress",
-        },
-        auth: { name: "Auth", detail: "OAuth sign-in and sessions" },
-        caching: {
-          name: "Caching",
-          detail: "tag-based revalidation with an on-demand purge endpoint",
+        auth: {
+          name: "Auth",
+          detail: "OAuth sign-in and sessions, and OIDC against a Keycloak realm with role claims read from the token",
         },
       },
     },
@@ -512,11 +535,11 @@ export const en = {
         },
         "streaming-ui": {
           name: "Streaming UI",
-          detail: "server-sent events, live price ticks",
+          detail: "server-sent events for live price ticks, NDJSON for token-by-token answers",
         },
-        "drag-and-drop": {
-          name: "Drag and drop",
-          detail: "keyboard-operable, correct ARIA roles",
+        "accessible-interaction": {
+          name: "Accessible interaction",
+          detail: "drag and drop that is keyboard-operable, with the ARIA roles the pattern actually calls for",
         },
         "design-systems": {
           name: "Design systems",
@@ -529,11 +552,11 @@ export const en = {
       skills: {
         testing: {
           name: "Testing",
-          detail: "unit, integration and Playwright end-to-end",
+          detail: "unit, integration and Playwright end-to-end — and 170 tests on the Node runner alone, with no test framework installed",
         },
         docker: {
           name: "Docker",
-          detail: "multi-stage builds, one origin, no CORS layer",
+          detail: "multi-stage builds, one origin, no CORS layer; a compose file that brings up the app, its database and an identity provider together",
         },
         "ci-cd": {
           name: "CI/CD",

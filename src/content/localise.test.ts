@@ -214,10 +214,45 @@ describe("localiseSkills", () => {
         skills: [
           { name: "Postgres", detail: "schema, indexing, migrations" },
           { name: "Drizzle ORM", detail: "typed schema, generated migrations" },
-          { name: "Full-text search", detail: "pg_trgm trigram index" },
           {
-            name: "Data pipelines",
-            detail: "backfill, retry with backoff, batched upserts",
+            name: "Full-text search",
+            detail:
+              "pg_trgm trigrams, and generated tsvector columns indexed twice — simple for identifiers, english for prose",
+          },
+          {
+            name: "Background work",
+            detail:
+              "a monthly cron job, advisory-locked queues, backfill with retry and backoff, durable partial progress",
+          },
+        ],
+      },
+      {
+        title: "AI and retrieval",
+        skills: [
+          {
+            name: "Retrieval-augmented generation",
+            detail:
+              "three arms — vector, identifier and BM25 prose — combined by reciprocal rank fusion; nothing retrieved refuses the question instead of guessing at it",
+          },
+          {
+            name: "Vector search",
+            detail:
+              "pgvector with an HNSW cosine index over 384-dimension embeddings computed in-process, so indexed text never leaves the container",
+          },
+          {
+            name: "LLM integration",
+            detail:
+              "four answering providers behind one interface, with per-user and deployment-wide spend ceilings checked before a call can cost anything",
+          },
+          {
+            name: "Prompt injection defence",
+            detail:
+              "retrieved text travels inside tags the application writes, tag-shaped spans are escaped rather than stripped, and citations are validated before the first word of prose streams",
+          },
+          {
+            name: "PII anonymisation",
+            detail:
+              "names, e-mail addresses and phone numbers become placeholders before anything crosses a network boundary; the mapping back lives in the request and dies with it",
           },
         ],
       },
@@ -225,15 +260,15 @@ describe("localiseSkills", () => {
         title: "Backend and integrations",
         skills: [
           { name: "FastAPI", detail: "typed routes, service layer" },
-          { name: "Third-party APIs", detail: "Steam, TMDB, OpenRouter" },
           {
-            name: "Scheduled jobs",
-            detail: "a monthly cron job, advisory-locked queues, durable partial progress",
+            name: "Third-party APIs",
+            detail:
+              "Steam, TMDB, OpenRouter, with tag-based cache revalidation and an on-demand purge endpoint",
           },
-          { name: "Auth", detail: "OAuth sign-in and sessions" },
           {
-            name: "Caching",
-            detail: "tag-based revalidation with an on-demand purge endpoint",
+            name: "Auth",
+            detail:
+              "OAuth sign-in and sessions, and OIDC against a Keycloak realm with role claims read from the token",
           },
         ],
       },
@@ -244,8 +279,15 @@ describe("localiseSkills", () => {
             name: "React and Next.js",
             detail: "App Router, server components by default",
           },
-          { name: "Streaming UI", detail: "server-sent events, live price ticks" },
-          { name: "Drag and drop", detail: "keyboard-operable, correct ARIA roles" },
+          {
+            name: "Streaming UI",
+            detail: "server-sent events for live price ticks, NDJSON for token-by-token answers",
+          },
+          {
+            name: "Accessible interaction",
+            detail:
+              "drag and drop that is keyboard-operable, with the ARIA roles the pattern actually calls for",
+          },
           {
             name: "Design systems",
             detail: "Tailwind v4, semantic tokens, no dark: variants",
@@ -257,11 +299,13 @@ describe("localiseSkills", () => {
         skills: [
           {
             name: "Testing",
-            detail: "unit, integration and Playwright end-to-end",
+            detail:
+              "unit, integration and Playwright end-to-end — and 170 tests on the Node runner alone, with no test framework installed",
           },
           {
             name: "Docker",
-            detail: "multi-stage builds, one origin, no CORS layer",
+            detail:
+              "multi-stage builds, one origin, no CORS layer; a compose file that brings up the app, its database and an identity provider together",
           },
           {
             name: "CI/CD",
