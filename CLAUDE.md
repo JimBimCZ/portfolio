@@ -42,8 +42,11 @@ The bundled docs in `node_modules/next/dist/docs/` are the authority for this ve
 - `site.ts` — locale-invariant facts: name, email, phone, the canonical URL, external links, and nav. Role and the `manifest` rows shown in the spec block are prose now, not facts, and live in the copy dictionaries (`copy.person.role`, `copy.person.manifest`) instead. Pages read facts from `site.ts` and prose from `getCopy(locale)`; no page hardcodes personal copy.
 - `projects.ts` — the `Project[]` array plus `getProject` and `formatShipped`. Ordered newest first and rendered as a log keyed on `shipped` (an ISO year-month). There are deliberately no version numbers: neither repository tags releases, so a version would be invented.
 - `skills.ts` — the skill matrix's structure: group and skill ids, each skill backed by checkable `evidence` against a real project slug. Names and details are prose and live in the copy dictionaries, keyed by these ids.
+- `architecture.ts` — each project's wiring, behind the technical design section on `/work/[slug]`: `BANDS` (`client`, `server`, `data`, `external`), the nodes in each band, and the edges between them with the protocol on each. Typed `Record<ProjectSlug, Architecture>`, so a project without a diagram is a compile error. Node names must be technology names or real paths — never English prose, which would stay English under `/cs`. That is why legal's node is `templates/*.md` and not "11 markdown templates". The decisions and per-node notes are prose and live in the copy dictionaries under `ProjectCopy.design`, notes keyed by node id.
 
-Adding a project means adding one array entry. `/work/[slug]` picks it up through `generateStaticParams`, so every project page is prerendered at build time — the site has no runtime data source and deploys as static output.
+Every node, edge and decision is checked against the project's own repository, the way `poster` images are real captures rather than mockups. Two claims shipped wrong and were caught in review: an edge labelled `litellm` that the deployed build does not install, and a SQLite backend trader stopped having. Verify against the repo before editing one.
+
+Adding a project means adding one array entry, its architecture entry, and its prose in both dictionaries. `/work/[slug]` picks it up through `generateStaticParams`, so every project page is prerendered at build time — the site has no runtime data source and deploys as static output.
 
 Screenshots live in `public/work/` and are referenced by `poster`. They are real captures of the running apps at 1440x900, not mockups; regenerate one with `npm run capture` from the live deployment (see Media contract below). A test asserts that every declared `poster` exists on disk and has non-empty `posterAlt`, so a broken path fails the suite rather than the page.
 
@@ -52,6 +55,15 @@ Screenshots live in `public/work/` and are referenced by `poster`. They are real
 Routes: `/` (hero, app carousel, track record, and skills), `/work` (full log), `/work/[slug]`, `/about`, `/contact`, `/privacy`, plus `not-found.tsx`. There is no single `layout.tsx` anymore — each route group under `src/app/` (`(en)/`, `(cs)/cs/`) owns its own, and each one owns the two fonts, its metadata template, and its header/footer shell. See Localisation below for how the Czech tree mirrors this.
 
 `src/components/` is presentational and mostly unaware of routing. The four Client Components are the exceptions: `site-header.tsx` and `language-switch.tsx` both read `usePathname` (for the active nav state, and to compute the other tree's URL); `app-carousel.tsx` and `app-media.tsx` are Client Components for unrelated browser-API reasons. Everything else is a Server Component — keep it that way unless a component genuinely needs browser APIs. Most of `components/pages/*.tsx` also take a `locale` prop and build locale-prefixed hrefs (`home.tsx`, `work.tsx`, `project.tsx`, `privacy.tsx`); `about.tsx`, `contact.tsx` and `not-found.tsx` don't need to.
+
+### Diagram contract
+
+`ArchitectureDiagram` renders `architecture.ts` as one CSS grid, and the layout is computed from the data rather than written per project:
+
+- Band *i* occupies grid row `i * 2 + 1`; the row between two bands is where a connector goes. Bands with no nodes are dropped by the selector before the component sees them.
+- An edge draws inline only when its destination row is exactly two below its origin. Every other edge — upward, or skipping a band — gets its own column in the left gutter, one lane each so two can never overlap. That is what lets trader's SSE stream and work-planner's Pusher channel point back at the client instead of away from it.
+- Grid placement goes in `style`, not class names: Tailwind cannot generate a class for a row index it has never seen.
+- It is markup rather than an image on purpose. Five projects across two themes would be ten files to regenerate on every stack change, none of them selectable or legible to a screen reader. The spec's "Why not images" section carries the argument in full.
 
 ### Media contract
 
@@ -76,7 +88,7 @@ Prose lives in `src/content/copy/`: `types.ts` defines the `Copy` type, `en.ts` 
 
 `Copy["projects"]` is `Record<ProjectSlug, ProjectCopy>` — keyed by the same `ProjectSlug` union `projects.ts` derives from the `Project[]` array. That's what makes adding a project without Czech prose a compile error: widen the slug union and `cs.ts`'s `satisfies Copy` check fails until you add the matching entry. Facts (employer, period, metric values, dates as ISO strings) stay single-source in `src/content/projects.ts` and `site.ts` — never duplicated per locale — while prose (summaries, highlights, taglines, section bodies) is per-locale in the dictionaries.
 
-`src/content/localise.ts` holds the `localise*` selectors that merge the two: `localiseProjects`/`localiseProject`/`localiseCarousel` pair `projects.ts`'s data with a `Copy`'s per-project text by slug (and throw if a project's `metrics` and its copy's `metricLabels` don't line up 1:1), `localiseSkills` does the same for the skill matrix, and `formatMetricValue` applies the locale's thousands separator to a metric's data value (`245,025` in English, `245 025` in Czech, joined with a non-breaking space so the number can't break across lines) without touching values that aren't plain integers. Components never read `projects.ts` or `skills.ts` directly for display — they go through a `localise*` selector with a `Copy`, so a page can't accidentally render English data under `/cs` or vice versa.
+`src/content/localise.ts` holds the `localise*` selectors that merge the two: `localiseProjects`/`localiseProject`/`localiseCarousel` pair `projects.ts`'s data with a `Copy`'s per-project text by slug (and throw if a project's `metrics` and its copy's `metricLabels` don't line up 1:1), `localiseSkills` does the same for the skill matrix, `localiseArchitecture` pairs a project's bands and edges with the reader's band titles and node notes (and throws if a note is keyed to a node that no longer exists), and `formatMetricValue` applies the locale's thousands separator to a metric's data value (`245,025` in English, `245 025` in Czech, joined with a non-breaking space so the number can't break across lines) without touching values that aren't plain integers. Components never read `projects.ts`, `skills.ts` or `architecture.ts` directly for display — they go through a `localise*` selector with a `Copy`, so a page can't accidentally render English data under `/cs` or vice versa.
 
 ## Styling conventions
 
