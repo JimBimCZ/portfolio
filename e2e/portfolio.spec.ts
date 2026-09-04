@@ -138,17 +138,23 @@ test("a project page shows its architecture and the decisions behind it", async 
   await expect(main.getByText("One FastAPI app, two deployments.").first()).toBeVisible();
 });
 
-// Work Planner has the densest diagram — four bands, eleven nodes and three
-// gutter lanes — so it is where a layout that does not fit shows up first.
-test("the densest diagram fits a phone without scrolling sideways", async ({ page }) => {
+// Work Planner has the densest band diagram — four bands, eleven nodes and
+// three gutter lanes — and Personal Knowledge Base adds an eight-step pipeline
+// of long module paths under it. Rather than nominate whichever is worst
+// today, every project page is checked: the next diagram to overflow is the
+// one nobody thought to name.
+test("no diagram makes a phone scroll sideways", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
-  await page.goto("/work/work-planner");
-  await expect(
-    page.getByRole("heading", { level: 2, name: "Technical design" }),
-  ).toBeVisible();
 
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow).toBeLessThanOrEqual(0);
+  for (const project of projects) {
+    await page.goto(`/work/${project.slug}`);
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Technical design" }),
+    ).toBeVisible();
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, project.slug).toBeLessThanOrEqual(0);
+  }
 });

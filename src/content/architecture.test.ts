@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { BANDS, architecture, type Band } from "./architecture";
+import type { ProjectSlug } from "./projects";
 import { projects } from "./projects";
 
 const entries = Object.entries(architecture);
@@ -61,6 +62,53 @@ describe("architecture", () => {
       }
       for (const edge of edges) {
         expect(edge.protocol.trim().length, `${slug}: ${edge.from}->${edge.to}`).toBeGreaterThan(0);
+      }
+    }
+  });
+});
+
+describe("pipelines", () => {
+  const pipelines = entries.flatMap(([slug, { pipeline }]) =>
+    pipeline ? [[slug, pipeline] as const] : [],
+  );
+
+  test("at least one project draws the path a request takes", () => {
+    expect(pipelines.length).toBeGreaterThan(0);
+  });
+
+  test("no step id is used twice, so a step's prose is never ambiguous", () => {
+    for (const [slug, pipeline] of pipelines) {
+      const ids = pipeline.map((step) => step.id);
+      expect(new Set(ids).size, slug).toBe(ids.length);
+    }
+  });
+
+  test("every step names the module it happens in", () => {
+    for (const [slug, pipeline] of pipelines) {
+      for (const step of pipeline) {
+        expect(step.name.trim().length, `${slug}/${step.id}`).toBeGreaterThan(0);
+        // A path or a file, never a sentence: prose here would stay English
+        // under /cs, the same rule node names follow.
+        expect(step.name, `${slug}/${step.id}`).not.toMatch(/\s/);
+      }
+    }
+  });
+
+  // A one-step sequence is not a sequence, and the whole reason the field
+  // exists is that the bands cannot show order.
+  test("a declared pipeline has enough steps to be an order", () => {
+    for (const [slug, pipeline] of pipelines) {
+      expect(pipeline.length, slug).toBeGreaterThan(1);
+    }
+  });
+  // Both diagrams render on the same page, so a name in both prints twice and
+  // reads as a mistake. The bands name modules, the pipeline names the files
+  // inside them, and this is what keeps that split honest.
+  test("no step repeats a node name on the same page", () => {
+    for (const [slug, pipeline] of pipelines) {
+      const nodeNames = new Set(architecture[slug as ProjectSlug].nodes.map((n) => n.name));
+      for (const step of pipeline) {
+        expect(nodeNames, `${slug}/${step.id}`).not.toContain(step.name);
       }
     }
   });

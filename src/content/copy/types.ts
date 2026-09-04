@@ -1,4 +1,4 @@
-import type { ProjectSlug } from "../projects";
+import type { ProjectSlug, ProjectStatus } from "../projects";
 import type { Band } from "../architecture";
 
 export const LOCALES = ["en", "cs"] as const;
@@ -17,9 +17,11 @@ export type UiCopy = {
     previous: string;
     next: string;
     openLiveApp: string;
+    /** Shown instead of `openLiveApp` on a card with no deployment to open. */
+    openSource: string;
     signInRequired: string;
   };
-  status: Record<"live" | "in-development" | "archived", string>;
+  status: Record<ProjectStatus, string>;
 };
 
 export type Pair = readonly [string, string];
@@ -100,6 +102,11 @@ export type ProjectCopy = {
   design: {
     decisions: readonly DesignDecision[];
     notes?: Readonly<Record<string, string>>;
+    /** The pipeline's <h3>. Required by `localiseArchitecture` for a project
+     *  that declares a `pipeline`, unused by one that does not. */
+    pipelineTitle?: string;
+    /** What each step does, keyed by the step ids in `architecture.ts`. */
+    steps?: Readonly<Record<string, string>>;
   };
 };
 

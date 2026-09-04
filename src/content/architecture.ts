@@ -38,14 +38,76 @@ export type ArchEdge = {
   protocol: string;
 };
 
+/**
+ * One step on the path a request takes, in order.
+ *
+ * The bands answer "what is this wired to". They cannot answer "what happens
+ * to a question", because the answer is a sequence and almost all of it
+ * happens inside one band. Only a project whose story IS that sequence
+ * declares a pipeline, which is why the field is optional: a four-step list
+ * that read `Server Actions -> Drizzle -> Postgres` would be the band diagram
+ * drawn a second time.
+ */
+export type PipelineStep = {
+  /** Stable key. The copy dictionaries hang the step's prose off it. */
+  id: string;
+  /** The module the step lives in, as a real path — never English prose,
+   *  under the same rule as `ArchNode["name"]`. */
+  name: string;
+  /** A step the request can stop at. The renderer draws it as a branch. */
+  guard?: true;
+};
+
 export type Architecture = {
   nodes: readonly ArchNode[];
   edges: readonly ArchEdge[];
+  pipeline?: readonly PipelineStep[];
 };
 
 /** `Record<ProjectSlug, …>` is what makes adding a project without a diagram a
  *  compile error, the same mechanism that already protects `cs.ts`. */
 export const architecture: Record<ProjectSlug, Architecture> = {
+  // The compose stack, which is the only way this one runs: app, Postgres with
+  // pgvector, and a Keycloak realm. Both models are baked into the image and
+  // run in the process, so neither appears in `external` — that absence is the
+  // privacy claim, and `embedders` carries the note that says so.
+  //
+  // The bands name modules and the pipeline names the files inside them, so
+  // the two never print the same string twice on one page.
+  "secure-llm": {
+    nodes: [
+      { id: "ask-form", band: "client", name: "app/ask/ask-form.tsx" },
+      { id: "guard", band: "server", name: "server/auth/guard.ts" },
+      { id: "rag", band: "server", name: "server/rag" },
+      { id: "privacy", band: "server", name: "server/privacy" },
+      { id: "providers", band: "server", name: "server/ai/providers" },
+      { id: "embedders", band: "server", name: "server/ai/embedders/local.ts" },
+      { id: "postgres", band: "data", name: "Postgres" },
+      { id: "pgvector", band: "data", name: "pgvector, HNSW cosine" },
+      { id: "tsvector", band: "data", name: "content_tsv / content_tsv_en" },
+      { id: "drizzle", band: "data", name: "Drizzle ORM" },
+      { id: "keycloak", band: "external", name: "Keycloak (OIDC)" },
+      { id: "anthropic", band: "external", name: "Anthropic API" },
+      { id: "openrouter", band: "external", name: "OpenRouter" },
+    ],
+    edges: [
+      { from: "client", to: "server", protocol: "POST /api/ask" },
+      { from: "server", to: "client", protocol: "application/x-ndjson" },
+      { from: "server", to: "data", protocol: "Drizzle" },
+      { from: "server", to: "external", protocol: "@anthropic-ai/sdk" },
+      { from: "client", to: "external", protocol: "OIDC redirect" },
+    ],
+    pipeline: [
+      { id: "route", name: "app/api/ask/route.ts" },
+      { id: "retrieve", name: "server/rag/retrieve.ts" },
+      { id: "fuse", name: "server/rag/fuse.ts", guard: true },
+      { id: "anonymize", name: "server/privacy/anonymizer.ts" },
+      { id: "envelope", name: "server/ai/prompts.ts" },
+      { id: "call", name: "server/ai/call.ts" },
+      { id: "citations", name: "server/rag/citations.ts", guard: true },
+      { id: "restore", name: "server/privacy/restoreStream.ts" },
+    ],
+  },
   // The deployed Vercel build — the one a visitor can open. The container build
   // differs enough to be worth saying so, which the first decision does, but not
   // enough to be worth a second diagram.

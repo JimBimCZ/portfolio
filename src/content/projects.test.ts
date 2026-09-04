@@ -72,6 +72,7 @@ describe("carousel projects", () => {
   test("are ordered with trader first, so first paint is not Steam's storefront", () => {
     expect(carouselProjects.map((p) => p.slug)).toEqual([
       "trader",
+      "secure-llm",
       "games-db",
       "my-movies",
       "legal",
@@ -79,9 +80,19 @@ describe("carousel projects", () => {
     ]);
   });
 
-  test("every carousel project has a live URL to open", () => {
+  // The card is one anchor, so a slide with neither a deployment nor a
+  // repository would render a link to nowhere. "Live" is the stronger claim
+  // and keeps its own guard below.
+  test("every carousel project has somewhere to send a visitor", () => {
     for (const project of carouselProjects) {
-      expect(project.liveUrl).toMatch(/^https:\/\//);
+      expect(project.liveUrl ?? project.repo, project.slug).toMatch(/^https:\/\//);
+    }
+  });
+
+  test("a project called live has the deployment that claim needs", () => {
+    for (const project of carouselProjects) {
+      if (project.status !== "live") continue;
+      expect(project.liveUrl, project.slug).toMatch(/^https:\/\//);
     }
   });
 

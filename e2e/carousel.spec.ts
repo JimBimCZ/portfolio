@@ -4,6 +4,10 @@ import { localiseCarousel } from "../src/content/localise";
 
 const carouselProjects = localiseCarousel(getCopy("en"));
 
+// Whatever the second slide happens to be. The tests below are about the
+// controls moving one slide, not about which project sits there.
+const second = carouselProjects[1].title;
+
 test("the carousel opens on trader with its poster showing", async ({ page }) => {
   await page.goto("/");
   const tabs = page.getByRole("tab");
@@ -15,17 +19,19 @@ test("the carousel opens on trader with its poster showing", async ({ page }) =>
 test("the next control changes the active application", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Next app" }).click();
-  await expect(page.getByRole("tab", { name: "Games DB" })).toHaveAttribute(
+  await expect(page.getByRole("tab", { name: second })).toHaveAttribute(
     "aria-selected",
     "true",
   );
 });
 
-test("each card opens its real deployment in a new tab", async ({ page }) => {
+// A project with no deployment links to its repository instead, so the
+// assertion is that the card opens the real thing — whichever that is.
+test("each card opens its real deployment or its source in a new tab", async ({ page }) => {
   await page.goto("/");
   for (const project of carouselProjects) {
     const link = page.getByRole("link", { name: new RegExp(project.title) }).first();
-    await expect(link).toHaveAttribute("href", project.liveUrl!);
+    await expect(link).toHaveAttribute("href", (project.liveUrl ?? project.repo)!);
     await expect(link).toHaveAttribute("target", "_blank");
   }
 });
@@ -67,7 +73,7 @@ test("the carousel is operable from the keyboard alone", async ({ page }) => {
   await expect(page.locator(":focus")).toHaveAttribute("aria-selected", "true");
 
   await page.keyboard.press("ArrowRight");
-  await expect(page.getByRole("tab", { name: "Games DB" })).toHaveAttribute(
+  await expect(page.getByRole("tab", { name: second })).toHaveAttribute(
     "aria-selected",
     "true",
   );
