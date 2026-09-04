@@ -60,7 +60,7 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
         <AppCarousel
           projects={carouselProjects}
           labels={copy.ui.carousel}
-          inDevelopment={copy.ui.status["in-development"]}
+          statuses={copy.ui.status}
         />
       </div>
 

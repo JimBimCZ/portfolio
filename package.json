@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "capture": "node scripts/capture/capture.mjs"
+    "capture": "node scripts/capture/capture.mjs",
+    "capture:secure-llm": "node scripts/capture/secure-llm.mjs"
   },
   "dependencies": {
     "next": "16.3.1",

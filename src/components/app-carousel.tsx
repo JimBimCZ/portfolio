@@ -17,11 +17,11 @@ const SWIPE_THRESHOLD_PX = 40;
 export function AppCarousel({
   projects,
   labels,
-  inDevelopment,
+  statuses,
 }: {
   projects: LocalisedProject[];
   labels: Copy["ui"]["carousel"];
-  inDevelopment: string;
+  statuses: Copy["ui"]["status"];
 }) {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -66,7 +66,7 @@ export function AppCarousel({
                   project={project}
                   active={position === index}
                   labels={labels}
-                  inDevelopment={inDevelopment}
+                  statuses={statuses}
                 />
               </div>
             ))}

@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
 import { getCopy } from "@/content/copy";
 import { localiseProject } from "@/content/localise";
+import { projects } from "@/content/projects";
 import CzechProject, { generateStaticParams } from "./page";
 
 const copy = getCopy("cs");
@@ -22,7 +23,7 @@ test("generates the same English slugs as the English tree", async () => {
 
   expect(params).toContainEqual({ slug: "trader" });
   expect(params).toContainEqual({ slug: "legal" });
-  expect(params).toHaveLength(5);
+  expect(params).toHaveLength(projects.length);
 });
 
 test("renders the project's Czech prose", async () => {

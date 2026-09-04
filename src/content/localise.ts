@@ -1,7 +1,14 @@
 import type { Copy, DesignDecision, Locale } from "./copy/types";
 import { CAROUSEL_ORDER, getProject, projects, type ProjectData, type ProjectSlug } from "./projects";
 import { skillStructure } from "./skills";
-import { BANDS, architecture, type ArchEdge, type ArchNode, type Band } from "./architecture";
+import {
+  BANDS,
+  architecture,
+  type ArchEdge,
+  type ArchNode,
+  type Band,
+  type PipelineStep,
+} from "./architecture";
 
 export type Metric = { label: string; value: string };
 
@@ -95,10 +102,14 @@ export function localiseSkills(copy: Copy): SkillGroup[] {
 
 export type LocalisedNode = ArchNode & { note?: string };
 export type LocalisedBand = { band: Band; title: string; nodes: LocalisedNode[] };
+export type LocalisedStep = PipelineStep & { detail: string };
+export type LocalisedPipeline = { title: string; steps: LocalisedStep[] };
 export type LocalisedArchitecture = {
   bands: LocalisedBand[];
   edges: readonly ArchEdge[];
   decisions: readonly DesignDecision[];
+  /** Present only for a project that declares a `pipeline`. */
+  pipeline?: LocalisedPipeline;
 };
 
 /**
@@ -113,7 +124,8 @@ export function localiseArchitecture(slug: string, copy: Copy): LocalisedArchite
   const data = architecture[slug as ProjectSlug];
   if (!data) throw new Error(`no architecture for project: ${slug}`);
 
-  const { decisions, notes = {} } = copy.projects[slug as ProjectSlug].design;
+  const { decisions, notes = {}, pipelineTitle, steps = {} } =
+    copy.projects[slug as ProjectSlug].design;
 
   // A renamed node id would otherwise drop its note without a word, leaving
   // the diagram quietly less informative than it reads in the dictionary.
@@ -130,5 +142,39 @@ export function localiseArchitecture(slug: string, copy: Copy): LocalisedArchite
       .map((node) => ({ ...node, note: notes[node.id] })),
   })).filter((band) => band.nodes.length > 0);
 
-  return { bands, edges: data.edges, decisions };
+  return { bands, edges: data.edges, decisions, pipeline: localisePipeline(slug, data.pipeline, pipelineTitle, steps) };
+}
+
+/**
+ * The steps with their prose, or nothing at all for a project without a
+ * pipeline.
+ *
+ * A step's `detail` is required where a node's `note` is optional: a node
+ * named `Postgres` still says something on its own, but a step is a bare
+ * module path until the prose says what happens there. Both halves of a
+ * mismatch throw — a step with no prose, and prose keyed to a step that has
+ * been renamed away — so a diagram is never quietly one step short.
+ */
+function localisePipeline(
+  slug: string,
+  pipeline: readonly PipelineStep[] | undefined,
+  title: string | undefined,
+  steps: Readonly<Record<string, string>>,
+): LocalisedPipeline | undefined {
+  if (!pipeline) return undefined;
+  if (!title) throw new Error(`${slug}: pipeline with no pipelineTitle`);
+
+  const ids = new Set(pipeline.map((step) => step.id));
+  for (const id of Object.keys(steps)) {
+    if (!ids.has(id)) throw new Error(`${slug}: step prose for unknown step ${id}`);
+  }
+
+  return {
+    title,
+    steps: pipeline.map((step) => {
+      const detail = steps[step.id];
+      if (!detail) throw new Error(`${slug}: no prose for pipeline step ${step.id}`);
+      return { ...step, detail };
+    }),
+  };
 }
