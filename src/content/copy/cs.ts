@@ -488,10 +488,38 @@ export const cs = {
       skills: {
         postgres: { name: "Postgres", detail: "schéma, indexy, migrace" },
         drizzle: { name: "Drizzle ORM", detail: "typované schéma, generované migrace" },
-        "full-text-search": { name: "Fulltextové vyhledávání", detail: "trigramový index pg_trgm" },
-        "data-pipelines": {
-          name: "Datové pipeliny",
-          detail: "backfill, retry s backoffem, dávkové upserty",
+        "full-text-search": {
+          name: "Fulltextové vyhledávání",
+          detail: "trigramy pg_trgm a generované tsvector sloupce indexované dvakrát — simple na identifikátory, english na běžný text",
+        },
+        "background-work": {
+          name: "Práce na pozadí",
+          detail: "měsíční cron, fronty jištěné advisory lockem, backfill s retry a backoffem, rozdělaná práce přežije pád",
+        },
+      },
+    },
+    "ai-and-retrieval": {
+      title: "AI a vyhledávání",
+      skills: {
+        rag: {
+          name: "Generování opřené o vyhledávání",
+          detail: "tři větve — vektorová, identifikátorová a BM25 nad textem — spojené reciprocal rank fusion; když se nic nenajde, otázku odmítne, místo aby si odpověď domyslel",
+        },
+        "vector-search": {
+          name: "Vektorové vyhledávání",
+          detail: "pgvector s HNSW indexem na kosinovou vzdálenost nad 384rozměrnými embeddingy počítanými v procesu, takže indexovaný text nikdy neopustí kontejner",
+        },
+        "llm-integration": {
+          name: "Integrace LLM",
+          detail: "čtyři poskytovatelé odpovědí za jedním rozhraním, se stropem útraty na uživatele i na celé nasazení kontrolovaným dřív, než hovor může něco stát",
+        },
+        "prompt-security": {
+          name: "Obrana proti prompt injection",
+          detail: "nalezený text cestuje uvnitř značek, které píše aplikace, cokoli tvaru značky se escapuje místo mazání a citace se ověří dřív, než odteče první slovo odpovědi",
+        },
+        "pii-anonymisation": {
+          name: "Anonymizace osobních údajů",
+          detail: "jména, e-maily a telefonní čísla se změní v zástupné značky dřív, než cokoli překročí hranici sítě; mapa zpátky žije v požadavku a s ním i zaniká",
         },
       },
     },
@@ -501,16 +529,11 @@ export const cs = {
         fastapi: { name: "FastAPI", detail: "typované routy, servisní vrstva" },
         "third-party-apis": {
           name: "API třetích stran",
-          detail: "Steam, TMDB, OpenRouter",
+          detail: "Steam, TMDB, OpenRouter, s invalidací cache podle tagů a endpointem pro okamžité vyprázdnění",
         },
-        "scheduled-jobs": {
-          name: "Plánované úlohy",
-          detail: "měsíční cron, fronty jištěné advisory lockem, rozdělaná práce přežije pád",
-        },
-        auth: { name: "Auth", detail: "přihlášení přes OAuth a session" },
-        caching: {
-          name: "Cache",
-          detail: "invalidace podle tagů s endpointem pro okamžité vyprázdnění",
+        auth: {
+          name: "Auth",
+          detail: "přihlášení přes OAuth a session, a OIDC proti Keycloak realmu s rolemi čtenými z tokenu",
         },
       },
     },
@@ -523,11 +546,11 @@ export const cs = {
         },
         "streaming-ui": {
           name: "Streamované UI",
-          detail: "server-sent events, živé ceny",
+          detail: "server-sent events pro živé ceny, NDJSON pro odpovědi slovo po slovu",
         },
-        "drag-and-drop": {
-          name: "Drag and drop",
-          detail: "ovladatelné klávesnicí, správné ARIA role",
+        "accessible-interaction": {
+          name: "Přístupné ovládání",
+          detail: "drag and drop ovladatelný klávesnicí, s ARIA rolemi, které ten vzor skutečně vyžaduje",
         },
         "design-systems": {
           name: "Design systémy",
@@ -540,11 +563,11 @@ export const cs = {
       skills: {
         testing: {
           name: "Testování",
-          detail: "unit, integrační a end-to-end v Playwrightu",
+          detail: "unit, integrační a end-to-end v Playwrightu — a 170 testů na samotném Node runneru, bez nainstalovaného testovacího frameworku",
         },
         docker: {
           name: "Docker",
-          detail: "vícefázové buildy, jeden origin, žádná CORS vrstva",
+          detail: "vícefázové buildy, jeden origin, žádná CORS vrstva; compose soubor, který zvedne aplikaci, její databázi a identity providera pohromadě",
         },
         "ci-cd": {
           name: "CI/CD",

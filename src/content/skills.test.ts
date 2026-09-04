@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { getCopy } from "./copy";
+import { getCopy, LOCALES } from "./copy";
 import { localiseSkills } from "./localise";
 import { getProject } from "./projects";
 import { skillStructure } from "./skills";
@@ -28,6 +28,36 @@ describe("skills", () => {
   test("no skill id is used twice, so no dictionary entry is ambiguous", () => {
     const ids = skillStructure.flatMap((g) => g.skills.map((s) => s.id));
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  test("every group and skill has prose in every locale, not just English", () => {
+    for (const locale of LOCALES) {
+      const copy = getCopy(locale);
+      for (const group of skillStructure) {
+        const text = copy.skills[group.id];
+        expect(text, `${locale}: group ${group.id}`).toBeDefined();
+        for (const skill of group.skills) {
+          expect(text?.skills[skill.id], `${locale}: ${group.id}/${skill.id}`).toBeDefined();
+        }
+      }
+    }
+  });
+
+  test("no dictionary keeps prose for a skill the structure dropped", () => {
+    const groupIds = new Set(skillStructure.map((g) => g.id));
+    for (const locale of LOCALES) {
+      const copy = getCopy(locale);
+      for (const [groupId, group] of Object.entries(copy.skills)) {
+        expect(groupIds.has(groupId), `${locale}: orphaned group ${groupId}`).toBe(true);
+        const structural = skillStructure.find((g) => g.id === groupId);
+        const skillIds = new Set(structural?.skills.map((s) => s.id));
+        for (const skillId of Object.keys(group.skills)) {
+          expect(skillIds.has(skillId), `${locale}: orphaned skill ${groupId}/${skillId}`).toBe(
+            true,
+          );
+        }
+      }
+    }
   });
 
   test("every skill says what specifically, not just a technology name", () => {
