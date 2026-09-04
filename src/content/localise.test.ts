@@ -72,6 +72,11 @@ describe("localiseProjects", () => {
   // of projects.ts and copy/en.ts, not derived from either at test time.
   test("pins every value-to-label pair, in order, for every project", () => {
     const expected: Record<ProjectSlug, Metric[]> = {
+      "secure-llm": [
+        { value: "170", label: "tests, no test framework" },
+        { value: "3", label: "retrieval arms, fused by rank" },
+        { value: "4", label: "answering providers behind one seam" },
+      ],
       trader: [
         { value: "2/sec", label: "price ticks streamed" },
         { value: "846", label: "tests across the stack" },
@@ -116,6 +121,11 @@ describe("localiseProjects", () => {
   // identically to their English counterparts.
   test("pins the Czech-rendered value for every project's metrics", () => {
     const expected: Record<ProjectSlug, Metric[]> = {
+      "secure-llm": [
+        { value: "170", label: "testů, bez testovacího frameworku" },
+        { value: "3", label: "vyhledávací větve, spojené podle pořadí" },
+        { value: "4", label: "poskytovatelé odpovědí za jedním rozhraním" },
+      ],
       trader: [
         { value: "2/sec", label: "streamované ceny" },
         { value: "846", label: "testů napříč stackem" },
@@ -164,9 +174,10 @@ describe("localiseProject", () => {
 });
 
 describe("localiseCarousel", () => {
-  test("is the five deployed apps, trader first", () => {
+  test("is the six carousel apps, trader first", () => {
     expect(localiseCarousel(en).map((p) => p.slug)).toEqual([
       "trader",
+      "secure-llm",
       "games-db",
       "my-movies",
       "legal",
@@ -336,5 +347,71 @@ describe("localiseArchitecture", () => {
 
   test("throws on a project it has no diagram for", () => {
     expect(() => localiseArchitecture("not-a-project", en)).toThrow(/not-a-project/);
+  });
+});
+
+describe("localiseArchitecture pipelines", () => {
+  const withDesign = (slug: "secure-llm", design: Record<string, unknown>) => ({
+    ...en,
+    projects: {
+      ...en.projects,
+      [slug]: { ...en.projects[slug], design: { ...en.projects[slug].design, ...design } },
+    },
+  });
+
+  test("pairs each step with its prose, in the order the request runs", () => {
+    const { pipeline } = localiseArchitecture("secure-llm", en);
+
+    expect(pipeline?.title).toBe("How a question becomes an answer");
+    expect(pipeline?.steps.map((step) => step.id)).toEqual(
+      architecture["secure-llm"].pipeline?.map((step) => step.id),
+    );
+    expect(pipeline?.steps[0].name).toBe("app/api/ask/route.ts");
+    expect(pipeline?.steps[0].detail).toBe(en.projects["secure-llm"].design.steps?.route);
+  });
+
+  test("reads the steps in the reader's language", () => {
+    const { pipeline } = localiseArchitecture("secure-llm", cs);
+
+    expect(pipeline?.title).toBe("Jak se z otázky stane odpověď");
+    // The module path is a fact and identical in both trees; only the prose
+    // beside it changes.
+    expect(pipeline?.steps[0].name).toBe("app/api/ask/route.ts");
+    expect(pipeline?.steps[0].detail).toBe(cs.projects["secure-llm"].design.steps?.route);
+  });
+
+  test("marks exactly the steps the request can stop at", () => {
+    const { pipeline } = localiseArchitecture("secure-llm", en);
+    const guards = pipeline?.steps.filter((step) => step.guard).map((step) => step.id);
+
+    // Retrieval finding nothing, and no citation surviving the guard. Both
+    // end in the same refusal, and nothing else may claim to.
+    expect(guards).toEqual(["fuse", "citations"]);
+  });
+
+  test("is absent for a project that declares no pipeline", () => {
+    expect(localiseArchitecture("trader", en).pipeline).toBeUndefined();
+  });
+
+  // The three ways the data and the dictionary can drift apart. A step with
+  // no prose is a bare module path on the page, which says nothing.
+  test("throws when a step has no prose", () => {
+    const steps = Object.fromEntries(
+      Object.entries(en.projects["secure-llm"].design.steps!).filter(([id]) => id !== "route"),
+    );
+    const copy = withDesign("secure-llm", { steps });
+    expect(() => localiseArchitecture("secure-llm", copy)).toThrow(/route/);
+  });
+
+  test("throws when prose names a step the pipeline does not have", () => {
+    const copy = withDesign("secure-llm", {
+      steps: { ...en.projects["secure-llm"].design.steps, "no-such-step": "orphaned" },
+    });
+    expect(() => localiseArchitecture("secure-llm", copy)).toThrow(/no-such-step/);
+  });
+
+  test("throws when a pipeline has no title", () => {
+    const copy = withDesign("secure-llm", { pipelineTitle: undefined });
+    expect(() => localiseArchitecture("secure-llm", copy)).toThrow(/pipelineTitle/);
   });
 });

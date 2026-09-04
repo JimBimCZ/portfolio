@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AnswerPipeline } from "@/components/answer-pipeline";
 import { ArchitectureDiagram } from "@/components/architecture-diagram";
 import { localePrefix, type Copy, type Locale } from "@/content/copy";
 import { localiseArchitecture, type LocalisedProject } from "@/content/localise";
@@ -68,6 +69,10 @@ export function ProjectPage({
       </ul>
 
       <h2 className="label mt-14 text-muted">{copy.architecture.heading}</h2>
+      {/* Flow first, then wiring: a reader who wants to know what the thing
+          does is asking what happens to a request, and the bands answer a
+          question they have not asked yet. Only one project has a pipeline. */}
+      {architecture.pipeline && <AnswerPipeline pipeline={architecture.pipeline} />}
       <ArchitectureDiagram
         architecture={architecture}
         label={copy.architecture.diagramLabel}

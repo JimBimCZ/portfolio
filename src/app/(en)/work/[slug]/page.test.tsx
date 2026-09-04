@@ -95,3 +95,25 @@ test("shows the technical design of every project", async () => {
     unmount();
   }
 });
+
+// The pipeline is opt-in, so the page has to render it where the data has one
+// and leave the section alone where it does not.
+test("draws the path a request takes, on the one project that declares it", async () => {
+  for (const { slug } of projects) {
+    const { pipeline } = localiseArchitecture(slug, getCopy("en"));
+    const { unmount } = render(await ProjectPage(argsFor(slug)));
+
+    if (pipeline) {
+      expect(
+        screen.getByRole("heading", { level: 3, name: pipeline.title }),
+        slug,
+      ).toBeInTheDocument();
+      for (const step of pipeline.steps) {
+        expect(screen.getByText(step.name), `${slug}/${step.id}`).toBeInTheDocument();
+      }
+    } else {
+      expect(screen.queryAllByTestId("pipeline-step"), slug).toHaveLength(0);
+    }
+    unmount();
+  }
+});

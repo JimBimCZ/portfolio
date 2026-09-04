@@ -20,7 +20,13 @@ export type ProjectData = {
   repo?: string;
   /** The deployment a visitor can open. Required when `status` is "live". */
   liveUrl?: string;
-  status: "live" | "in-development" | "archived";
+  /**
+   * "self-hosted" is for a finished project with nothing to open: it needs an
+   * identity provider, a database and models in the same compose file, so
+   * there is no URL to publish and `in-development` would call a shipped
+   * project unfinished. Its card links to the repository instead.
+   */
+  status: "live" | "in-development" | "self-hosted" | "archived";
   /** Two to four values, in the order their labels appear in the copy
    *  dictionary's `metricLabels` for this slug. Every value must be checkable
    *  against the repo or the app. */
@@ -35,6 +41,32 @@ export type ProjectData = {
 };
 
 export const projects = [
+  {
+    slug: "secure-llm" as const,
+    title: "Personal Knowledge Base",
+    shipped: "2026-09",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Postgres",
+      "pgvector",
+      "Drizzle",
+      "Auth.js",
+      "Keycloak",
+      "Anthropic SDK",
+      "OpenRouter",
+      "transformers.js",
+      "Docker",
+    ],
+    repo: "https://github.com/JimBimCZ/secure-llm",
+    // No `liveUrl`: the stack is an app, a Postgres with pgvector and a
+    // Keycloak realm in one compose file, and both models run in the image.
+    // `docker compose up` is the whole procedure, so the repository is what
+    // there is to open.
+    status: "self-hosted",
+    metrics: ["170", "3", "4"],
+    poster: "/work/secure-llm.webp",
+  },
   {
     slug: "trader" as const,
     title: "Trader",
@@ -139,10 +171,14 @@ export const projects = [
 // slug in skills.ts is a compile error, not just a runtime test failure.
 export type ProjectSlug = (typeof projects)[number]["slug"];
 
+/** Derived so the dictionaries' `ui.status` map cannot fall behind the union. */
+export type ProjectStatus = ProjectData["status"];
+
 /** The home page carousel. The order is declared here rather than taken from the
  *  log, so the first slide stays a deliberate choice. */
 export const CAROUSEL_ORDER = [
   "trader",
+  "secure-llm",
   "games-db",
   "my-movies",
   "legal",

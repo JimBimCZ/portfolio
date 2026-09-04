@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
 import { getCopy } from "@/content/copy";
 import { localiseProjects } from "@/content/localise";
+import { formatShipped } from "@/content/projects";
 import CzechWork, { metadata } from "./page";
 
 const copy = getCopy("cs");
@@ -18,10 +19,17 @@ test("lists every project with a link into the Czech tree", () => {
   }
 });
 
+// Derived from the log rather than counted by hand: the projects no longer
+// all ship in the same month, and a blanket count would have to be edited
+// every time one does not.
 test("reads the ship date as a Czech label and value", () => {
   render(<CzechWork />);
 
-  expect(screen.getAllByText("Nasazeno: srpen 2026").length).toBe(projects.length);
+  for (const shipped of new Set(projects.map((project) => project.shipped))) {
+    const expected = projects.filter((project) => project.shipped === shipped).length;
+    const label = `Nasazeno: ${formatShipped(shipped, "cs")}`;
+    expect(screen.getAllByText(label).length, label).toBe(expected);
+  }
 });
 
 test("titles the page in Czech", () => {

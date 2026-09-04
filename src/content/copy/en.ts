@@ -13,11 +13,13 @@ export const en = {
       previous: "Previous app",
       next: "Next app",
       openLiveApp: "Open live app →",
+      openSource: "Source on GitHub →",
       signInRequired: "Sign-in required",
     },
     status: {
       live: "Live",
       "in-development": "In development",
+      "self-hosted": "Self-hosted",
       archived: "Archived",
     },
   },
@@ -221,6 +223,69 @@ export const en = {
     },
   },
   projects: {
+    "secure-llm": {
+      summary:
+        "A knowledge base you can ask questions of. Every answer points back at the document it came from, and if your own notes do not answer the question, the app says so instead of guessing.",
+      role: "Solo build — retrieval, privacy, identity, infrastructure",
+      highlights: [
+        "Three retrieval arms — vector, identifier and BM25 prose — combined by reciprocal rank fusion. Each lexical arm exists because the embedder measurably refused a question the corpus answers: \"What are PL1 and PL2 set to?\" scored 0.054 against a 0.25 floor, about a document the app had indexed.",
+        "Citations are streamed before prose. The model’s JSON puts them first, the array is validated the moment it closes, and the first word of an answer goes out only after a source has been checked — so a rejected answer is refused while the screen still says checking sources, rather than being taken away after it has been read.",
+        "Names, e-mail addresses and phone numbers become placeholders before anything leaves the process, and are restored on the way back. The embedder runs in-process, so the anonymised answering call is the only thing that crosses a network boundary at all.",
+        "Four answering providers behind one interface, proved rather than asserted: the same code answered through OpenRouter against an OpenAI model using the Anthropic SDK — another company, account and model namespace — with no change to the prompt, the guard, the anonymizer or the audit record.",
+      ],
+      metricLabels: [
+        "tests, no test framework",
+        "retrieval arms, fused by rank",
+        "answering providers behind one seam",
+      ],
+      design: {
+        notes: {
+          embedders: "In-process. No text is sent anywhere to be embedded.",
+          providers: "Four implementations: anthropic, openrouter, gateway, mock.",
+          pgvector: "384 dimensions, cosine distance.",
+          tsvector: "Generated columns: simple for identifiers, english for prose.",
+          keycloak: "The realm ships in the compose file.",
+        },
+        pipelineTitle: "How a question becomes an answer",
+        steps: {
+          route:
+            "The session decides whose documents are searched — the request body cannot name a user. The per-user and deployment-wide spend ceilings are checked here, before anything can cost money.",
+          retrieve:
+            "The question is embedded in the process, then three searches run: vector similarity, an exact identifier match if the question holds something shaped like a part number, and BM25 over prose. Each repeats the ownership and embedding-model filter in its own SQL rather than trusting another arm to have applied it.",
+          fuse:
+            "Fusion only orders — every list arrives already filtered, so an empty result stays empty. Nothing found ends the request here, with “Not found in your knowledge base.” and no model call at all.",
+          anonymize:
+            "One anonymizer per request replaces people, e-mail addresses and phone numbers in the question and in every retrieved chunk. The same instance does both, so a question about a person still matches a note about them.",
+          envelope:
+            "Question and sources travel inside tags the application writes, and the system prompt’s first rule is that everything inside them is data. Text shaped like one of those tags is escaped rather than stripped — the sentence that tried it is still note content.",
+          call:
+            "The one place where text leaves the process. It enforces a timeout and writes the audit row — model, timing, token counts, outcome — and never the content.",
+          citations:
+            "Every cited number must index the set that was actually sent. A citation is a position, not an id, so the model is never shown one it could invent. If none survive, one stricter retry follows, and then the answer is refused.",
+          restore:
+            "Placeholders become real names again as the stream reaches the reader. The mapping that can do that lives in the request and dies with it — never stored, never logged.",
+        },
+        decisions: [
+          {
+            choice: "Citations before prose, in the wire format.",
+            because:
+              "A delta never precedes its citations in the NDJSON stream, so a client that ignored every other rule still cannot render unsourced text. The latency win is small — time to first token is 84–94% of the call — and that is the point: streaming prose first would look far better and would be showing text no guard had approved.",
+          },
+          {
+            choice: "Two seams, not one.",
+            because:
+              "Anthropic has no embeddings endpoint, so a single combined provider interface could not have been implemented by the file named after them. Answering and embedding are separate interfaces, and the embedder’s default runs inside the container — which is what keeps the text being indexed off the network entirely.",
+          },
+          {
+            choice: "Three retrieval arms rather than a lower score floor.",
+            because:
+              "A floor tuned downward until the failures stop is a threshold tuned by feel, and the refusal path is the one thing that must not rest on that. The identifier arm searches each term as a phrase, and the prose arm is admitted on IDF coverage and two matched terms, so an arm either has evidence or does not run.",
+          },
+        ],
+      },
+      posterAlt:
+        "The Ask screen answering a question about sizing a power supply: the reply works from a 142 W processor figure and a 320 W card up to an 850 W supply, and under it three cited sources, each linking to a different document in the knowledge base.",
+    },
     trader: {
       summary:
         "A trading terminal with imaginary money: prices stream in twice a second, and an assistant that can read your portfolio and place the trades for you.",

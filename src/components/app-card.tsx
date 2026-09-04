@@ -5,23 +5,30 @@ import type { LocalisedProject } from "@/content/localise";
 /**
  * One slide. The whole card is a single anchor, so it is keyboard-operable and
  * middle-clickable for free — no div with a click handler.
+ *
+ * A card without a deployment falls back to the repository: the header says so
+ * rather than promising a live app, and the status dot stays unlit, because a
+ * green dot next to a project nobody can open is a claim the card cannot back.
+ * `projects.ts` guarantees one or the other exists.
  */
 export function AppCard({
   project,
   active,
   labels,
-  inDevelopment,
+  statuses,
 }: {
   project: LocalisedProject;
   active: boolean;
   labels: Copy["ui"]["carousel"];
-  inDevelopment: string;
+  statuses: Copy["ui"]["status"];
 }) {
-  const host = project.liveUrl?.replace(/^https:\/\//, "") ?? "";
+  const deployed = Boolean(project.liveUrl);
+  const target = project.liveUrl ?? project.repo;
+  const host = target?.replace(/^https:\/\//, "") ?? "";
 
   return (
     <a
-      href={project.liveUrl}
+      href={target}
       target="_blank"
       rel="noopener noreferrer"
       // Inactive slides sit clipped outside the carousel's viewport (see
@@ -38,15 +45,20 @@ export function AppCard({
       className="block overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-accent"
     >
       <div className="flex items-center gap-3 border-b border-line-soft bg-raised px-4 py-2.5">
-        <span className="size-1.5 shrink-0 rounded-full bg-live" aria-hidden />
+        <span
+          aria-hidden
+          className={`size-1.5 shrink-0 rounded-full ${deployed ? "bg-live" : "bg-dim"}`}
+        />
         <span className="text-sm font-medium">{project.title}</span>
         <span className="font-mono text-xs text-dim">{host}</span>
-        {project.status === "in-development" && (
+        {project.status !== "live" && (
           <span className="label rounded border border-line px-1.5 py-0.5 text-dim">
-            {inDevelopment}
+            {statuses[project.status]}
           </span>
         )}
-        <span className="label ml-auto text-accent">{labels.openLiveApp}</span>
+        <span className="label ml-auto text-accent">
+          {deployed ? labels.openLiveApp : labels.openSource}
+        </span>
       </div>
 
       <AppMedia project={project} active={active} />
