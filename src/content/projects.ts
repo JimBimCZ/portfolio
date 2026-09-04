@@ -157,8 +157,9 @@ export const projects = [
     ],
     repo: "https://github.com/JimBimCZ/work-planner",
     liveUrl: "https://work-planner-seven.vercel.app",
+    // No `signInRequired`: the root is a public demo board, so a visitor who
+    // opens the card has something to use. OAuth still gates `/boards/*`.
     status: "in-development",
-    signInRequired: true,
     metrics: ["Postgres", "291"],
     poster: "/work/work-planner.webp",
     tour: "/work/work-planner.webm",
@@ -177,12 +178,12 @@ export type ProjectStatus = ProjectData["status"];
 /** The home page carousel. The order is declared here rather than taken from the
  *  log, so the first slide stays a deliberate choice. */
 export const CAROUSEL_ORDER = [
+  "work-planner",
   "trader",
   "secure-llm",
-  "games-db",
   "my-movies",
+  "games-db",
   "legal",
-  "work-planner",
 ] as const;
 
 export function getProject(slug: string) {

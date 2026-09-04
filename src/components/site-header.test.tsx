@@ -39,9 +39,43 @@ test("marks the section the visitor is in as the current page", () => {
 test("marks nothing as current on the home page", () => {
   pathname.current = "/";
   render(<SiteHeader {...propsFor(copy)} locale="en" />);
-  for (const name of ["Work", "About", "Contact"]) {
+  for (const name of ["Work", "Skills", "Experience", "About", "Contact"]) {
     expect(screen.getByRole("link", { name })).not.toHaveAttribute("aria-current");
   }
+});
+
+// Derived from site.nav rather than a hardcoded list, so adding a section
+// without giving it a nav entry — or a label in one of the dictionaries —
+// fails here rather than shipping a header that has quietly fallen behind.
+test("links every section in site.nav, in both languages", () => {
+  pathname.current = "/";
+  for (const [dictionary, locale, prefix] of [
+    [copy, "en", ""],
+    [csCopy, "cs", "/cs"],
+  ] as const) {
+    const { unmount } = render(
+      <SiteHeader {...propsFor(dictionary)} locale={locale} />,
+    );
+    for (const item of site.nav) {
+      expect(
+        screen.getByRole("link", { name: dictionary.ui.nav[item.key] }),
+        `${locale} ${item.href}`,
+      ).toHaveAttribute("href", `${prefix}${item.href}`);
+    }
+    unmount();
+  }
+});
+
+test("marks the skills section as current while the visitor is on it", () => {
+  pathname.current = "/cs/skills";
+  render(<SiteHeader {...propsFor(csCopy)} locale="cs" />);
+
+  expect(
+    screen.getByRole("link", { name: csCopy.ui.nav.skills }),
+  ).toHaveAttribute("aria-current", "page");
+  expect(
+    screen.getByRole("link", { name: csCopy.ui.nav.experience }),
+  ).not.toHaveAttribute("aria-current");
 });
 
 test("shows the live-availability status", () => {
@@ -56,16 +90,17 @@ test("offers a mailto link for direct contact", () => {
   expect(link).toHaveAttribute("href", `mailto:${site.email}`);
 });
 
-// The reveal width is 860px, not a named Tailwind breakpoint: below it the
-// row does not have room for the longer Czech nav and language switch, so
-// the cluster stays hidden until the width where that holds for both
-// languages (measured empirically — see the 2026-09-01 review, finding 1).
+// The reveal width is measured, not a named Tailwind breakpoint: below it the
+// row does not have room for the longer Czech nav and language switch, so the
+// cluster stays hidden until the width where that holds for both languages.
+// It was 860 for a three-item nav; with five items the Czech nav wraps to two
+// lines up to 1015px, so the reveal moved to 1024.
 test("hides availability and email below the width the row actually fits", () => {
   render(<SiteHeader {...propsFor(copy)} locale="en" />);
   const link = screen.getByRole("link", { name: site.email });
   const group = link.closest(".hidden");
   expect(group).not.toBeNull();
-  expect(group).toHaveClass("min-[860px]:flex");
+  expect(group).toHaveClass("min-[1024px]:flex");
 });
 
 test("names the sections in the language of the page it sits on", () => {

@@ -69,14 +69,14 @@ describe("projects", () => {
 });
 
 describe("carousel projects", () => {
-  test("are ordered with trader first, so first paint is not Steam's storefront", () => {
+  test("are ordered with work-planner first, so first paint is not Steam's storefront", () => {
     expect(carouselProjects.map((p) => p.slug)).toEqual([
+      "work-planner",
       "trader",
       "secure-llm",
-      "games-db",
       "my-movies",
+      "games-db",
       "legal",
-      "work-planner",
     ]);
   });
 

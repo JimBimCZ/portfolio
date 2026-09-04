@@ -10,7 +10,13 @@ import type { Copy } from "./types";
 export const cs = {
   locale: "cs",
   ui: {
-    nav: { work: "Projekty", about: "O mně", contact: "Kontakt" },
+    nav: {
+      work: "Projekty",
+      skills: "Dovednosti",
+      experience: "Praxe",
+      about: "O mně",
+      contact: "Kontakt",
+    },
     navLabel: "Hlavní navigace",
     privacy: "Soukromí",
     languageSwitch: { label: "Jazyk", en: "English", cs: "Čeština" },
@@ -151,6 +157,7 @@ export const cs = {
       trackRecord: "Co mám za sebou",
       fullHistory: "Celá historie →",
       skills: "Dovednosti, ke každé důkaz",
+      allSkills: "Všechny dovednosti →",
       contact: "Kontakt",
     },
     work: {
@@ -164,6 +171,14 @@ export const cs = {
       // srpnu") to read as a sentence. Label and value sidestep the case.
       shipped: "Nasazeno:",
     },
+    skills: {
+      title: "Co umím a čím to dokládám",
+      lede: "U každé dovednosti níž stojí nasazené projekty, které ji dokládají. Štítek vede rovnou do běžící aplikace, a když není co otevřít, na stránku projektu.",
+    },
+    experience: {
+      title: "Kde jsem pracoval",
+      lede: "Od nejnovějšího, včetně let před programováním. Cesta přes zvuk a světla na živých akcích je netradiční a právě z ní jsou návyky, které si nesu dál.",
+    },
     project: {
       back: "← Projekty",
       role: "Role",
@@ -174,7 +189,6 @@ export const cs = {
     },
     about: {
       title: "O mně",
-      experience: "Praxe",
       toolkit: "Nástroje",
     },
     contact: {
@@ -207,6 +221,16 @@ export const cs = {
     work: {
       title: "Projekty",
       description: "Projekty od nejnovějšího, s tím, co jsem nasadil a co to změnilo.",
+    },
+    skills: {
+      title: "Dovednosti",
+      description:
+        "Celá matice dovedností. Za každou položkou stojí nasazený projekt, který si můžete otevřít, ne sebehodnocení na stupnici.",
+    },
+    experience: {
+      title: "Praxe",
+      description:
+        "Celá pracovní historie od nejnovějšího — frontend a full-stack vývoj, cestou přes zvuk a světla v britském hudebním průmyslu.",
     },
     about: {
       title: "O mně",
@@ -450,7 +474,7 @@ export const cs = {
       highlights: [
         "Nástěnky, sloupce a karty stojí na skutečném schématu v Postgresu — dávno za kostrou s health routou, kterou README pořád popisuje.",
         "Přetahování mezi sloupci ovladatelné klávesnicí, postavené na dnd-kit.",
-        "Ke každé nástěnce se dá dostat jen přes přihlášení OAuth (Google a GitHub); hostovský ani demo účet neexistuje.",
+        "Kořen webu je veřejná demo nástěnka — skutečná aplikace, která se naplní při každé návštěvě a nic neukládá, takže si jde na co sáhnout i bez účtu. Nástěnky, které zůstávají, hlídá OAuth (Google a GitHub).",
         "291 testů napříč stackem: 211 unit a komponentových, 80 end-to-end v Playwrightu.",
       ],
       metricLabels: ["Drizzle + Neon", "testů napříč stackem"],
@@ -479,7 +503,7 @@ export const cs = {
         ],
       },
       posterAlt:
-        "Přihlašovací obrazovka Work Planneru: název aplikace nad tlačítky Continue with Google a Continue with GitHub, žádný hostovský ani demo účet.",
+        "Veřejná demo nástěnka Work Planneru: pět sloupců od Ready to work po Done, v nich karty se štítky a termíny, v rohu tlačítko Sign in.",
     },
   },
   skills: {

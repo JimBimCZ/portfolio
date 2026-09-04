@@ -28,10 +28,23 @@ test("states availability in the hero's spec block, without navigating", () => {
   expect(screen.getByText(/open to new work/i)).toBeInTheDocument();
 });
 
-test("puts the track record above the skills, as the stronger evidence", () => {
+// Skills first: it reads on from the carousel directly above it, which is the
+// evidence every row of the matrix cites. The employment history answers a
+// different question and follows.
+test("puts the skills above the track record, reading on from the carousel", () => {
   render(<HomePage copy={copy} locale="en" />);
   const html = document.body.innerHTML;
-  expect(html.indexOf("Track record")).toBeLessThan(html.indexOf("Skills"));
+  expect(html.indexOf("Skills")).toBeLessThan(html.indexOf("Track record"));
+});
+
+test("sends each section to the page that carries it in full", () => {
+  render(<HomePage copy={copy} locale="en" />);
+  expect(
+    screen.getByRole("link", { name: copy.pages.home.allSkills }),
+  ).toHaveAttribute("href", "/skills");
+  expect(
+    screen.getByRole("link", { name: copy.pages.home.fullHistory }),
+  ).toHaveAttribute("href", "/experience");
 });
 
 test("offers a direct way to make contact", () => {

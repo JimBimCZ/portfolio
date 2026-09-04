@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { getCopy } from "../src/content/copy";
 import { projects } from "../src/content/projects";
+import { site } from "../src/content/site";
 
 test("a visitor can get from the home page to a project's source", async ({ page }) => {
   await page.goto("/");
@@ -68,6 +69,45 @@ test("the current section is marked in the navigation", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Work", exact: true }),
   ).not.toHaveAttribute("aria-current", "page");
+});
+
+// The two sections that used to exist only as home-page blocks. Driven from
+// site.nav so a section added to the header without a page — or with a page
+// only in one tree — fails here as a dead nav link.
+test("every nav entry opens its page in both trees", async ({ page }) => {
+  for (const [locale, prefix] of [
+    ["en", ""],
+    ["cs", "/cs"],
+  ] as const) {
+    const copy = getCopy(locale);
+    for (const item of site.nav) {
+      const response = await page.goto(`${prefix}${item.href}`);
+      expect(response?.status(), `${locale} ${item.href}`).toBe(200);
+      await expect(
+        page.getByRole("link", { name: copy.ui.nav[item.key], exact: true }),
+      ).toHaveAttribute("aria-current", "page");
+    }
+  }
+});
+
+// The home page's skills and track-record blocks are previews; each links to
+// the page that carries it in full.
+test("the home page sends a visitor on to the skills and experience pages", async ({ page }) => {
+  const copy = getCopy("en");
+
+  await page.goto("/");
+  await page.getByRole("link", { name: copy.pages.home.allSkills }).click();
+  await expect(page).toHaveURL("/skills");
+  await expect(
+    page.getByRole("heading", { level: 1, name: copy.pages.skills.title }),
+  ).toBeVisible();
+
+  await page.goto("/");
+  await page.getByRole("link", { name: copy.pages.home.fullHistory }).click();
+  await expect(page).toHaveURL("/experience");
+  await expect(
+    page.getByRole("heading", { level: 1, name: copy.pages.experience.title }),
+  ).toBeVisible();
 });
 
 test("an unknown project shows the not-found page", async ({ page }) => {

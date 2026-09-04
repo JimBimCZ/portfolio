@@ -96,13 +96,36 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
         </ul>
       </section>
 
+      {/*
+        Skills before the track record: what I can do now, evidenced by the
+        apps directly above, reads on from the carousel. The employment
+        history answers a different question and follows it. Each section
+        links to the page that carries it in full.
+      */}
+      <section aria-labelledby="skills" className="py-16">
+        <div className="flex items-baseline justify-between gap-6">
+          <h2 id="skills" className="label text-muted">
+            {copy.pages.home.skills}
+          </h2>
+          <Link
+            href={`${prefix}/skills`}
+            className="label text-muted hover:text-accent"
+          >
+            {copy.pages.home.allSkills}
+          </Link>
+        </div>
+        <div className="mt-8">
+          <SkillMatrix groups={skillGroups} locale={locale} />
+        </div>
+      </section>
+
       <section aria-labelledby="track-record" className="py-16">
         <div className="flex items-baseline justify-between gap-6">
           <h2 id="track-record" className="label text-muted">
             {copy.pages.home.trackRecord}
           </h2>
           <Link
-            href={`${prefix}/about`}
+            href={`${prefix}/experience`}
             className="label text-muted hover:text-accent"
           >
             {copy.pages.home.fullHistory}
@@ -110,15 +133,6 @@ export function HomePage({ copy, locale }: { copy: Copy; locale: Locale }) {
         </div>
         <div className="mt-8">
           <ExperienceLog roles={copy.person.experience} locale={locale} />
-        </div>
-      </section>
-
-      <section aria-labelledby="skills" className="py-16">
-        <h2 id="skills" className="label text-muted">
-          {copy.pages.home.skills}
-        </h2>
-        <div className="mt-8">
-          <SkillMatrix groups={skillGroups} locale={locale} />
         </div>
       </section>
 

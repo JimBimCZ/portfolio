@@ -6,7 +6,13 @@ export type Locale = (typeof LOCALES)[number];
 
 /** Chrome: strings that belong to the shell rather than to one page. */
 export type UiCopy = {
-  nav: { work: string; about: string; contact: string };
+  nav: {
+    work: string;
+    skills: string;
+    experience: string;
+    about: string;
+    contact: string;
+  };
   /** Accessible name of the header's <nav> landmark. */
   navLabel: string;
   privacy: string;
@@ -64,11 +70,14 @@ export type PagesCopy = {
     trackRecord: string;
     fullHistory: string;
     skills: string;
+    allSkills: string;
     contact: string;
   };
   work: { title: string; lede: string; more: string; liveDemo: string; repo: string; shipped: string };
+  skills: { title: string; lede: string };
+  experience: { title: string; lede: string };
   project: { back: string; role: string; stack: string; whatItBrings: string; visitSite: string; source: string };
-  about: { title: string; experience: string; toolkit: string };
+  about: { title: string; toolkit: string };
   contact: { title: string; body: string; phone: string; based: string };
   privacy: { title: string; lede: string; responsible: string; contact: string; updated: string };
   notFound: { code: string; title: string; back: string };
@@ -79,6 +88,8 @@ export type MetaCopy = {
   titleTemplate: string;
   home: { title: string; description: string };
   work: { title: string; description: string };
+  skills: { title: string; description: string };
+  experience: { title: string; description: string };
   about: { title: string; description: string };
   contact: { title: string; description: string };
   privacy: { title: string; description: string };

@@ -71,12 +71,20 @@ test("arrow keys keep moving the same way DOM focus follows the selected tab", a
   expect(screen.getByRole("tab", { name: carouselProjects[2].title })).toHaveFocus();
 });
 
+// Walks the whole carousel rather than stopping at a hardcoded index, so the
+// rule is checked against every slide and survives a reordering: only the
+// active card renders a video, and a slide with no tour renders none at all.
 test("exactly one video plays, however far you scroll the carousel", async () => {
   const { container } = render(<AppCarousel projects={carouselProjects} labels={copy.ui.carousel}
       statuses={copy.ui.status} />);
-  await userEvent.click(screen.getByRole("button", { name: /next/i }));
-  await userEvent.click(screen.getByRole("button", { name: /next/i }));
-  expect(container.querySelectorAll("video").length).toBe(1);
+  const next = screen.getByRole("button", { name: /next/i });
+  for (let index = 1; index < carouselProjects.length; index += 1) {
+    await userEvent.click(next);
+    const slide = carouselProjects[index];
+    expect(container.querySelectorAll("video").length, slide.slug).toBe(
+      slide.tour ? 1 : 0,
+    );
+  }
 });
 
 // The touch handlers sit on the carousel's swipeable track, a plain div one

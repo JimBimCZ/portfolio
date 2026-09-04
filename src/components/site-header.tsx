@@ -29,7 +29,14 @@ export function SiteHeader({
 
   return (
     <header className="border-b border-line">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-6 px-6 py-5">
+      {/*
+        Wraps rather than scrolls. Five nav items are 372px of unshrinkable
+        text, so on a 390px phone the row cannot fit the name, the nav and
+        the language switch on one line — before wrapping, that overflowed
+        the viewport and made every page scroll sideways. The nav drops to
+        its own line instead and the header just gets taller.
+      */}
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-5">
         <Link href={prefix || "/"} className="label text-text hover:text-accent">
           {site.name}
         </Link>
@@ -38,8 +45,14 @@ export function SiteHeader({
           longer Czech nav and language switch too — reveal it at the width
           where that holds (measured empirically), not at a generic
           breakpoint that happens to work for English alone.
+
+          Re-measured when the nav went from three items to five: the Czech
+          nav wraps to two lines up to 1015px with the cluster shown, and
+          fits from 1016px. 1024 is that threshold with a little headroom.
+          English alone would still be fine at the old 860, which is exactly
+          the trap this comment is about.
         */}
-        <div className="hidden items-center gap-6 min-[860px]:flex">
+        <div className="hidden items-center gap-6 min-[1024px]:flex">
           <p className="label flex items-center gap-2 text-muted">
             <span className="size-1.5 rounded-full bg-live" aria-hidden />
             {status}
@@ -52,7 +65,7 @@ export function SiteHeader({
           </a>
         </div>
         <nav aria-label={navLabel}>
-          <ul className="flex items-center gap-6">
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {site.nav.map((item) => {
               const href = `${prefix}${item.href}`;
               const active = pathname.startsWith(href);

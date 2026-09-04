@@ -174,14 +174,14 @@ describe("localiseProject", () => {
 });
 
 describe("localiseCarousel", () => {
-  test("is the six carousel apps, trader first", () => {
+  test("is the six carousel apps, work-planner first", () => {
     expect(localiseCarousel(en).map((p) => p.slug)).toEqual([
+      "work-planner",
       "trader",
       "secure-llm",
-      "games-db",
       "my-movies",
+      "games-db",
       "legal",
-      "work-planner",
     ]);
   });
 });

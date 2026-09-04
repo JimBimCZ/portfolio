@@ -3,7 +3,13 @@ import type { Copy } from "./types";
 export const en = {
   locale: "en",
   ui: {
-    nav: { work: "Work", about: "About", contact: "Contact" },
+    nav: {
+      work: "Work",
+      skills: "Skills",
+      experience: "Experience",
+      about: "About",
+      contact: "Contact",
+    },
     navLabel: "Main",
     privacy: "Privacy",
     languageSwitch: { label: "Language", en: "English", cs: "Čeština" },
@@ -144,6 +150,7 @@ export const en = {
       trackRecord: "Track record",
       fullHistory: "Full history →",
       skills: "Skills, with receipts",
+      allSkills: "Every skill →",
       contact: "Contact",
     },
     work: {
@@ -153,6 +160,14 @@ export const en = {
       liveDemo: "Live demo",
       repo: "GitHub",
       shipped: "Shipped",
+    },
+    skills: {
+      title: "What I can do, and what proves it",
+      lede: "Every skill below names the shipped projects that back it. Follow a tag to the running app, or to the case study when there is nothing deployed to open.",
+    },
+    experience: {
+      title: "Where I have worked",
+      lede: "Newest first, including the years before software. The route through live sound and lighting is unconventional, and it is where the habits came from.",
     },
     project: {
       back: "← Work",
@@ -164,7 +179,6 @@ export const en = {
     },
     about: {
       title: "About",
-      experience: "Experience",
       toolkit: "Toolkit",
     },
     contact: {
@@ -196,6 +210,16 @@ export const en = {
     work: {
       title: "Work",
       description: "Projects, newest first, with what shipped and what it changed.",
+    },
+    skills: {
+      title: "Skills",
+      description:
+        "The full skill matrix, every entry backed by a shipped project you can open rather than a self-assessed rating.",
+    },
+    experience: {
+      title: "Experience",
+      description:
+        "The full work history, newest first — frontend and full-stack engineering, by way of live sound and lighting in the UK music industry.",
     },
     about: {
       title: "About",
@@ -439,7 +463,7 @@ export const en = {
       highlights: [
         "Boards, columns and cards backed by a real Postgres schema — well past the health-route scaffold the README still describes.",
         "Keyboard-operable drag and drop between columns, built on dnd-kit.",
-        "OAuth-only sign-in (Google and GitHub) gates every board; there is no guest or demo account.",
+        "The root is a public demo board — the real app, seeded per visit and saving nothing, so there is something to poke at without an account. OAuth (Google and GitHub) gates the boards that persist.",
         "291 tests across the stack: 211 unit and component, 80 Playwright end-to-end.",
       ],
       metricLabels: ["Drizzle + Neon", "tests across the stack"],
@@ -468,7 +492,7 @@ export const en = {
         ],
       },
       posterAlt:
-        "Work Planner's sign-in screen: the app name above Continue with Google and Continue with GitHub buttons, with no guest or demo account available.",
+        "Work Planner's public demo board: five columns from Ready to work through to Done, each holding cards tagged with labels and due dates, and a Sign in button in the corner.",
     },
   },
   skills: {

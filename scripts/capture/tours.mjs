@@ -11,9 +11,10 @@
  * frame is captured (and before `run`). Use it when the resting state is a
  * bad first impression — trader's untouched home screen has an empty
  * positions table and an empty performance chart, which undersells it badly
- * — to leave the app populated before the still is taken. Apps whose resting
- * state is already good (games-db, my-movies, the two sign-in screens) don't
- * define one.
+ * — to leave the app populated before the still is taken, or when something
+ * covers it, as work-planner's first-load coach marks cover its board. Apps
+ * whose resting state is already good (games-db, my-movies, and legal's
+ * sign-in screen) don't define one.
  *
  * URLs here must match `liveUrl` in src/content/projects.ts, which is the
  * source of truth for where each app is deployed.
@@ -109,10 +110,46 @@ export const tours = {
       });
     },
   },
-  // work-planner is OAuth-only (Google, GitHub) — there is no email/password
-  // form on its sign-in screen, so no demo account could ever drive it past
-  // that point. The poster and video are the sign-in screen itself.
+  // work-planner's root is a public demo board — the real app, seeded per
+  // visit and saving nothing, so a capture needs no credentials. It used to
+  // land on the OAuth screen instead, which is what the 5KB poster of two
+  // sign-in buttons was. Real boards are still OAuth-only (Google, GitHub);
+  // `/boards/*` redirects to sign-in.
+  //
+  // A coach-mark tour opens over the board on first load and dims it, so
+  // `prepare` skips it before the poster is taken. Drag and drop is driven
+  // from the keyboard rather than the mouse: the board is dnd-kit, whose
+  // pointer sensor wants a sustained real drag that Playwright's synthetic
+  // mouse moves do not reliably produce, while Enter/arrows/Enter is the
+  // app's own keyboard path and moves a card every time.
   "work-planner": {
     url: "https://work-planner-seven.vercel.app",
+    async prepare(page) {
+      await maybe(async () => {
+        await page.getByRole("button", { name: "Skip" }).click();
+        await settle(page, 800);
+      });
+    },
+    async run(page) {
+      // Enter picks the card up, each ArrowRight advances it one drop target,
+      // Enter drops it. Two presses carry the first card of "Ready to work"
+      // into "In progress" — one target inside its own column, then the first
+      // card of the next one.
+      await maybe(async () => {
+        await page.locator('article[aria-roledescription="sortable"]').first().focus();
+        await page.keyboard.press("Enter");
+        await settle(page, 700);
+        await page.keyboard.press("ArrowRight");
+        await settle(page, 700);
+        await page.keyboard.press("ArrowRight");
+        await settle(page, 700);
+        await page.keyboard.press("Enter");
+        await settle(page, 1500);
+      });
+      await maybe(async () => {
+        await page.getByTestId("card-title").filter({ hasText: "EU bucket" }).click();
+        await settle(page, 3000);
+      });
+    },
   },
 };
