@@ -49,7 +49,7 @@ export const cs = {
     /** Rendered as the spec block on the home and about pages. Keys stay short. */
     manifest: [
       ["role", "Full-stack a AI vývojář"],
-      ["hloubka", "Senior na frontendu, backend až do produkce"],
+      ["hloubka", "Od datového modelu po rozhraní, nasazené a v provozu"],
       ["zaměření", "LLM funkce s typovaným a testovatelným výstupem"],
       ["stack", "TypeScript, Next.js, React, FastAPI, Postgres"],
       ["sídlo", "Brno, ČR — SEČ"],
@@ -57,9 +57,9 @@ export const cs = {
     ],
     /** The about page reads these as paragraphs, in order. */
     bio: [
-      "Full-stack vývojář, senior na frontendu, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
-      "Běžnou náplní dne jsou React a TypeScript na seniorní úrovni — funkce, které vznikají a dál se udržují v kódu, se kterým musí žít i ostatní, stav řešený přes Redux a React Context a produkční problémy dohledané v CloudWatch logách a v SQL, ne odhadované.",
-      "Aplikace v přehledu práce jsou sólo projekty od začátku do konce — schémata a migrace v Postgresu přes Drizzle, služby ve FastAPI, přihlášení přes OAuth a správa sessions, naplánované úlohy a k tomu Docker image a CI, které to všechno nasazují. Seniorita na frontendu je z běžné práce, zbytek stacku z toho, že tohle musím postavit a provozovat sám.",
+      "Full-stack vývojář, cestou přes zvuk a světla na živých akcích v britském hudebním průmyslu. Je to netradiční cesta k téhle práci, ale zůstaly mi po ní dva návyky, které si stojí za to udržet: technická přesnost a komunikace, jakou si člověk osvojí v partě, kde musí všechno klapnout dřív, než do sálu pustí diváky.",
+      "Stavím celé aplikace, ne jednu jejich vrstvu. Projekty v přehledu práce jsou sólo buildy od začátku do konce — schémata a migrace v Postgresu přes Drizzle, služby ve FastAPI a v Node, přihlášení přes OAuth a správa sessions, naplánované úlohy a streamované odpovědi a k tomu Docker image a CI, které to všechno nasazují. Rozhraní stojí na API, které jsem navrhl, nad schématem, se kterým pak musím žít.",
+      "Placená práce je frontend na seniorní úrovni — React a TypeScript v kódu, se kterým musí žít i ostatní, stav řešený přes Redux a React Context a produkční problémy dohledané v CloudWatch logách a v SQL, ne odhadované. Odtud je hloubka v prezentační vrstvě; zbytek z toho, že systémy za těmihle aplikacemi sám provozuju a platím.",
       "Druhá polovina je agentic AI: workflow postavená kolem LLM, vlastní MCP servery a multiagentní systémy vyladěné tak, aby byly spolehlivé a zároveň dost levné na to, aby se daly reálně provozovat. Nejlíp mi to jde v úzké spolupráci s ostatními — dodávat řešení, které sedne na potřebu klienta, v termínu, na kterém jsme se domluvili.",
     ],
     /** Newest first. The about page renders this as a log. */
